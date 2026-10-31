@@ -1,6 +1,6 @@
 # Refactoring plan
 
-Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 done, not committed yet; Phase 3 next (2026-10-31)
+Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 next (2026-10-31)
 
 §1 describes the state before Phase 1.
 
@@ -71,13 +71,14 @@ Each phase ends with `check` green and is one commit. I'll make the commits and 
 - Copy the inputs of the 16 days that exist in both places from the old folder to `inputs/`.
 - Requires: inputs for the 5 days whose tests read files and have no copy locally (2019/13, 19, 21 and 22, and 2022/18). See §4.1. Done 2026-10-31: all 111 tests pass with `--all-features`, including the 9 that read inputs.
 
-### Phase 2: shared-code fixes (with unit tests) (done 2026-10-31, not committed yet)
+### Phase 2: shared-code fixes (with unit tests) (done 2026-10-31, committed as `f4c16bf`)
 - **`Answer` type**: `enum Answer { Num(u64), Text(String) }` with `From` and `Display`. `SolveFn` becomes `fn() -> Result<(Answer, Answer)>`. Existing days change only their return line: `Ok((p1.into(), p2.into()))`.
 - **`read_input`**: the inputs root comes from the `AOC_INPUTS` environment variable, or defaults to `<crate root>/inputs` (`env!("CARGO_MANIFEST_DIR")`). Paths are built with `Path::join`. Add `read_example(year, day, n)` for `day_NN_example{n}.txt`.
 - **Year registry**: a `register_years!` macro generates the modules, `get_year_solver` and the year list that `run_all` iterates. Adding a year then takes one line. It takes module names (`register_years!(year_2015, …)`), like `register_days!`, because turning `2015` into `year_2015` would need a proc-macro crate.
 - **`day_to_u8`**: checked at compile time, so a bad module name is a build error.
 - **`generate`**: builds paths with `Path::join` and adds the day to `register_days!` (and the year to `register_years!`) itself.
 - **Unit tests**: for everything above plus `utils::parser`. No new tests for individual days.
+- **Follow-up (`359387c`)**: `cargo fmt` never reached the modules declared inside `register_days!` and `register_years!`. `rustfmt.toml` (edition 2024) now makes `check` run `rustfmt --check` on every file, and all sources were formatted once. That commit is listed in `.git-blame-ignore-revs`.
 
 ### Phase 3: move puzzle examples out of the source (see §5, question 1)
 - Move the 26 inline examples to `inputs/year_YYYY/day_NN_example*.txt` and read them with `read_example`. Mark those tests `puzzle-inputs`.
@@ -119,7 +120,7 @@ For each day:
 - `.clang-format` and `.clang-tidy` are left for later, so that existing C++ isn't mass-reformatted.
 
 ### Phase 6: CI and wrap-up
-- `.github/workflows/ci.yml`: an ubuntu, macOS and Windows matrix running `cargo fmt --check`, `clippy -D warnings`, `cargo test` (without `puzzle-inputs`), and the CMake build plus `ctest`.
+- `.github/workflows/ci.yml`: an ubuntu, macOS and Windows matrix running `cargo fmt --check`, `rustfmt --check` on every `.rs` file (`cargo fmt` skips macro-declared modules), `clippy -D warnings`, `cargo test` (without `puzzle-inputs`), and the CMake build plus `ctest`.
 - Archive or delete the old folder after you've checked the port, along with its nested `.git` histories. That's your call when we get there.
 
 ## 4. Manual tasks for you

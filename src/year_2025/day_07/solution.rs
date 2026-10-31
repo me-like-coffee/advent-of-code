@@ -1,5 +1,5 @@
 use crate::utils::parser::{parse_str_lines, Parse};
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use anyhow::{anyhow, Result};
 use nom::{character::complete::one_of, multi::many1, IResult, Parser};
 use std::collections::{HashMap, HashSet, VecDeque};
@@ -125,11 +125,12 @@ fn calculate_solution(grid: &[Vec<char>]) -> Result<(u64, u64)> {
 }
 
 /// Entry point for Day 07
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let content = read_input(Year(2025), Day(7))?;
     let rows = parse_str_lines(&content, ManifoldRow::parse)?;
     let grid: Vec<Vec<char>> = rows.into_iter().map(|r| r.cells).collect();
-    calculate_solution(&grid)
+    let (p1, p2) = calculate_solution(&grid)?;
+    Ok((p1.into(), p2.into()))
 }
 
 #[cfg(test)]

@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Result};
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 
 #[derive(Debug, Clone, Copy)]
 enum Instruction {
@@ -236,9 +236,10 @@ fn wrap_cube_real(r: i32, c: i32, f: i32, s: usize) -> (i32, i32, i32) {
 /// Solve year 2022 day 22.
 /// # Errors
 /// Returns an error if input cannot be read.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2022), Day(22))?;
-    calculate_solution(&input)
+    let (p1, p2) = calculate_solution(&input)?;
+    Ok((p1.into(), p2.into()))
 }
 
 #[cfg(test)]

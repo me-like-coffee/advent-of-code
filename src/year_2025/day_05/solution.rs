@@ -1,5 +1,5 @@
 use crate::utils::parser::{parse_full, unsigned_number, Parse};
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use anyhow::Result;
 use nom::{
     character::complete::{line_ending, multispace0, multispace1},
@@ -122,10 +122,11 @@ fn calculate_solution(db: &InventoryDb) -> Result<(u64, u64)> {
 }
 
 /// Entry point for Day 05
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let content = read_input(Year(2025), Day(5))?;
     let db = parse_full(&content, InventoryDb::parse)?;
-    calculate_solution(&db)
+    let (p1, p2) = calculate_solution(&db)?;
+    Ok((p1.into(), p2.into()))
 }
 
 #[cfg(test)]

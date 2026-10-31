@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 
@@ -6,7 +6,7 @@ use anyhow::{Context, Result};
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or program execution fails.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(13))?;
     let program: Vec<i64> = input
         .trim()
@@ -23,7 +23,7 @@ pub fn solve() -> Result<(u64, u64)> {
     // Part 2: Play the game and get the final score
     let part2 = solve_part2(&program)?;
 
-    Ok((part1, part2))
+    Ok((part1.into(), part2.into()))
 }
 
 fn solve_part1(program: &[i64]) -> Result<u64> {
@@ -94,7 +94,7 @@ mod tests {
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_13_part1() -> Result<()> {
         let (p1, _) = solve()?;
-        assert_eq!(p1, 270);
+        assert_eq!(p1, 270.into());
         Ok(())
     }
 }

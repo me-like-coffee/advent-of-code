@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 use std::collections::{HashMap, VecDeque};
@@ -16,7 +16,7 @@ type Grid = HashMap<(i32, i32), Tile>;
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or program execution fails.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(15))?;
     let program: Vec<i64> = input
         .trim()
@@ -36,7 +36,7 @@ pub fn solve() -> Result<(u64, u64)> {
     // Part 2: Max distance from oxygen to any empty tile
     let part2 = find_max_distance(oxygen_pos, &map);
 
-    Ok((part1 as u64, part2 as u64))
+    Ok(((part1 as u64).into(), (part2 as u64).into()))
 }
 
 fn explore_map(program: &[i64]) -> Result<(Grid, (i32, i32))> {

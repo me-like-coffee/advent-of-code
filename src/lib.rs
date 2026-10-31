@@ -1,31 +1,30 @@
 pub mod utils;
-pub(crate) mod year_2015;
-pub(crate) mod year_2018;
-pub(crate) mod year_2019;
-pub(crate) mod year_2020;
-pub(crate) mod year_2021;
-pub(crate) mod year_2022;
-pub(crate) mod year_2023;
-pub(crate) mod year_2024;
-pub(crate) mod year_2025;
 
 pub use crate::utils::SolveFn;
 pub use crate::utils::run_day;
-pub use crate::utils::{Day, Year};
+pub use crate::utils::{Answer, Day, Year};
 
-/// Top-level dispatcher to resolve a solver for a specific year and day.
-#[must_use]
-pub fn get_year_solver(year: u16, day: u8) -> Option<SolveFn> {
-    match year {
-        2015 => year_2015::get_solver(day),
-        2018 => year_2018::get_solver(day),
-        2019 => year_2019::get_solver(day),
-        2020 => year_2020::get_solver(day),
-        2021 => year_2021::get_solver(day),
-        2022 => year_2022::get_solver(day),
-        2023 => year_2023::get_solver(day),
-        2024 => year_2024::get_solver(day),
-        2025 => year_2025::get_solver(day),
-        _ => None,
+register_years!(
+    year_2015, year_2018, year_2019, year_2020, year_2021, year_2022, year_2023, year_2024,
+    year_2025
+);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_years() {
+        assert_eq!(YEARS.first(), Some(&2015));
+        assert!(YEARS.contains(&2025));
+        assert!(YEARS.windows(2).all(|w| w[0] < w[1]));
+    }
+
+    #[test]
+    fn test_get_year_solver() {
+        assert!(get_year_solver(2015, 1).is_some());
+        assert!(get_year_solver(2019, 25).is_some());
+        assert!(get_year_solver(2015, 2).is_none());
+        assert!(get_year_solver(2016, 1).is_none());
     }
 }

@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use anyhow::Result;
 
 /// A schematic represented by the heights of its 5 columns.
@@ -52,7 +52,7 @@ impl Schematic {
 }
 
 /// Solves Year 2024, Day 25: Code Chronicle.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2024), Day(25))?;
     let blocks: Vec<&str> = input.split("\r\n\r\n")
         .map(|s| s.trim())
@@ -82,7 +82,7 @@ pub fn solve() -> Result<(u64, u64)> {
     }
 
     // Day 25 usually only has one part.
-    Ok((fit_count, 0))
+    Ok((fit_count.into(), 0.into()))
 }
 
 #[cfg(test)]

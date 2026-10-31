@@ -1,5 +1,5 @@
 use crate::utils::parser::{parse_str_lines, Parse};
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use anyhow::{Context, Result};
 use nom::{character::complete::digit1, combinator::map, IResult, Parser};
 
@@ -73,10 +73,11 @@ fn calculate_solution(banks: &[BatteryBank]) -> Result<(u64, u64)> {
 }
 
 /// Entry point for Day 03
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let content = read_input(Year(2025), Day(3))?;
     let banks = parse_str_lines(&content, BatteryBank::parse)?;
-    calculate_solution(&banks)
+    let (p1, p2) = calculate_solution(&banks)?;
+    Ok((p1.into(), p2.into()))
 }
 
 #[cfg(test)]

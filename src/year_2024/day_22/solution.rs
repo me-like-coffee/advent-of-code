@@ -1,9 +1,9 @@
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use anyhow::{Context, Result};
 use std::collections::HashMap;
 
 /// Solves Year 2024, Day 22: Monkey Market.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2024), Day(22))?;
     let initial_secrets: Vec<u64> = input
         .lines()
@@ -45,7 +45,7 @@ pub fn solve() -> Result<(u64, u64)> {
 
     let part2 = total_bananas.values().copied().max().unwrap_or(0);
 
-    Ok((part1, part2))
+    Ok((part1.into(), part2.into()))
 }
 
 use std::collections::HashSet;

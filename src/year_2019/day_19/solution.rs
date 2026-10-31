@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 
@@ -6,7 +6,7 @@ use anyhow::{Context, Result};
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or program execution fails.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(19))?;
     let program: Vec<i64> = input
         .trim()
@@ -20,7 +20,7 @@ pub fn solve() -> Result<(u64, u64)> {
     let part1 = count_affected_points(&program, 50, 50)?;
     let part2 = find_square(&program, 100)?;
 
-    Ok((part1 as u64, part2 as u64))
+    Ok(((part1 as u64).into(), (part2 as u64).into()))
 }
 
 fn is_affected(program: &[i64], x: i64, y: i64) -> Result<bool> {

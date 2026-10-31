@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 use num::Integer;
@@ -7,7 +7,7 @@ use num::Integer;
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or program execution fails.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(7))?;
     let program: Vec<i64> = input
         .trim()
@@ -21,7 +21,7 @@ pub fn solve() -> Result<(u64, u64)> {
     let part1 = find_max_thruster_signal(&program, 0..=4, false)?;
     let part2 = find_max_thruster_signal(&program, 5..=9, true)?;
 
-    Ok((part1 as u64, part2 as u64))
+    Ok(((part1 as u64).into(), (part2 as u64).into()))
 }
 
 fn find_max_thruster_signal(

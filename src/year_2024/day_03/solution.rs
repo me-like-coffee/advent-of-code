@@ -1,5 +1,5 @@
 use crate::utils::parser::unsigned_number;
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use anyhow::Result;
 use nom::{
     branch::alt,
@@ -79,9 +79,10 @@ fn calculate_solution(input: &str) -> Result<(u64, u64)> {
     Ok((p1_sum, p2_sum))
 }
 
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let content = read_input(Year(2024), Day(3))?;
-    calculate_solution(&content)
+    let (p1, p2) = calculate_solution(&content)?;
+    Ok((p1.into(), p2.into()))
 }
 
 #[cfg(test)]

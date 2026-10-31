@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 
@@ -47,7 +47,7 @@ use anyhow::{Context, Result};
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or program execution fails.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(25))?;
     let program: Vec<i64> = input
         .trim()
@@ -60,7 +60,7 @@ pub fn solve() -> Result<(u64, u64)> {
 
     let password = solve_part1(&program)?;
 
-    Ok((password, 0))
+    Ok((password.into(), 0.into()))
 }
 
 fn solve_part1(program: &[i64]) -> Result<u64> {

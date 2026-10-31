@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use anyhow::{anyhow, Result};
 use std::collections::{HashMap, HashSet, VecDeque};
 
@@ -6,11 +6,11 @@ use std::collections::{HashMap, HashSet, VecDeque};
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or BFS fails to find a path.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(20))?;
     let p1 = solve_part1(&input)?;
     let p2 = solve_part2(&input)?;
-    Ok((p1, p2))
+    Ok((p1.into(), p2.into()))
 }
 
 struct Maze {

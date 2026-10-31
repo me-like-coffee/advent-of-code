@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use anyhow::{Result, anyhow};
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 
 #[derive(Debug, Clone)]
 enum Job {
@@ -130,9 +130,10 @@ pub fn calculate_solution(input: &str) -> Result<(u64, u64)> {
 /// Solve year 2022 day 21.
 /// # Errors
 /// Returns an error if root monkey is missing or if input cannot be read.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2022), Day(21))?;
-    calculate_solution(&input)
+    let (p1, p2) = calculate_solution(&input)?;
+    Ok((p1.into(), p2.into()))
 }
 
 #[cfg(test)]

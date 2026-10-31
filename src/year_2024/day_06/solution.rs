@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use anyhow::{Context, Result};
 use rayon::prelude::*;
 use std::collections::HashSet;
@@ -36,7 +36,7 @@ impl Direction {
 }
 
 /// Solves Year 2024, Day 6: Guard Gallivant.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2024), Day(6))?;
     let grid: Vec<Vec<char>> = input
         .lines()
@@ -61,7 +61,7 @@ pub fn solve() -> Result<(u64, u64)> {
         .filter(|&&pos| is_looping(&grid, start_pos, start_dir, pos, width, height))
         .count() as u64;
 
-    Ok((part1, part2))
+    Ok((part1.into(), part2.into()))
 }
 
 fn find_start(grid: &[Vec<char>]) -> Option<((i32, i32), Direction)> {

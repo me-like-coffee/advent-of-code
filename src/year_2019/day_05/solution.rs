@@ -1,9 +1,9 @@
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use crate::year_2019::intcode::Intcode;
 use anyhow::{Context, Result};
 
 /// Solves Year 2019, Day 5: Sunny with a Chance of Asteroids.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(5))?;
     let program: Vec<i64> = input
         .trim()
@@ -30,7 +30,7 @@ pub fn solve() -> Result<(u64, u64)> {
         .last()
         .context("No output produced for Part 2")?;
 
-    Ok((part1 as u64, part2 as u64))
+    Ok(((part1 as u64).into(), (part2 as u64).into()))
 }
 
 #[cfg(test)]

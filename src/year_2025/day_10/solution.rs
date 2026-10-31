@@ -1,5 +1,5 @@
 use crate::utils::parser::{parse_str_lines, unsigned_number, Parse};
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use anyhow::Result;
 use nom::{
     bytes::complete::tag,
@@ -328,10 +328,11 @@ fn calculate_solution(machines: &[Machine]) -> Result<(u64, u64)> {
 }
 
 /// Entry point for Day 10
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let content = read_input(Year(2025), Day(10))?;
     let machines = parse_str_lines(&content, Machine::parse)?;
-    calculate_solution(&machines)
+    let (p1, p2) = calculate_solution(&machines)?;
+    Ok((p1.into(), p2.into()))
 }
 
 #[cfg(test)]

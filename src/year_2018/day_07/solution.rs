@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use anyhow::Result;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -6,12 +6,12 @@ use std::collections::{BTreeMap, BTreeSet};
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or parsed.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let content = read_input(Year(2018), Day(7))?;
     let part1 = solve_part1(&content);
     println!("[2018] Day 07 Part 1 Order: {}", part1);
     let part2 = solve_part2(&content, 5, 60);
-    Ok((0, part2))
+    Ok((0.into(), part2.into()))
 }
 
 fn parse_dependencies(input: &str) -> (BTreeSet<char>, BTreeMap<char, BTreeSet<char>>) {

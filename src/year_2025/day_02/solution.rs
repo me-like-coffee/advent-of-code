@@ -1,5 +1,5 @@
 use crate::utils::parser::{parse_str_lines, unsigned_number, Parse};
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use anyhow::Result;
 use nom::{
     bytes::complete::tag, multi::separated_list1, sequence::separated_pair, IResult, Parser,
@@ -96,10 +96,11 @@ fn calculate_solution(groups: &[RangeGroup]) -> Result<(u64, u64)> {
 }
 
 /// Entry point for Day 02
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let content = read_input(Year(2025), Day(2))?;
     let groups = parse_str_lines(&content, RangeGroup::parse)?;
-    calculate_solution(&groups)
+    let (p1, p2) = calculate_solution(&groups)?;
+    Ok((p1.into(), p2.into()))
 }
 
 #[cfg(test)]

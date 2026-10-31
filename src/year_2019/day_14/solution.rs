@@ -1,5 +1,5 @@
 use crate::utils::parser::unsigned_number;
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use anyhow::{anyhow, Context, Result};
 use nom::{
     bytes::complete::tag,
@@ -54,9 +54,10 @@ fn parse_reactions(input: &str) -> IResult<&str, Vec<Reaction>> {
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or parsed.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(14))?;
-    calculate_solution(&input)
+    let (p1, p2) = calculate_solution(&input)?;
+    Ok((p1.into(), p2.into()))
 }
 
 /// Core logic for Year 2019, Day 14.

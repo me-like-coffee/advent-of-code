@@ -1,9 +1,9 @@
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use crate::year_2019::intcode::Intcode;
 use anyhow::{Context, Result};
 
 /// Solves Year 2019, Day 2: 1202 Program Alarm.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(2))?;
     let program: Vec<i64> = input
         .trim()
@@ -31,7 +31,7 @@ pub fn solve() -> Result<(u64, u64)> {
         }
     }
 
-    Ok((part1 as u64, part2 as u64))
+    Ok(((part1 as u64).into(), (part2 as u64).into()))
 }
 
 fn run_with_params(program: &[i64], noun: i64, verb: i64) -> Result<i64> {

@@ -195,7 +195,7 @@ fn time_to_build(ore_cost: u32, clay_cost: u32, obsidian_cost: u32, state: &Stat
     Some(t + 1)
 }
 
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(crate::utils::Answer, crate::utils::Answer)> {
     let content = crate::utils::read_input(crate::utils::Year(2022), crate::utils::Day(19))?;
     let blueprints: Vec<Blueprint> = content
         .lines()
@@ -218,7 +218,7 @@ pub fn solve() -> Result<(u64, u64)> {
         .map(|b| solve_blueprint(b, 32))
         .product();
 
-    Ok((p1 as u64, p2 as u64))
+    Ok(((p1 as u64).into(), (p2 as u64).into()))
 }
 
 #[cfg(test)]
@@ -264,8 +264,8 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_regression() -> Result<()> {
         let (p1, p2) = solve()?;
-        assert_eq!(p1, 1466);
-        assert_eq!(p2, 8250);
+        assert_eq!(p1, 1466.into());
+        assert_eq!(p2, 8250.into());
         Ok(())
     }
 }

@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use anyhow::{anyhow, Result};
 use std::collections::{HashSet, VecDeque};
 
@@ -6,14 +6,14 @@ use std::collections::{HashSet, VecDeque};
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or the loop cannot be found.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2023), Day(10))?;
     let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
 
     let (part1, loop_coords, start_pos, actual_start_char) = find_loop(&grid)?;
     let part2 = count_enclosed_tiles(&grid, &loop_coords, start_pos, actual_start_char);
 
-    Ok((part1 as u64, part2 as u64))
+    Ok(((part1 as u64).into(), (part2 as u64).into()))
 }
 
 type LoopInfo = (usize, HashSet<(usize, usize)>, (usize, usize), char);

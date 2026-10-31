@@ -1,6 +1,8 @@
 # Refactoring plan
 
-Status: **draft, awaiting approval** (2026-10-30)
+Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 done, not committed yet; Phase 3 next (2026-10-31)
+
+§1 describes the state before Phase 1.
 
 This plan merges the local solutions in `~/Workspace/AdventOfCode` (the "old folder") into this repository (`me-like-coffee/advent-of-code`), fixes flaws in the shared code, and adds the 2022 C++ solutions under `cpp/`.
 
@@ -39,7 +41,7 @@ advent-of-code/
 ├── Cargo.toml  Cargo.lock  rust-toolchain.toml
 ├── src/
 │   ├── main.rs               # runner and `generate`
-│   ├── lib.rs                # register_years!(2015, 2016, …)
+│   ├── lib.rs                # register_years!(year_2015, year_2016, …)
 │   ├── utils/                # runner types, Answer, read_input, parser (+ unit tests)
 │   ├── year_2017/knot_hash.rs     # shared by days 10 and 14 (+ unit tests)
 │   ├── year_2018/device.rs        # shared by days 16, 19 (+ unit tests)
@@ -60,19 +62,19 @@ The Rust and C++ solutions read the same `inputs/` tree.
 
 Each phase ends with `check` green and is one commit. I'll make the commits and pushes when you ask, after `check` passes.
 
-### Phase 1: get `check` green on the current code (done 2026-10-31, not committed yet)
+### Phase 1: get `check` green on the current code (done 2026-10-31, committed as `dd539f0`)
 - Migrate to edition 2024: `cargo fix --edition`, set `edition = "2024"`, then `cargo fmt`. This was validated in a scratch copy.
 - Fix the clippy findings: `cargo clippy --fix` for the 33 automatic ones, plus 2 decimal constants by hand. Approving this plan counts as approval for that cleanup.
 - Add a `puzzle-inputs` feature. Tests that read `inputs/` get `#[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]`. `check` runs them through `--all-features`; CI and fresh clones skip them.
 - Commit `Cargo.lock` (remove it from `.gitignore`), pin dependencies to exact versions, and add `rust-toolchain.toml` (1.99.1) and `rust-version`.
 - Add `.gitattributes` (`* text=auto eol=lf`) and `README.md`, covering usage, the input layout, and a note that inputs aren't included.
 - Copy the inputs of the 16 days that exist in both places from the old folder to `inputs/`.
-- Requires: inputs for the 5 days whose tests read files and have no copy locally (2019/13, 19, 21 and 22, and 2022/18). See §4.1.
+- Requires: inputs for the 5 days whose tests read files and have no copy locally (2019/13, 19, 21 and 22, and 2022/18). See §4.1. Done 2026-10-31: all 111 tests pass with `--all-features`, including the 9 that read inputs.
 
-### Phase 2: shared-code fixes (with unit tests)
+### Phase 2: shared-code fixes (with unit tests) (done 2026-10-31, not committed yet)
 - **`Answer` type**: `enum Answer { Num(u64), Text(String) }` with `From` and `Display`. `SolveFn` becomes `fn() -> Result<(Answer, Answer)>`. Existing days change only their return line: `Ok((p1.into(), p2.into()))`.
 - **`read_input`**: the inputs root comes from the `AOC_INPUTS` environment variable, or defaults to `<crate root>/inputs` (`env!("CARGO_MANIFEST_DIR")`). Paths are built with `Path::join`. Add `read_example(year, day, n)` for `day_NN_example{n}.txt`.
-- **Year registry**: a `register_years!` macro generates the modules, `get_year_solver` and the year list that `run_all` iterates. Adding a year then takes one line.
+- **Year registry**: a `register_years!` macro generates the modules, `get_year_solver` and the year list that `run_all` iterates. Adding a year then takes one line. It takes module names (`register_years!(year_2015, …)`), like `register_days!`, because turning `2015` into `year_2015` would need a proc-macro crate.
 - **`day_to_u8`**: checked at compile time, so a bad module name is a build error.
 - **`generate`**: builds paths with `Path::join` and adds the day to `register_days!` (and the year to `register_years!`) itself.
 - **Unit tests**: for everything above plus `utils::parser`. No new tests for individual days.
@@ -135,10 +137,10 @@ Each AoC account gets its own inputs, and the tests here check the answers for *
 **Which days.**
 | Needed for | Days |
 |---|---|
-| Phase 1 (tests that read inputs) | 2019/13, 2019/19, 2019/21, 2019/22, 2022/18 |
-| Running them with the runner (`-y`, `-a`) | 2015/01; 2018/07; 2019/02, 05, 07, 11, 18, 20, 23, 24, 25; 2020/13, 22; 2022/17, 24; 2023/12; 2024/04, 05, 06, 25; 2025/01–12 |
+| Phase 1 (tests that read inputs), **done 2026-10-31** | 2019/13, 2019/19, 2019/21, 2019/22, 2022/18 |
+| Running them with the runner (`-y`, `-a`), **still missing** | 2015/01; 2018/07; 2019/02, 05, 07, 11, 18, 20, 23, 24, 25; 2020/13, 22; 2022/17, 24; 2023/12; 2024/04, 05, 06, 25; 2025/01–12 |
 
-The other 16 days in this repo already have inputs in the old folder. I'll copy those into `inputs/` in Phase 1, and you don't need to download them again.
+The other 16 days in this repo already had inputs in the old folder. They were copied into `inputs/` in Phase 1, and you don't need to download them again.
 
 **How to download.**
 - **In a browser:** log in at https://adventofcode.com, open `https://adventofcode.com/YYYY/day/D/input` (no leading zero in the URL), and use *Save As…* with the path above.
@@ -160,7 +162,7 @@ The other 16 days in this repo already have inputs in the old folder. I'll copy 
 
 **Example files are not a manual task.** In Phase 3 I'll write the examples from the current test code and the old folder's `test*.txt` files to `inputs/year_YYYY/day_NN_example{n}.txt` myself.
 
-**Verifying.** After downloading, tell me and I'll run the 9 input-dependent tests. If any fails, its input is probably from a different account or was damaged in saving.
+**Verifying.** After downloading, tell me and I'll run the 9 input-dependent tests. If any fails, its input is probably from a different account or was damaged in saving. Verified 2026-10-31 for the Phase 1 days: all 9 pass.
 
 ### 4.2 Nothing else
 `gh` is set up and the toolchains are installed.

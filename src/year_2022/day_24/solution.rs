@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Result};
 use std::collections::HashSet;
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Direction {
@@ -126,9 +126,10 @@ pub fn calculate_solution(input: &str) -> Result<(u64, u64)> {
     Ok((time1, time3))
 }
 
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let content = read_input(Year(2022), Day(24))?;
-    calculate_solution(&content)
+    let (p1, p2) = calculate_solution(&content)?;
+    Ok((p1.into(), p2.into()))
 }
 
 #[cfg(test)]

@@ -46,14 +46,14 @@ fn parse_input(input: &str) -> Result<HashSet<Point3D>> {
 }
 
 /// Solve for Year 2022, Day 18
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(crate::utils::Answer, crate::utils::Answer)> {
     let input = crate::utils::read_input(crate::utils::Year(2022), crate::utils::Day(18))?;
     let cubes = parse_input(&input)?;
     
     let p1 = calculate_surface_area(&cubes);
     let p2 = calculate_exterior_surface_area(&cubes);
     
-    Ok((p1 as u64, p2 as u64))
+    Ok(((p1 as u64).into(), (p2 as u64).into()))
 }
 
 fn calculate_surface_area(cubes: &HashSet<Point3D>) -> usize {
@@ -142,8 +142,8 @@ mod tests {
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_regression() -> Result<()> {
         let (p1, p2) = solve()?;
-        assert_eq!(p1, 4500);
-        assert_eq!(p2, 2558);
+        assert_eq!(p1, 4500.into());
+        assert_eq!(p2, 2558.into());
         Ok(())
     }
 }

@@ -1,9 +1,9 @@
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use anyhow::{Context, Result};
 use std::collections::{HashMap, HashSet};
 
 /// Solves Year 2024, Day 5: Print Queue.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2024), Day(5))?;
     let (rules_str, updates_str) = input
         .split_once("\r\n\r\n")
@@ -53,7 +53,7 @@ pub fn solve() -> Result<(u64, u64)> {
         }
     }
 
-    Ok((part1_sum, part2_sum))
+    Ok((part1_sum.into(), part2_sum.into()))
 }
 
 fn is_ordered(update: &[u32], rules: &HashMap<u32, HashSet<u32>>) -> bool {

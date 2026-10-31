@@ -1,5 +1,5 @@
 use crate::utils::parser::Parse;
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use anyhow::{anyhow, Result};
 use nom::{
     bytes::complete::tag, character::complete::i64 as parse_i64, sequence::separated_pair, IResult,
@@ -174,7 +174,7 @@ fn calculate_solution(points: &[Point]) -> Result<(u64, u64)> {
     Ok((part1 as u64, part2 as u64))
 }
 
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let content = read_input(Year(2025), Day(9))?;
     // Input is space-separated points, not line-separated.
     let points: Vec<Point> = content
@@ -186,7 +186,8 @@ pub fn solve() -> Result<(u64, u64)> {
         })
         .collect::<Result<Vec<Point>>>()?;
 
-    calculate_solution(&points)
+    let (p1, p2) = calculate_solution(&points)?;
+    Ok((p1.into(), p2.into()))
 }
 
 #[cfg(test)]

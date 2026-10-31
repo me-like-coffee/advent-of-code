@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use anyhow::Result;
 use std::collections::{BinaryHeap, HashMap, HashSet, VecDeque};
 
@@ -6,11 +6,11 @@ use std::collections::{BinaryHeap, HashMap, HashSet, VecDeque};
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or parsed.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(18))?;
     let part1 = solve_part1(&input)?;
     let part2 = solve_part2(&input)?;
-    Ok((part1, part2))
+    Ok((part1.into(), part2.into()))
 }
 
 fn solve_part1(input: &str) -> Result<u64> {

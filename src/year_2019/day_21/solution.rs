@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 
@@ -6,7 +6,7 @@ use anyhow::{Context, Result};
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or program execution fails.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(21))?;
     let program: Vec<i64> = input
         .trim()
@@ -54,7 +54,7 @@ pub fn solve() -> Result<(u64, u64)> {
     ];
     let part2 = run_springscript(&program, &part2_script)?;
 
-    Ok((part1, part2))
+    Ok((part1.into(), part2.into()))
 }
 
 fn run_springscript(program: &[i64], script: &[&str]) -> Result<u64> {

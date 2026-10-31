@@ -1,17 +1,17 @@
 use anyhow::Result;
 use std::collections::HashMap;
-use crate::utils::{Year, Day, read_input};
+use crate::utils::{Answer, Year, Day, read_input};
 
 /// # Errors
 /// Returns error if the input cannot be read.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2022), Day(17))?;
     let jets = input.trim().as_bytes();
     
     let p1 = simulate(jets, 2022);
     let p2 = simulate(jets, 1_000_000_000_000);
 
-    Ok((p1, p2))
+    Ok((p1.into(), p2.into()))
 }
 
 fn simulate(jets: &[u8], total_rocks: u64) -> u64 {

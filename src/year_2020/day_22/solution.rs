@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use anyhow::{anyhow, Result};
 use std::collections::{HashSet, VecDeque};
 
@@ -6,10 +6,10 @@ use std::collections::{HashSet, VecDeque};
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or parsed.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let content = read_input(Year(2020), Day(22))?;
     let (p1, p2) = calculate_solution(&content)?;
-    Ok((p1, p2))
+    Ok((p1.into(), p2.into()))
 }
 
 fn parse_decks(input: &str) -> Result<(VecDeque<u32>, VecDeque<u32>)> {

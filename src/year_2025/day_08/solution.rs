@@ -1,5 +1,5 @@
 use crate::utils::parser::{parse_str_lines, unsigned_number, Parse};
-use crate::utils::{read_input, Year, Day};
+use crate::utils::{Answer, read_input, Year, Day};
 use anyhow::Result;
 use nom::{bytes::complete::tag, IResult};
 use std::collections::HashMap;
@@ -141,10 +141,11 @@ fn calculate_solution(points: &[Point]) -> Result<(u64, u64)> {
 }
 
 /// Entry point for Day 08
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let content = read_input(Year(2025), Day(8))?;
     let points = parse_str_lines(&content, Point::parse)?;
-    calculate_solution(&points)
+    let (p1, p2) = calculate_solution(&points)?;
+    Ok((p1.into(), p2.into()))
 }
 
 #[cfg(test)]

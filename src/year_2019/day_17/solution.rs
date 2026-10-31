@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use crate::year_2019::intcode::Intcode;
 use anyhow::{Context, Result};
 use std::collections::HashSet;
@@ -7,7 +7,7 @@ use std::collections::HashSet;
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or program execution fails.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(17))?;
     let program: Vec<i64> = input
         .trim()
@@ -31,7 +31,7 @@ pub fn solve() -> Result<(u64, u64)> {
     let part1 = calculate_alignment_parameters(&grid);
     let part2 = solve_part2(&program, &grid)?;
 
-    Ok((part1, part2))
+    Ok((part1.into(), part2.into()))
 }
 
 fn calculate_alignment_parameters(grid: &[Vec<char>]) -> u64 {

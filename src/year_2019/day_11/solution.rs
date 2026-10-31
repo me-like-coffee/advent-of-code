@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 use std::collections::HashMap;
@@ -45,7 +45,7 @@ impl Direction {
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or program execution fails.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(11))?;
     let program: Vec<i64> = input
         .trim()
@@ -65,7 +65,7 @@ pub fn solve() -> Result<(u64, u64)> {
     render_panels(&painted_p2);
 
     // Part 2 answer is a string, so we return 0 and expect the user to see the output.
-    Ok((part1, 0))
+    Ok((part1.into(), 0.into()))
 }
 
 fn run_robot(program: &[i64], start_color: i64) -> Result<HashMap<(i32, i32), i64>> {

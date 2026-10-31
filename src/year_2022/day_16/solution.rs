@@ -156,7 +156,7 @@ fn dfs_masks(
 }
 
 /// Solve for Year 2022, Day 16
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(crate::utils::Answer, crate::utils::Answer)> {
     let input = crate::utils::read_input(crate::utils::Year(2022), crate::utils::Day(16))?;
     let valves = parse_input(&input)?;
     let ctx = prepare_context(&valves);
@@ -182,7 +182,7 @@ pub fn solve() -> Result<(u64, u64)> {
         }
     }
 
-    Ok((p1 as u64, p2 as u64))
+    Ok(((p1 as u64).into(), (p2 as u64).into()))
 }
 
 #[cfg(test)]
@@ -230,8 +230,8 @@ Valve JJ has flow rate=21; tunnel leads to valve II
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_regression() -> Result<()> {
         let (p1, p2) = solve()?;
-        assert_eq!(p1, 1862);
-        assert_eq!(p2, 2422);
+        assert_eq!(p1, 1862.into());
+        assert_eq!(p2, 2422.into());
         Ok(())
     }
 }

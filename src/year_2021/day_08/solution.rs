@@ -1,4 +1,4 @@
-use crate::utils::{read_input, Day, Year};
+use crate::utils::{Answer, read_input, Day, Year};
 use anyhow::Result;
 use std::collections::{HashMap, HashSet};
 
@@ -6,10 +6,10 @@ use std::collections::{HashMap, HashSet};
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or parsed.
-pub fn solve() -> Result<(u64, u64)> {
+pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2021), Day(8))?;
     let (p1, p2) = calculate_solution(&input);
-    Ok((p1, p2))
+    Ok((p1.into(), p2.into()))
 }
 
 fn calculate_solution(input: &str) -> (u64, u64) {

@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Day, Year};
+use crate::utils::{Answer, Day, Year, read_input};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 use num::Integer;
@@ -148,8 +148,8 @@ mod tests {
     #[test]
     fn test_day_07_part2_examples() -> Result<()> {
         let prog1 = vec![
-            3, 26, 1001, 26, -4, 26, 3, 27, 1002, 27, 2, 27, 1, 27, 26, 27, 4, 27, 1001, 28, -1, 28,
-            1005, 28, 6, 99, 0, 0, 5,
+            3, 26, 1001, 26, -4, 26, 3, 27, 1002, 27, 2, 27, 1, 27, 26, 27, 4, 27, 1001, 28, -1,
+            28, 1005, 28, 6, 99, 0, 0, 5,
         ];
         assert_eq!(find_max_thruster_signal(&prog1, 5..=9, true)?, 139629729);
 

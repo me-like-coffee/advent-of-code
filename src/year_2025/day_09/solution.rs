@@ -1,9 +1,9 @@
 use crate::utils::parser::Parse;
-use crate::utils::{Answer, read_input, Year, Day};
-use anyhow::{anyhow, Result};
+use crate::utils::{Answer, Day, Year, read_input};
+use anyhow::{Result, anyhow};
 use nom::{
-    bytes::complete::tag, character::complete::i64 as parse_i64, sequence::separated_pair, IResult,
-    Parser,
+    IResult, Parser, bytes::complete::tag, character::complete::i64 as parse_i64,
+    sequence::separated_pair,
 };
 use rayon::prelude::*;
 
@@ -213,4 +213,3 @@ mod tests {
         Ok(())
     }
 }
-

@@ -1,12 +1,12 @@
-use crate::utils::parser::{parse_full, unsigned_number, Parse};
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::parser::{Parse, parse_full, unsigned_number};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 use nom::{
+    IResult, Parser,
     character::complete::{line_ending, multispace0, multispace1},
     combinator::map,
     multi::separated_list1,
     sequence::separated_pair,
-    IResult, Parser,
 };
 use std::cmp;
 
@@ -144,4 +144,3 @@ mod tests {
         Ok(())
     }
 }
-

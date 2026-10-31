@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Day, Year};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 use std::collections::{BinaryHeap, HashMap, HashSet, VecDeque};
 
@@ -253,7 +253,15 @@ mod tests {
 ##@#@##
 #cB#Ab#
 #######";
-        assert_eq!(solve_generic(&input.lines().map(|l| l.chars().collect()).collect::<Vec<Vec<char>>>())?, 8);
+        assert_eq!(
+            solve_generic(
+                &input
+                    .lines()
+                    .map(|l| l.chars().collect())
+                    .collect::<Vec<Vec<char>>>()
+            )?,
+            8
+        );
         Ok(())
     }
 
@@ -266,7 +274,15 @@ mod tests {
 ######@#@######
 #b.....#.....c#
 ###############";
-        assert_eq!(solve_generic(&input.lines().map(|l| l.chars().collect()).collect::<Vec<Vec<char>>>())?, 24);
+        assert_eq!(
+            solve_generic(
+                &input
+                    .lines()
+                    .map(|l| l.chars().collect())
+                    .collect::<Vec<Vec<char>>>()
+            )?,
+            24
+        );
         Ok(())
     }
 
@@ -279,7 +295,15 @@ mod tests {
 ###C#@#@###J#
 #fEbA.#.FgHi#
 #############";
-        assert_eq!(solve_generic(&input.lines().map(|l| l.chars().collect()).collect::<Vec<Vec<char>>>())?, 32);
+        assert_eq!(
+            solve_generic(
+                &input
+                    .lines()
+                    .map(|l| l.chars().collect())
+                    .collect::<Vec<Vec<char>>>()
+            )?,
+            32
+        );
         Ok(())
     }
 
@@ -294,7 +318,15 @@ mod tests {
 #M###N#H###.#
 #o#m..#i#jk.#
 #############";
-        assert_eq!(solve_generic(&input.lines().map(|l| l.chars().collect()).collect::<Vec<Vec<char>>>())?, 72);
+        assert_eq!(
+            solve_generic(
+                &input
+                    .lines()
+                    .map(|l| l.chars().collect())
+                    .collect::<Vec<Vec<char>>>()
+            )?,
+            72
+        );
         Ok(())
     }
 }

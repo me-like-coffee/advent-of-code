@@ -1,7 +1,7 @@
 use crate::utils::parser::{parse_str_lines, unsigned_number};
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
-use nom::{character::complete::space1, sequence::separated_pair, IResult, Parser};
+use nom::{IResult, Parser, character::complete::space1, sequence::separated_pair};
 use std::collections::HashMap;
 
 /// Parser for a single line of input: two numbers separated by spaces.
@@ -65,4 +65,3 @@ mod tests {
         Ok(())
     }
 }
-

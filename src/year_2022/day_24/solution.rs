@@ -1,6 +1,6 @@
-use anyhow::{anyhow, Result};
+use crate::utils::{Answer, Day, Year, read_input};
+use anyhow::{Result, anyhow};
 use std::collections::HashSet;
-use crate::utils::{Answer, read_input, Year, Day};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Direction {
@@ -73,7 +73,12 @@ fn find_path(map: &Map, start: (i32, i32), end: (i32, i32), start_time: u64) -> 
         }
         current_positions = next_positions;
         if current_positions.is_empty() {
-            return Err(anyhow!("No path found from {:?} to {:?} at time {}", start, end, time));
+            return Err(anyhow!(
+                "No path found from {:?} to {:?} at time {}",
+                start,
+                end,
+                time
+            ));
         }
     }
     Ok(time)
@@ -109,14 +114,18 @@ pub fn calculate_solution(input: &str) -> Result<(u64, u64)> {
         }
     }
 
-    let map = Map { width, height, blizzards };
+    let map = Map {
+        width,
+        height,
+        blizzards,
+    };
 
     let start = (-1, 0);
     let end = (height, width - 1);
 
     // Trip 1: Start to End
     let time1 = find_path(&map, start, end, 0)?;
-    
+
     // Trip 2: End back to Start
     let time2 = find_path(&map, end, start, time1)?;
 

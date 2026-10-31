@@ -1,13 +1,13 @@
-use crate::utils::{Answer, read_input, Day, Year};
-use anyhow::{anyhow, Result};
+use crate::utils::{Answer, Day, Year, read_input};
+use anyhow::{Result, anyhow};
 use nom::{
+    IResult, Parser,
     branch::alt,
     bytes::complete::tag,
     character::complete::{i128 as nom_i128, multispace0},
     combinator::{map, value},
     multi::separated_list1,
     sequence::preceded,
-    IResult, Parser,
 };
 
 /// Solves Year 2019, Day 22: Slam Shuffle.
@@ -145,11 +145,7 @@ fn run_shuffle_part2(
 
 fn mul_mod(a: i128, b: i128, m: i128) -> i128 {
     let res = (a * b) % m;
-    if res < 0 {
-        res + m
-    } else {
-        res
-    }
+    if res < 0 { res + m } else { res }
 }
 
 fn mod_pow(mut base: i128, mut exp: i128, modulus: i128) -> i128 {
@@ -205,7 +201,10 @@ mod tests {
         let input = "deal with increment 7
 deal into new stack
 deal into new stack";
-        assert_eq!(simulate_deck(input, 10)?, vec![0, 3, 6, 9, 2, 5, 8, 1, 4, 7]);
+        assert_eq!(
+            simulate_deck(input, 10)?,
+            vec![0, 3, 6, 9, 2, 5, 8, 1, 4, 7]
+        );
         Ok(())
     }
 
@@ -214,7 +213,10 @@ deal into new stack";
         let input = "cut 6
 deal with increment 7
 deal into new stack";
-        assert_eq!(simulate_deck(input, 10)?, vec![3, 0, 7, 4, 1, 8, 5, 2, 9, 6]);
+        assert_eq!(
+            simulate_deck(input, 10)?,
+            vec![3, 0, 7, 4, 1, 8, 5, 2, 9, 6]
+        );
         Ok(())
     }
 
@@ -223,7 +225,10 @@ deal into new stack";
         let input = "deal with increment 7
 deal with increment 9
 cut -2";
-        assert_eq!(simulate_deck(input, 10)?, vec![6, 3, 0, 7, 4, 1, 8, 5, 2, 9]);
+        assert_eq!(
+            simulate_deck(input, 10)?,
+            vec![6, 3, 0, 7, 4, 1, 8, 5, 2, 9]
+        );
         Ok(())
     }
 
@@ -239,7 +244,10 @@ cut 3
 deal with increment 9
 deal with increment 3
 cut -1";
-        assert_eq!(simulate_deck(input, 10)?, vec![9, 2, 5, 8, 1, 4, 7, 0, 3, 6]);
+        assert_eq!(
+            simulate_deck(input, 10)?,
+            vec![9, 2, 5, 8, 1, 4, 7, 0, 3, 6]
+        );
         Ok(())
     }
 
@@ -271,15 +279,15 @@ cut -1";
         let input = read_input(Year(2019), Day(22))?;
         let deck_size = 119315717514047i128;
         let iterations = 1;
-        
+
         let card_to_track = 2019;
         // Forward: find where card 2019 ends up
         let pos = run_shuffle(&input, deck_size, card_to_track)?;
-        
+
         // Reverse: at that position, we should find card 2019.
         let card = run_shuffle_part2(&input, deck_size, iterations, pos as i128)?;
         assert_eq!(card as i128, card_to_track);
-        
+
         Ok(())
     }
 }

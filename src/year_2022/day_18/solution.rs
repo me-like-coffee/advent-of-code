@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::collections::HashSet;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -11,12 +11,36 @@ struct Point3D {
 impl Point3D {
     fn neighbors(&self) -> [Point3D; 6] {
         [
-            Point3D { x: self.x + 1, y: self.y, z: self.z },
-            Point3D { x: self.x - 1, y: self.y, z: self.z },
-            Point3D { x: self.x, y: self.y + 1, z: self.z },
-            Point3D { x: self.x, y: self.y - 1, z: self.z },
-            Point3D { x: self.x, y: self.y, z: self.z + 1 },
-            Point3D { x: self.x, y: self.y, z: self.z - 1 },
+            Point3D {
+                x: self.x + 1,
+                y: self.y,
+                z: self.z,
+            },
+            Point3D {
+                x: self.x - 1,
+                y: self.y,
+                z: self.z,
+            },
+            Point3D {
+                x: self.x,
+                y: self.y + 1,
+                z: self.z,
+            },
+            Point3D {
+                x: self.x,
+                y: self.y - 1,
+                z: self.z,
+            },
+            Point3D {
+                x: self.x,
+                y: self.y,
+                z: self.z + 1,
+            },
+            Point3D {
+                x: self.x,
+                y: self.y,
+                z: self.z - 1,
+            },
         ]
     }
 }
@@ -29,13 +53,16 @@ fn parse_input(input: &str) -> Result<HashSet<Point3D>> {
         }
         let coords: Vec<i32> = line
             .split(',')
-            .map(|s| s.parse::<i32>().map_err(|e| anyhow!("Failed to parse coordinate: {}", e)))
+            .map(|s| {
+                s.parse::<i32>()
+                    .map_err(|e| anyhow!("Failed to parse coordinate: {}", e))
+            })
             .collect::<Result<Vec<i32>>>()?;
-        
+
         if coords.len() != 3 {
             return Err(anyhow!("Invalid coordinate format: {}", line));
         }
-        
+
         cubes.insert(Point3D {
             x: coords[0],
             y: coords[1],
@@ -49,10 +76,10 @@ fn parse_input(input: &str) -> Result<HashSet<Point3D>> {
 pub fn solve() -> Result<(crate::utils::Answer, crate::utils::Answer)> {
     let input = crate::utils::read_input(crate::utils::Year(2022), crate::utils::Day(18))?;
     let cubes = parse_input(&input)?;
-    
+
     let p1 = calculate_surface_area(&cubes);
     let p2 = calculate_exterior_surface_area(&cubes);
-    
+
     Ok(((p1 as u64).into(), (p2 as u64).into()))
 }
 
@@ -82,18 +109,26 @@ fn calculate_exterior_surface_area(cubes: &HashSet<Point3D>) -> usize {
 
     let mut exterior = HashSet::new();
     let mut queue = std::collections::VecDeque::new();
-    let start = Point3D { x: min_x, y: min_y, z: min_z };
-    
+    let start = Point3D {
+        x: min_x,
+        y: min_y,
+        z: min_z,
+    };
+
     exterior.insert(start);
     queue.push_back(start);
 
     while let Some(curr) = queue.pop_front() {
         for neighbor in curr.neighbors() {
-            if neighbor.x >= min_x && neighbor.x <= max_x &&
-               neighbor.y >= min_y && neighbor.y <= max_y &&
-               neighbor.z >= min_z && neighbor.z <= max_z &&
-               !cubes.contains(&neighbor) &&
-               !exterior.contains(&neighbor) {
+            if neighbor.x >= min_x
+                && neighbor.x <= max_x
+                && neighbor.y >= min_y
+                && neighbor.y <= max_y
+                && neighbor.z >= min_z
+                && neighbor.z <= max_z
+                && !cubes.contains(&neighbor)
+                && !exterior.contains(&neighbor)
+            {
                 exterior.insert(neighbor);
                 queue.push_back(neighbor);
             }

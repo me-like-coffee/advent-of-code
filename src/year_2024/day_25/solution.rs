@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 
 /// A schematic represented by the heights of its 5 columns.
@@ -30,7 +30,13 @@ impl Schematic {
             total_volume += *height;
         }
 
-        Some((Self { heights, total_volume }, is_lock))
+        Some((
+            Self {
+                heights,
+                total_volume,
+            },
+            is_lock,
+        ))
     }
 
     /// Checks if this schematic (assumed to be a lock) fits with a key.
@@ -54,7 +60,8 @@ impl Schematic {
 /// Solves Year 2024, Day 25: Code Chronicle.
 pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2024), Day(25))?;
-    let blocks: Vec<&str> = input.split("\r\n\r\n")
+    let blocks: Vec<&str> = input
+        .split("\r\n\r\n")
         .map(|s| s.trim())
         .filter(|s| !s.is_empty())
         .collect();
@@ -157,4 +164,3 @@ mod tests {
         assert_eq!(fit_count, 3);
     }
 }
-

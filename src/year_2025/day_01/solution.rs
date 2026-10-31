@@ -1,7 +1,7 @@
-use crate::utils::parser::{parse_str_lines, unsigned_number, Parse};
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::parser::{Parse, parse_str_lines, unsigned_number};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
-use nom::{character::complete::one_of, sequence::pair, IResult, Parser};
+use nom::{IResult, Parser, character::complete::one_of, sequence::pair};
 
 /// The parsed instruction: Direction ('L' or 'R') and Amount.
 #[derive(Debug, Clone, Copy)]
@@ -73,4 +73,3 @@ mod tests {
         Ok(())
     }
 }
-

@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Day, Year};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 use num::integer::gcd;
 use std::collections::{BTreeMap, HashSet};
@@ -179,4 +179,3 @@ mod tests {
         assert_eq!(p2, 802);
     }
 }
-

@@ -1,7 +1,7 @@
-use crate::utils::parser::{parse_str_lines, unsigned_number, Parse};
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::parser::{Parse, parse_str_lines, unsigned_number};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
-use nom::{bytes::complete::tag, IResult};
+use nom::{IResult, bytes::complete::tag};
 use std::collections::HashMap;
 
 /// Represents a 3D coordinate.
@@ -163,4 +163,3 @@ mod tests {
         Ok(())
     }
 }
-

@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Day, Year};
+use crate::utils::{Answer, Day, Year, read_input};
 use crate::year_2019::intcode::Intcode;
 use anyhow::{Context, Result};
 use std::collections::HashSet;
@@ -225,10 +225,11 @@ fn compress_path(path: &[String]) -> Option<Compressed> {
         for i in 0..functions.len() {
             let func = &functions[i];
             if path.starts_with(func)
-                && let Some(mut rest) = find_functions(&path[func.len()..], functions) {
-                    rest.insert(0, i);
-                    return Some(rest);
-                }
+                && let Some(mut rest) = find_functions(&path[func.len()..], functions)
+            {
+                rest.insert(0, i);
+                return Some(rest);
+            }
         }
 
         // Try creating a new function if we have space

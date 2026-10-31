@@ -1,11 +1,10 @@
 use anyhow::Result;
 use nom::{
+    IResult, Parser,
     branch::alt,
     bytes::complete::tag,
     character::complete::{alpha1, digit1},
     multi::separated_list1,
-    Parser,
-    IResult,
 };
 use std::collections::HashMap;
 
@@ -25,7 +24,8 @@ fn parse_valve(input: &str) -> IResult<&str, Valve> {
     let (input, _) = alt((
         tag("; tunnels lead to valves "),
         tag("; tunnel leads to valve "),
-    )).parse(input)?;
+    ))
+    .parse(input)?;
     let (input, tunnels): (&str, Vec<&str>) = separated_list1(tag(", "), alpha1).parse(input)?;
 
     Ok((
@@ -43,7 +43,8 @@ fn parse_input(input: &str) -> Result<Vec<Valve>> {
         .lines()
         .filter(|line| !line.is_empty())
         .map(|line| {
-            let (_, valve) = parse_valve(line).map_err(|e| anyhow::anyhow!("Parse error: {}", e))?;
+            let (_, valve) =
+                parse_valve(line).map_err(|e| anyhow::anyhow!("Parse error: {}", e))?;
             Ok(valve)
         })
         .collect()
@@ -92,10 +93,16 @@ fn prepare_context(valves: &[Valve]) -> Context {
         .collect();
 
     let start_node = *valve_map.get("AA").expect("Valve AA not found");
-    let start_idx = relevant_valves.iter().position(|&i| i == start_node).unwrap();
+    let start_idx = relevant_valves
+        .iter()
+        .position(|&i| i == start_node)
+        .unwrap();
 
     let n_rel = relevant_valves.len();
-    let flow_rates: Vec<u32> = relevant_valves.iter().map(|&i| valves[i].flow_rate).collect();
+    let flow_rates: Vec<u32> = relevant_valves
+        .iter()
+        .map(|&i| valves[i].flow_rate)
+        .collect();
     let mut rel_dists = vec![vec![0u32; n_rel]; n_rel];
     for i in 0..n_rel {
         for j in 0..n_rel {
@@ -113,14 +120,7 @@ fn prepare_context(valves: &[Valve]) -> Context {
 
 fn get_max_pressures_for_masks(ctx: &Context, time: u32) -> HashMap<u64, u32> {
     let mut max_pressures = HashMap::new();
-    dfs_masks(
-        ctx.start_idx,
-        time,
-        0,
-        0,
-        ctx,
-        &mut max_pressures,
-    );
+    dfs_masks(ctx.start_idx, time, 0, 0, ctx, &mut max_pressures);
     max_pressures
 }
 
@@ -168,10 +168,10 @@ pub fn solve() -> Result<(crate::utils::Answer, crate::utils::Answer)> {
     // Part 2: 26 minutes, 2 people
     let masks_p2 = get_max_pressures_for_masks(&ctx, 26);
     let mut p2 = 0;
-    
+
     // Convert to Vec for faster iteration
     let mask_vec: Vec<(u64, u32)> = masks_p2.into_iter().collect();
-    
+
     for i in 0..mask_vec.len() {
         for j in i + 1..mask_vec.len() {
             let (m1, v1) = mask_vec[i];
@@ -206,7 +206,7 @@ Valve JJ has flow rate=21; tunnel leads to valve II
     fn test_example() {
         let valves = parse_input(EXAMPLE).unwrap();
         let ctx = prepare_context(&valves);
-        
+
         let masks_p1 = get_max_pressures_for_masks(&ctx, 30);
         let p1 = *masks_p1.values().max().unwrap_or(&0);
         assert_eq!(p1, 1651);
@@ -218,9 +218,9 @@ Valve JJ has flow rate=21; tunnel leads to valve II
             for j in i + 1..mask_vec.len() {
                 let (m1, v1) = mask_vec[i];
                 let (m2, v2) = mask_vec[j];
-            if (m1 & m2) == 0 && v1 + v2 > p2 {
-                p2 = v1 + v2;
-            }
+                if (m1 & m2) == 0 && v1 + v2 > p2 {
+                    p2 = v1 + v2;
+                }
             }
         }
         assert_eq!(p2, 1707);

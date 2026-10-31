@@ -1,7 +1,7 @@
-use crate::utils::parser::{parse_str_lines, Parse};
-use crate::utils::{Answer, read_input, Year, Day};
-use anyhow::{anyhow, Result};
-use nom::{character::complete::one_of, multi::many1, IResult, Parser};
+use crate::utils::parser::{Parse, parse_str_lines};
+use crate::utils::{Answer, Day, Year, read_input};
+use anyhow::{Result, anyhow};
+use nom::{IResult, Parser, character::complete::one_of, multi::many1};
 use std::collections::{HashMap, HashSet, VecDeque};
 
 /// Represents a single row of the manifold diagram.
@@ -89,13 +89,12 @@ fn solve_part_one(grid: &[Vec<char>], start: (usize, usize)) -> usize {
                     }
                 }
             }
-            '.' | 'S'
-                if r + 1 < rows => {
-                    let next_pos = (r + 1, c);
-                    if visited.insert(next_pos) {
-                        queue.push_back(next_pos);
-                    }
+            '.' | 'S' if r + 1 < rows => {
+                let next_pos = (r + 1, c);
+                if visited.insert(next_pos) {
+                    queue.push_back(next_pos);
                 }
+            }
             _ => {}
         }
     }
@@ -149,4 +148,3 @@ mod tests {
         Ok(())
     }
 }
-

@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::{Context, Result};
 use std::collections::{HashMap, HashSet};
 
@@ -63,9 +63,10 @@ fn is_ordered(update: &[u32], rules: &HashMap<u32, HashSet<u32>>) -> bool {
             let y = update[j];
             // If there's a rule that says y must be before x, then it's wrong
             if let Some(after_y) = rules.get(&y)
-                && after_y.contains(&x) {
-                    return false;
-                }
+                && after_y.contains(&x)
+            {
+                return false;
+            }
         }
     }
     true
@@ -74,13 +75,15 @@ fn is_ordered(update: &[u32], rules: &HashMap<u32, HashSet<u32>>) -> bool {
 fn reorder(update: &mut [u32], rules: &HashMap<u32, HashSet<u32>>) {
     update.sort_by(|&a, &b| {
         if let Some(after_a) = rules.get(&a)
-            && after_a.contains(&b) {
-                return std::cmp::Ordering::Less;
-            }
+            && after_a.contains(&b)
+        {
+            return std::cmp::Ordering::Less;
+        }
         if let Some(after_b) = rules.get(&b)
-            && after_b.contains(&a) {
-                return std::cmp::Ordering::Greater;
-            }
+            && after_b.contains(&a)
+        {
+            return std::cmp::Ordering::Greater;
+        }
         std::cmp::Ordering::Equal
     });
 }
@@ -154,4 +157,3 @@ mod tests {
         assert_eq!(part2_sum, 123);
     }
 }
-

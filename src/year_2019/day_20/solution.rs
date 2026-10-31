@@ -1,5 +1,5 @@
-use crate::utils::{Answer, read_input, Day, Year};
-use anyhow::{anyhow, Result};
+use crate::utils::{Answer, Day, Year, read_input};
+use anyhow::{Result, anyhow};
 use std::collections::{HashMap, HashSet, VecDeque};
 
 /// Solves Year 2019, Day 20: Donut Maze.
@@ -110,13 +110,7 @@ impl Maze {
                 } else {
                     pos_list.iter().find(|&&p| p != pos).copied()
                 };
-                portals.insert(
-                    pos,
-                    PortalInfo {
-                        target,
-                        is_outer,
-                    },
-                );
+                portals.insert(pos, PortalInfo { target, is_outer });
             }
         }
 
@@ -145,10 +139,19 @@ fn solve_part1(input: &str) -> Result<u64> {
         }
 
         let (r, c) = pos;
-        let neighbors = [(r.wrapping_sub(1), c), (r + 1, c), (r, c.wrapping_sub(1)), (r, c + 1)];
+        let neighbors = [
+            (r.wrapping_sub(1), c),
+            (r + 1, c),
+            (r, c.wrapping_sub(1)),
+            (r, c + 1),
+        ];
 
         for next in neighbors {
-            if next.0 < maze.rows && next.1 < maze.cols && maze.grid[next.0][next.1] == '.' && !visited.contains(&next) {
+            if next.0 < maze.rows
+                && next.1 < maze.cols
+                && maze.grid[next.0][next.1] == '.'
+                && !visited.contains(&next)
+            {
                 visited.insert(next);
                 queue.push_back((next, dist + 1));
             }
@@ -156,10 +159,11 @@ fn solve_part1(input: &str) -> Result<u64> {
 
         if let Some(portal) = maze.portals.get(&pos)
             && let Some(target) = portal.target
-                && !visited.contains(&target) {
-                    visited.insert(target);
-                    queue.push_back((target, dist + 1));
-                }
+            && !visited.contains(&target)
+        {
+            visited.insert(target);
+            queue.push_back((target, dist + 1));
+        }
     }
 
     Err(anyhow!("No path found for Part 1"))
@@ -179,29 +183,40 @@ fn solve_part2(input: &str) -> Result<u64> {
             return Ok(dist);
         }
 
-        let neighbors = [(r.wrapping_sub(1), c), (r + 1, c), (r, c.wrapping_sub(1)), (r, c + 1)];
+        let neighbors = [
+            (r.wrapping_sub(1), c),
+            (r + 1, c),
+            (r, c.wrapping_sub(1)),
+            (r, c + 1),
+        ];
 
         for next in neighbors {
-            if next.0 < maze.rows && next.1 < maze.cols && maze.grid[next.0][next.1] == '.' && !visited.contains(&(next.0, next.1, level)) {
+            if next.0 < maze.rows
+                && next.1 < maze.cols
+                && maze.grid[next.0][next.1] == '.'
+                && !visited.contains(&(next.0, next.1, level))
+            {
                 visited.insert((next.0, next.1, level));
                 queue.push_back((next.0, next.1, level, dist + 1));
             }
         }
 
         if let Some(portal) = maze.portals.get(&(r, c))
-            && let Some(target) = portal.target {
-                let next_level = if portal.is_outer {
-                    if level == 0 { None } else { Some(level - 1) }
-                } else {
-                    Some(level + 1)
-                };
+            && let Some(target) = portal.target
+        {
+            let next_level = if portal.is_outer {
+                if level == 0 { None } else { Some(level - 1) }
+            } else {
+                Some(level + 1)
+            };
 
-                if let Some(nl) = next_level
-                    && !visited.contains(&(target.0, target.1, nl)) {
-                        visited.insert((target.0, target.1, nl));
-                        queue.push_back((target.0, target.1, nl, dist + 1));
-                    }
+            if let Some(nl) = next_level
+                && !visited.contains(&(target.0, target.1, nl))
+            {
+                visited.insert((target.0, target.1, nl));
+                queue.push_back((target.0, target.1, nl, dist + 1));
             }
+        }
     }
 
     Err(anyhow!("No path found for Part 2"))

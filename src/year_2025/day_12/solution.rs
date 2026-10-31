@@ -1,12 +1,12 @@
-use crate::utils::parser::{parse_full, unsigned_number, Parse};
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::parser::{Parse, parse_full, unsigned_number};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 use nom::{
+    IResult, Parser,
     bytes::complete::tag,
     character::complete::{line_ending, multispace0, one_of, space1},
     multi::{count, many1, separated_list1},
     sequence::{pair, separated_pair, terminated},
-    IResult, Parser,
 };
 
 // --- Data Structures ---
@@ -167,4 +167,3 @@ mod tests {
         Ok(())
     }
 }
-

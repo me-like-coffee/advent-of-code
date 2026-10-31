@@ -1,12 +1,12 @@
 use crate::utils::parser::unsigned_number;
-use crate::utils::{Answer, read_input, Day, Year};
-use anyhow::{anyhow, Context, Result};
+use crate::utils::{Answer, Day, Year, read_input};
+use anyhow::{Context, Result, anyhow};
 use nom::{
+    IResult, Parser,
     bytes::complete::tag,
     character::complete::{alpha1, line_ending, multispace0},
     multi::separated_list1,
     sequence::{separated_pair, terminated},
-    IResult, Parser,
 };
 use std::collections::{HashMap, VecDeque};
 
@@ -62,8 +62,8 @@ pub fn solve() -> Result<(Answer, Answer)> {
 
 /// Core logic for Year 2019, Day 14.
 fn calculate_solution(input: &str) -> Result<(u64, u64)> {
-    let (_, reactions) = parse_reactions(input.trim())
-        .map_err(|e| anyhow!("Failed to parse reactions: {}", e))?;
+    let (_, reactions) =
+        parse_reactions(input.trim()).map_err(|e| anyhow!("Failed to parse reactions: {}", e))?;
 
     let mut reaction_map = HashMap::new();
     for r in reactions {
@@ -75,7 +75,7 @@ fn calculate_solution(input: &str) -> Result<(u64, u64)> {
     let total_ore = 1_000_000_000_000u64;
     let mut low = total_ore / p1;
     let mut high = low * 2;
-    
+
     // Ensure high is actually high enough
     while calculate_ore_needed(&reaction_map, high)? <= total_ore {
         low = high;
@@ -115,11 +115,12 @@ fn calculate_ore_needed(reaction_map: &HashMap<String, Reaction>, fuel_amount: u
             *in_degree.entry(input.name.clone()).or_insert(0) += 1;
         }
     }
-    
+
     let mut requirements = HashMap::new();
     requirements.insert("FUEL".to_string(), fuel_amount);
-    
-    let mut available_to_process: VecDeque<String> = in_degree.iter()
+
+    let mut available_to_process: VecDeque<String> = in_degree
+        .iter()
         .filter(|&(_, &deg)| deg == 0)
         .map(|(name, _)| name.clone())
         .collect();
@@ -130,20 +131,22 @@ fn calculate_ore_needed(reaction_map: &HashMap<String, Reaction>, fuel_amount: u
         if current == "ORE" {
             continue;
         }
-        
+
         let req_amount = requirements.get(&current).copied().unwrap_or(0);
-        let reaction = reaction_map.get(&current).ok_or_else(|| anyhow!("Reaction not found for chemical: {}", current))?;
-        
+        let reaction = reaction_map
+            .get(&current)
+            .ok_or_else(|| anyhow!("Reaction not found for chemical: {}", current))?;
+
         let batch_size = reaction.output.amount;
         let num_batches = req_amount.div_ceil(batch_size);
-        
+
         for input in &reaction.inputs {
             let total_input_needed = num_batches * input.amount;
             if input.name == "ORE" {
                 ore_needed += total_input_needed;
             } else {
                 *requirements.entry(input.name.clone()).or_insert(0) += total_input_needed;
-                
+
                 let degree = in_degree.get_mut(&input.name).context("Degree not found")?;
                 *degree -= 1;
                 if *degree == 0 {

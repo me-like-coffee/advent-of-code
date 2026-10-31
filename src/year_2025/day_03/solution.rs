@@ -1,7 +1,7 @@
-use crate::utils::parser::{parse_str_lines, Parse};
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::parser::{Parse, parse_str_lines};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::{Context, Result};
-use nom::{character::complete::digit1, combinator::map, IResult, Parser};
+use nom::{IResult, Parser, character::complete::digit1, combinator::map};
 
 /// Represents a bank of batteries as a sequence of single-digit joltage values.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -110,4 +110,3 @@ mod tests {
         assert_eq!(find_max_subsequence_val(&b4, 12).unwrap(), 888911112111);
     }
 }
-

@@ -1,5 +1,5 @@
-use crate::utils::{Answer, read_input, Day, Year};
-use anyhow::{anyhow, Result};
+use crate::utils::{Answer, Day, Year, read_input};
+use anyhow::{Result, anyhow};
 use std::collections::{HashSet, VecDeque};
 
 /// Solves Year 2020, Day 22: Crab Combat.
@@ -16,7 +16,10 @@ fn parse_decks(input: &str) -> Result<(VecDeque<u32>, VecDeque<u32>)> {
     let normalized = input.replace("\r\n", "\n");
     let players: Vec<&str> = normalized.split("\n\n").collect();
     if players.len() != 2 {
-        return Err(anyhow!("Invalid input: expected 2 players, found {}", players.len()));
+        return Err(anyhow!(
+            "Invalid input: expected 2 players, found {}",
+            players.len()
+        ));
     }
 
     let p1_deck = players[0]

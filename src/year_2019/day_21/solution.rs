@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Day, Year};
+use crate::utils::{Answer, Day, Year, read_input};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 
@@ -37,20 +37,14 @@ pub fn solve() -> Result<(Answer, Answer)> {
     // Mapping to instructions:
     let part2_script = [
         // 1. Calculate (!A || !B || !C) && D (Same as Part 1)
-        "NOT A J",
-        "NOT B T",
-        "OR T J",
-        "NOT C T",
-        "OR T J",
-        "AND D J",
+        "NOT A J", "NOT B T", "OR T J", "NOT C T", "OR T J", "AND D J",
         // 2. Calculate (E || H) using T as a scratchpad.
         // Since there is no "MOV E T", we use the NOT-NOT identity trick: T = !!E = E.
         "NOT E T", // T = !E
         "NOT T T", // T = !!E = E
         "OR H T",  // T = E || H
         // 3. Final jump condition: [Part 1] && [Safety Check]
-        "AND T J",
-        "RUN",
+        "AND T J", "RUN",
     ];
     let part2 = run_springscript(&program, &part2_script)?;
 
@@ -100,7 +94,12 @@ mod tests {
             .split(',')
             .map(|s| s.parse::<i64>().unwrap())
             .collect();
-        let result = run_springscript(&program, &["NOT A J", "NOT B T", "OR T J", "NOT C T", "OR T J", "AND D J", "WALK"])?;
+        let result = run_springscript(
+            &program,
+            &[
+                "NOT A J", "NOT B T", "OR T J", "NOT C T", "OR T J", "AND D J", "WALK",
+            ],
+        )?;
         assert!(result > 0);
         Ok(())
     }
@@ -114,7 +113,13 @@ mod tests {
             .split(',')
             .map(|s| s.parse::<i64>().unwrap())
             .collect();
-        let result = run_springscript(&program, &["NOT A J", "NOT B T", "OR T J", "NOT C T", "OR T J", "AND D J", "NOT E T", "NOT T T", "OR H T", "AND T J", "RUN"])?;
+        let result = run_springscript(
+            &program,
+            &[
+                "NOT A J", "NOT B T", "OR T J", "NOT C T", "OR T J", "AND D J", "NOT E T",
+                "NOT T T", "OR H T", "AND T J", "RUN",
+            ],
+        )?;
         assert!(result > 0);
         Ok(())
     }

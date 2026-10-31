@@ -1,7 +1,7 @@
-use crate::utils::parser::{parse_str_lines, Parse};
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::parser::{Parse, parse_str_lines};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
-use nom::{character::complete::one_of, multi::many1, IResult, Parser};
+use nom::{IResult, Parser, character::complete::one_of, multi::many1};
 
 /// Represents a single row of the grid.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -109,4 +109,3 @@ mod tests {
         Ok(())
     }
 }
-

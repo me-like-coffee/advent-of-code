@@ -1,7 +1,7 @@
 use crate::utils::parser::{parse_str_lines, unsigned_number};
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
-use nom::{character::complete::space1, multi::separated_list1, IResult, Parser};
+use nom::{IResult, Parser, character::complete::space1, multi::separated_list1};
 
 /// Checks if a report is safe according to Part 1 rules.
 fn is_safe(levels: &[i64]) -> bool {
@@ -81,4 +81,3 @@ mod tests {
         Ok(())
     }
 }
-

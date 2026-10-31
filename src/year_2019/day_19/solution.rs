@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Day, Year};
+use crate::utils::{Answer, Day, Year, read_input};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 
@@ -27,10 +27,14 @@ fn is_affected(program: &[i64], x: i64, y: i64) -> Result<bool> {
     let mut vm = Intcode::new(program.to_vec());
     vm.add_input(x);
     vm.add_input(y);
-    
+
     match vm.step()? {
         Status::Output(val) => Ok(val == 1),
-        _ => Err(anyhow::anyhow!("VM did not produce output for coordinate ({}, {})", x, y)),
+        _ => Err(anyhow::anyhow!(
+            "VM did not produce output for coordinate ({}, {})",
+            x,
+            y
+        )),
     }
 }
 
@@ -59,7 +63,7 @@ fn find_square(program: &[i64], size: i64) -> Result<u64> {
                 break;
             }
         }
-        
+
         // If bottom-left is (x, y), check if top-right (x+offset, y-offset) is in beam
         if is_affected(program, x + offset, y - offset)? {
             // Found the square! Top-left corner is (x, y - offset)
@@ -82,7 +86,7 @@ mod tests {
             .split(',')
             .map(|s| s.parse::<i64>().unwrap())
             .collect();
-        
+
         // The problem description example uses a different beam that has 27 points in 10x10.
         // For my specific input, the 10x10 area has 7 points.
         let result = count_affected_points(&program, 10, 10)?;

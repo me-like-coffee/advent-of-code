@@ -1,8 +1,8 @@
-use crate::utils::parser::{parse_str_lines, unsigned_number, Parse};
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::parser::{Parse, parse_str_lines, unsigned_number};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 use nom::{
-    bytes::complete::tag, multi::separated_list1, sequence::separated_pair, IResult, Parser,
+    IResult, Parser, bytes::complete::tag, multi::separated_list1, sequence::separated_pair,
 };
 
 /// Represents a range of IDs: start (inclusive) to end (inclusive).
@@ -150,4 +150,3 @@ mod tests {
         assert!(!is_recursive_id(5));
     }
 }
-

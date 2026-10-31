@@ -1,13 +1,13 @@
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 use std::collections::HashMap;
-use crate::utils::{Answer, Year, Day, read_input};
 
 /// # Errors
 /// Returns error if the input cannot be read.
 pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2022), Day(17))?;
     let jets = input.trim().as_bytes();
-    
+
     let p1 = simulate(jets, 2022);
     let p2 = simulate(jets, 1_000_000_000_000);
 
@@ -27,7 +27,7 @@ fn simulate(jets: &[u8], total_rocks: u64) -> u64 {
     let mut max_y = -1i64;
     let mut jet_idx = 0usize;
     let mut top_heights = [-1i64; 7];
-    
+
     // State for cycle detection: (rock_idx, jet_idx, profile) -> (rock_count, max_y)
     let mut seen_states: HashMap<(usize, usize, [i64; 7]), (u64, i64)> = HashMap::new();
     let mut added_by_cycles = 0u64;
@@ -35,7 +35,7 @@ fn simulate(jets: &[u8], total_rocks: u64) -> u64 {
     let mut r = 0u64;
     while r < total_rocks {
         let rock_idx = (r % 5) as usize;
-        
+
         // Cycle detection profile: relative heights of each column
         let mut profile = [0i64; 7];
         for i in 0..7 {
@@ -48,10 +48,10 @@ fn simulate(jets: &[u8], total_rocks: u64) -> u64 {
             let cycle_height = max_y - prev_max_y;
             let remaining_rocks = total_rocks - r;
             let num_cycles = remaining_rocks / cycle_len;
-            
+
             added_by_cycles += num_cycles * (cycle_height as u64);
             r += num_cycles * cycle_len;
-            
+
             // After jumping, clear the map to prevent further jumps
             seen_states.clear();
         } else {
@@ -84,12 +84,12 @@ fn simulate(jets: &[u8], total_rocks: u64) -> u64 {
                 for &(rx, ry) in rock {
                     let rx_abs = x + rx;
                     let ry_abs = y + ry;
-                    
+
                     if ry_abs >= chamber.len() as i64 {
                         chamber.resize((ry_abs + 1) as usize, 0);
                     }
                     chamber[ry_abs as usize] |= 1 << rx_abs;
-                    
+
                     if ry_abs > max_y {
                         max_y = ry_abs;
                     }

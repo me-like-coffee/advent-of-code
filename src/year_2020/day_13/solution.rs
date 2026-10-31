@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Day, Year};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 
 /// Solves Year 2020, Day 13: Shuttle Search.

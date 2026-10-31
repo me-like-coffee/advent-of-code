@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Day, Year};
+use crate::utils::{Answer, Day, Year, read_input};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 use std::collections::{HashMap, VecDeque};
@@ -30,8 +30,8 @@ pub fn solve() -> Result<(Answer, Answer)> {
     let (map, oxygen_pos) = explore_map(&program)?;
 
     // Part 1: BFS distance to oxygen
-    let part1 = find_shortest_path((0, 0), oxygen_pos, &map)
-        .context("Could not find path to oxygen")?;
+    let part1 =
+        find_shortest_path((0, 0), oxygen_pos, &map).context("Could not find path to oxygen")?;
 
     // Part 2: Max distance from oxygen to any empty tile
     let part2 = find_max_distance(oxygen_pos, &map);
@@ -67,7 +67,7 @@ fn explore_map(program: &[i64]) -> Result<(Grid, (i32, i32))> {
 
             let mut next_vm = vm.clone();
             next_vm.add_input(dir);
-            
+
             match next_vm.step()? {
                 Status::Output(0) => {
                     map.insert(next_pos, Tile::Wall);
@@ -103,10 +103,12 @@ fn find_shortest_path(start: (i32, i32), target: (i32, i32), map: &Grid) -> Opti
         for (dx, dy) in [(0, -1), (0, 1), (-1, 0), (1, 0)] {
             let next_pos = (pos.0 + dx, pos.1 + dy);
             if let Some(&tile) = map.get(&next_pos)
-                && tile != Tile::Wall && !visited.contains_key(&next_pos) {
-                    visited.insert(next_pos, dist + 1);
-                    queue.push_back((next_pos, dist + 1));
-                }
+                && tile != Tile::Wall
+                && !visited.contains_key(&next_pos)
+            {
+                visited.insert(next_pos, dist + 1);
+                queue.push_back((next_pos, dist + 1));
+            }
         }
     }
     None
@@ -125,10 +127,12 @@ fn find_max_distance(start: (i32, i32), map: &Grid) -> u32 {
         for (dx, dy) in [(0, -1), (0, 1), (-1, 0), (1, 0)] {
             let next_pos = (pos.0 + dx, pos.1 + dy);
             if let Some(&tile) = map.get(&next_pos)
-                && tile != Tile::Wall && !visited.contains_key(&next_pos) {
-                    visited.insert(next_pos, dist + 1);
-                    queue.push_back((next_pos, dist + 1));
-                }
+                && tile != Tile::Wall
+                && !visited.contains_key(&next_pos)
+            {
+                visited.insert(next_pos, dist + 1);
+                queue.push_back((next_pos, dist + 1));
+            }
         }
     }
     max_dist
@@ -143,26 +147,26 @@ mod tests {
         let mut map = Grid::new();
         // Tracing the example from the problem description:
         // Start at (0,0)
-        map.insert((0,0), Tile::Empty);
+        map.insert((0, 0), Tile::Empty);
         // North (1) -> 0 (Wall)
-        map.insert((0,-1), Tile::Wall);
+        map.insert((0, -1), Tile::Wall);
         // East (4) -> 1 (Empty)
-        map.insert((1,0), Tile::Empty);
+        map.insert((1, 0), Tile::Empty);
         // North (1) -> 0 (Wall)
-        map.insert((1,-1), Tile::Wall);
+        map.insert((1, -1), Tile::Wall);
         // South (2) -> 0 (Wall)
-        map.insert((1,1), Tile::Wall);
+        map.insert((1, 1), Tile::Wall);
         // East (4) -> 0 (Wall)
-        map.insert((2,0), Tile::Wall);
+        map.insert((2, 0), Tile::Wall);
         // West (3) -> 1 (Move back to 0,0 - already Empty)
         // West (3) -> 0 (Wall)
-        map.insert((-1,0), Tile::Wall);
+        map.insert((-1, 0), Tile::Wall);
         // South (2) -> 1 (Empty)
-        map.insert((0,1), Tile::Empty);
+        map.insert((0, 1), Tile::Empty);
         // South (2) -> 0 (Wall)
-        map.insert((0,2), Tile::Wall);
+        map.insert((0, 2), Tile::Wall);
         // West (3) -> 2 (Oxygen)
-        map.insert((-1,1), Tile::Oxygen);
+        map.insert((-1, 1), Tile::Oxygen);
 
         assert_eq!(find_shortest_path((0, 0), (-1, 1), &map), Some(2));
     }
@@ -180,8 +184,12 @@ mod tests {
             for (x, c) in line.chars().enumerate() {
                 let pos = (x as i32, y as i32);
                 match c {
-                    '#' => { map.insert(pos, Tile::Wall); }
-                    '.' => { map.insert(pos, Tile::Empty); }
+                    '#' => {
+                        map.insert(pos, Tile::Wall);
+                    }
+                    '.' => {
+                        map.insert(pos, Tile::Empty);
+                    }
                     'O' => {
                         map.insert(pos, Tile::Oxygen);
                         oxygen_pos = pos;

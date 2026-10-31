@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 
 /// Core logic for Year 2024, Day 04
@@ -15,7 +15,7 @@ fn calculate_solution(input: &str) -> Result<(u64, u64)> {
 
     let rows = grid.len();
     let cols = grid[0].len();
-    
+
     // --- Part 1 ---
     let target = "XMAS".as_bytes();
     let mut count_p1 = 0;
@@ -106,4 +106,3 @@ MXMXAXMASX";
         Ok(())
     }
 }
-

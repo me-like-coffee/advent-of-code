@@ -1,13 +1,13 @@
 use crate::utils::parser::unsigned_number;
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 use nom::{
+    IResult, Parser,
     branch::alt,
     bytes::complete::tag,
     character::complete::anychar,
     combinator::value,
     sequence::{delimited, separated_pair},
-    IResult, Parser,
 };
 
 #[derive(Debug, Clone, Copy)]
@@ -47,7 +47,8 @@ fn calculate_solution(input: &str) -> Result<(u64, u64)> {
     let mut remaining = input;
     while !remaining.is_empty() {
         // Try to parse any of the instructions
-        let res: IResult<&str, Instruction> = alt((parse_mul, parse_do, parse_dont)).parse(remaining);
+        let res: IResult<&str, Instruction> =
+            alt((parse_mul, parse_do, parse_dont)).parse(remaining);
 
         match res {
             Ok((next_input, instruction)) => {
@@ -89,8 +90,10 @@ pub fn solve() -> Result<(Answer, Answer)> {
 mod tests {
     use super::*;
 
-    const TEST_INPUT_P1: &str = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
-    const TEST_INPUT_P2: &str = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))";
+    const TEST_INPUT_P1: &str =
+        "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
+    const TEST_INPUT_P2: &str =
+        "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))";
 
     #[test]
     fn test_day_03_part1() -> Result<()> {
@@ -106,4 +109,3 @@ mod tests {
         Ok(())
     }
 }
-

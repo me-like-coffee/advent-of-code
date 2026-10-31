@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::{Answer, Day, Year, read_input};
 use crate::year_2019::intcode::Intcode;
 use anyhow::{Context, Result};
 
@@ -61,4 +61,3 @@ mod tests {
         assert_eq!(vm.memory[0], 3500);
     }
 }
-

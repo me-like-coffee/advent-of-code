@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::{Context, Result};
 use rayon::prelude::*;
 use std::collections::HashSet;
@@ -184,4 +184,3 @@ mod tests {
         assert_eq!(part2, 6);
     }
 }
-

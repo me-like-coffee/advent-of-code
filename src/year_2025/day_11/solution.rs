@@ -1,11 +1,11 @@
-use crate::utils::parser::{parse_str_lines, Parse};
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::parser::{Parse, parse_str_lines};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 use nom::{
+    IResult, Parser,
     bytes::complete::tag,
     character::complete::{alpha1, space0, space1},
     multi::separated_list1,
-    IResult, Parser,
 };
 use std::collections::HashMap;
 
@@ -123,4 +123,3 @@ mod tests {
         Ok(())
     }
 }
-

@@ -1,5 +1,5 @@
-use anyhow::{anyhow, Result};
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::{Answer, Day, Year, read_input};
+use anyhow::{Result, anyhow};
 
 #[derive(Debug, Clone, Copy)]
 enum Instruction {
@@ -60,7 +60,12 @@ pub fn calculate_solution(input: &str) -> Result<(u64, u64)> {
     }
 
     let face_size = if rows > 50 { 50 } else { 4 };
-    let map = Map { grid, rows, cols, face_size };
+    let map = Map {
+        grid,
+        rows,
+        cols,
+        face_size,
+    };
 
     let mut instructions = Vec::new();
     let mut num_str = String::new();
@@ -127,19 +132,31 @@ fn solve_part(map: &Map, instructions: &[Instruction], is_cube: bool) -> u64 {
                             // Part 1 wrapping
                             if dr == 1 {
                                 for rr in 0..map.rows {
-                                    if map.get(rr as i32, c as i32) != Tile::Void { nr = rr as i32; break; }
+                                    if map.get(rr as i32, c as i32) != Tile::Void {
+                                        nr = rr as i32;
+                                        break;
+                                    }
                                 }
                             } else if dr == -1 {
                                 for rr in (0..map.rows).rev() {
-                                    if map.get(rr as i32, c as i32) != Tile::Void { nr = rr as i32; break; }
+                                    if map.get(rr as i32, c as i32) != Tile::Void {
+                                        nr = rr as i32;
+                                        break;
+                                    }
                                 }
                             } else if dc == 1 {
                                 for cc in 0..map.cols {
-                                    if map.get(r as i32, cc as i32) != Tile::Void { nc = cc as i32; break; }
+                                    if map.get(r as i32, cc as i32) != Tile::Void {
+                                        nc = cc as i32;
+                                        break;
+                                    }
                                 }
                             } else if dc == -1 {
                                 for cc in (0..map.cols).rev() {
-                                    if map.get(r as i32, cc as i32) != Tile::Void { nc = cc as i32; break; }
+                                    if map.get(r as i32, cc as i32) != Tile::Void {
+                                        nc = cc as i32;
+                                        break;
+                                    }
                                 }
                             }
                         } else {
@@ -179,24 +196,24 @@ fn wrap_cube_example(r: i32, c: i32, f: i32, s: usize) -> (i32, i32, i32) {
     match (face_r, face_c, f) {
         // Face 1 (0, 2)
         (0, 2, 0) => (2 * s + (s - 1 - local_r), 4 * s - 1, 2), // 1R -> 6R (flip)
-        (0, 2, 2) => (s, s + local_r, 1),                      // 1L -> 3D
-        (0, 2, 3) => (s, s - 1 - local_c, 1),                  // 1U -> 2D (flip)
+        (0, 2, 2) => (s, s + local_r, 1),                       // 1L -> 3D
+        (0, 2, 3) => (s, s - 1 - local_c, 1),                   // 1U -> 2D (flip)
         // Face 2 (1, 0)
-        (1, 0, 1) => (3 * s - 1, 3 * s - 1 - local_c, 3),      // 2D -> 5U (flip)
-        (1, 0, 2) => (3 * s - 1, 4 * s - 1 - local_r, 3),      // 2L -> 6U (flip)
-        (1, 0, 3) => (0, 3 * s - 1 - local_c, 1),              // 2U -> 1D (flip)
+        (1, 0, 1) => (3 * s - 1, 3 * s - 1 - local_c, 3), // 2D -> 5U (flip)
+        (1, 0, 2) => (3 * s - 1, 4 * s - 1 - local_r, 3), // 2L -> 6U (flip)
+        (1, 0, 3) => (0, 3 * s - 1 - local_c, 1),         // 2U -> 1D (flip)
         // Face 3 (1, 1)
-        (1, 1, 1) => (3 * s - 1 - local_c, 2 * s, 0),          // 3D -> 5L
-        (1, 1, 3) => (local_c, 2 * s, 0),                      // 3U -> 1L
+        (1, 1, 1) => (3 * s - 1 - local_c, 2 * s, 0), // 3D -> 5L
+        (1, 1, 3) => (local_c, 2 * s, 0),             // 3U -> 1L
         // Face 4 (1, 2)
-        (1, 2, 0) => (2 * s, 4 * s - 1 - local_r, 1),          // 4R -> 6D (flip)
+        (1, 2, 0) => (2 * s, 4 * s - 1 - local_r, 1), // 4R -> 6D (flip)
         // Face 5 (2, 2)
-        (2, 2, 1) => (2 * s - 1, s - 1 - local_c, 3),          // 5D -> 2U (flip)
-        (2, 2, 2) => (2 * s - 1, 2 * s - 1 - local_r, 3),      // 5L -> 3U (flip)
+        (2, 2, 1) => (2 * s - 1, s - 1 - local_c, 3), // 5D -> 2U (flip)
+        (2, 2, 2) => (2 * s - 1, 2 * s - 1 - local_r, 3), // 5L -> 3U (flip)
         // Face 6 (2, 3)
-        (2, 3, 0) => (s - 1 - local_r, 3 * s - 1, 2),          // 6R -> 1R (flip)
-        (2, 3, 1) => (2 * s - 1 - local_c, 0, 0),              // 6D -> 2R (flip)
-        (2, 3, 3) => (2 * s - 1 - local_c, 3 * s - 1, 2),      // 6U -> 4R
+        (2, 3, 0) => (s - 1 - local_r, 3 * s - 1, 2), // 6R -> 1R (flip)
+        (2, 3, 1) => (2 * s - 1 - local_c, 0, 0),     // 6D -> 2R (flip)
+        (2, 3, 3) => (2 * s - 1 - local_c, 3 * s - 1, 2), // 6U -> 4R
         _ => unreachable!("Invalid wrap in example: ({}, {}, {})", face_r, face_c, f),
     }
 }
@@ -210,25 +227,25 @@ fn wrap_cube_real(r: i32, c: i32, f: i32, s: usize) -> (i32, i32, i32) {
 
     match (face_r, face_c, f) {
         // Face 1 (0, 1)
-        (0, 1, 2) => (3 * s - 1 - local_r, 0, 0),              // 1L -> 4L (flip)
-        (0, 1, 3) => (3 * s + local_c, 0, 0),                  // 1U -> 6L
+        (0, 1, 2) => (3 * s - 1 - local_r, 0, 0), // 1L -> 4L (flip)
+        (0, 1, 3) => (3 * s + local_c, 0, 0),     // 1U -> 6L
         // Face 2 (0, 2)
-        (0, 2, 0) => (3 * s - 1 - local_r, 2 * s - 1, 2),      // 2R -> 5R (flip)
-        (0, 2, 1) => (s + local_c, 2 * s - 1, 2),              // 2D -> 3R
-        (0, 2, 3) => (4 * s - 1, local_c, 3),                  // 2U -> 6D
+        (0, 2, 0) => (3 * s - 1 - local_r, 2 * s - 1, 2), // 2R -> 5R (flip)
+        (0, 2, 1) => (s + local_c, 2 * s - 1, 2),         // 2D -> 3R
+        (0, 2, 3) => (4 * s - 1, local_c, 3),             // 2U -> 6D
         // Face 3 (1, 1)
-        (1, 1, 0) => (s - 1, 2 * s + local_r, 3),              // 3R -> 2U
-        (1, 1, 2) => (2 * s, local_r, 1),                      // 3L -> 4D
+        (1, 1, 0) => (s - 1, 2 * s + local_r, 3), // 3R -> 2U
+        (1, 1, 2) => (2 * s, local_r, 1),         // 3L -> 4D
         // Face 4 (2, 0)
-        (2, 0, 2) => (s - 1 - local_r, s, 0),                  // 4L -> 1L (flip)
-        (2, 0, 3) => (s + local_c, s, 0),                      // 4U -> 3L
+        (2, 0, 2) => (s - 1 - local_r, s, 0), // 4L -> 1L (flip)
+        (2, 0, 3) => (s + local_c, s, 0),     // 4U -> 3L
         // Face 5 (2, 1)
-        (2, 1, 0) => (s - 1 - local_r, 3 * s - 1, 2),          // 5R -> 2R (flip)
-        (2, 1, 1) => (3 * s + local_c, s - 1, 2),              // 5D -> 6R
+        (2, 1, 0) => (s - 1 - local_r, 3 * s - 1, 2), // 5R -> 2R (flip)
+        (2, 1, 1) => (3 * s + local_c, s - 1, 2),     // 5D -> 6R
         // Face 6 (3, 0)
-        (3, 0, 0) => (3 * s - 1, s + local_r, 3),              // 6R -> 5U
-        (3, 0, 1) => (0, 2 * s + local_c, 1),                  // 6D -> 2D
-        (3, 0, 2) => (0, s + local_r, 1),                      // 6L -> 1D
+        (3, 0, 0) => (3 * s - 1, s + local_r, 3), // 6R -> 5U
+        (3, 0, 1) => (0, 2 * s + local_c, 1),     // 6D -> 2D
+        (3, 0, 2) => (0, s + local_r, 1),         // 6L -> 1D
         _ => unreachable!("Invalid wrap in real: ({}, {}, {})", face_r, face_c, f),
     }
 }

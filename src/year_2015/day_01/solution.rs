@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::{Context, Result};
 
 /// Solves Year 2015, Day 1: Not Quite Lisp.
@@ -81,4 +81,3 @@ mod tests {
         }
     }
 }
-

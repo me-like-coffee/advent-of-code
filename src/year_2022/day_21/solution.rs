@@ -1,6 +1,6 @@
-use std::collections::HashMap;
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::{Result, anyhow};
-use crate::utils::{Answer, read_input, Year, Day};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
 enum Job {
@@ -12,7 +12,8 @@ enum Job {
 }
 
 fn parse(input: &str) -> HashMap<String, Job> {
-    input.lines()
+    input
+        .lines()
         .filter(|line| !line.is_empty())
         .map(|line| {
             let parts: Vec<&str> = line.split(": ").collect();
@@ -112,7 +113,9 @@ pub fn calculate_solution(input: &str) -> Result<(u64, u64)> {
 
     let part1 = evaluate("root", &monkeys);
 
-    let root_job = monkeys.get("root").ok_or_else(|| anyhow!("Missing root monkey"))?;
+    let root_job = monkeys
+        .get("root")
+        .ok_or_else(|| anyhow!("Missing root monkey"))?;
     let (l, r) = match root_job {
         Job::Add(l, r) | Job::Sub(l, r) | Job::Mul(l, r) | Job::Div(l, r) => (l, r),
         Job::Literal(_) => return Err(anyhow!("Root monkey has literal job")),

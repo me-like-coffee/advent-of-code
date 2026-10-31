@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Day, Year};
+use crate::utils::{Answer, Day, Year, read_input};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 use std::collections::HashMap;
@@ -92,7 +92,9 @@ fn run_robot(program: &[i64], start_color: i64) -> Result<HashMap<(i32, i32), i6
         // Second output: direction to turn
         let turn = match vm.run()? {
             Status::Output(t) => t,
-            Status::Halted => return Err(anyhow::anyhow!("VM halted unexpectedly after first output")),
+            Status::Halted => {
+                return Err(anyhow::anyhow!("VM halted unexpectedly after first output"));
+            }
             Status::NeedsInput => return Err(anyhow::anyhow!("VM requested input unexpectedly")),
         };
 

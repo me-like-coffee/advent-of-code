@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::{Answer, Day, Year, read_input};
 use crate::year_2019::intcode::Intcode;
 use anyhow::{Context, Result};
 
@@ -18,17 +18,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
     let mut vm1 = Intcode::new(program.clone());
     vm1.add_input(1);
     let outputs1 = vm1.run_to_end()?;
-    let part1 = *outputs1
-        .last()
-        .context("No output produced for Part 1")?;
+    let part1 = *outputs1.last().context("No output produced for Part 1")?;
 
     // Part 2: Input is 5
     let mut vm2 = Intcode::new(program);
     vm2.add_input(5);
     let outputs2 = vm2.run_to_end()?;
-    let part2 = *outputs2
-        .last()
-        .context("No output produced for Part 2")?;
+    let part2 = *outputs2.last().context("No output produced for Part 2")?;
 
     Ok(((part1 as u64).into(), (part2 as u64).into()))
 }
@@ -83,4 +79,3 @@ mod tests {
         assert_eq!(*vm.run_to_end().unwrap().last().unwrap(), 1);
     }
 }
-

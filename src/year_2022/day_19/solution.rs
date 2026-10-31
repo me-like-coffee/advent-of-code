@@ -1,10 +1,5 @@
-use anyhow::{anyhow, Result};
-use nom::{
-    bytes::complete::tag,
-    character::complete::digit1,
-    IResult,
-    Parser,
-};
+use anyhow::{Result, anyhow};
+use nom::{IResult, Parser, bytes::complete::tag, character::complete::digit1};
 use rayon::prelude::*;
 
 #[derive(Debug, Clone, Copy)]
@@ -100,7 +95,9 @@ fn solve_blueprint(blueprint: &Blueprint, time: u32) -> u32 {
 
 fn dfs(state: State, b: &Blueprint, max_ore: u32, max_geodes: &mut u32) {
     // Heuristic pruning: if even building a geode robot every minute won't beat best, stop.
-    let potential = state.geodes + state.geode_robots * state.time_left + state.time_left * (state.time_left.saturating_sub(1)) / 2;
+    let potential = state.geodes
+        + state.geode_robots * state.time_left
+        + state.time_left * (state.time_left.saturating_sub(1)) / 2;
     if potential <= *max_geodes {
         return;
     }
@@ -116,59 +113,72 @@ fn dfs(state: State, b: &Blueprint, max_ore: u32, max_geodes: &mut u32) {
     }
 
     // Try building geode robot
-    if let Some(t) = time_to_build(b.geode_robot_ore_cost, 0, b.geode_robot_obsidian_cost, &state)
-        && state.time_left > t {
-            let mut next = state;
-            next.time_left -= t;
-            next.ore = next.ore + next.ore_robots * t - b.geode_robot_ore_cost;
-            next.clay += next.clay_robots * t;
-            next.obsidian = next.obsidian + next.obsidian_robots * t - b.geode_robot_obsidian_cost;
-            next.geodes += next.geode_robots * t;
-            next.geode_robots += 1;
-            dfs(next, b, max_ore, max_geodes);
-        }
+    if let Some(t) = time_to_build(
+        b.geode_robot_ore_cost,
+        0,
+        b.geode_robot_obsidian_cost,
+        &state,
+    ) && state.time_left > t
+    {
+        let mut next = state;
+        next.time_left -= t;
+        next.ore = next.ore + next.ore_robots * t - b.geode_robot_ore_cost;
+        next.clay += next.clay_robots * t;
+        next.obsidian = next.obsidian + next.obsidian_robots * t - b.geode_robot_obsidian_cost;
+        next.geodes += next.geode_robots * t;
+        next.geode_robots += 1;
+        dfs(next, b, max_ore, max_geodes);
+    }
 
     // Try building obsidian robot
     if state.obsidian_robots < b.geode_robot_obsidian_cost
-        && let Some(t) = time_to_build(b.obsidian_robot_ore_cost, b.obsidian_robot_clay_cost, 0, &state)
-            && state.time_left > t {
-                let mut next = state;
-                next.time_left -= t;
-                next.ore = next.ore + next.ore_robots * t - b.obsidian_robot_ore_cost;
-                next.clay = next.clay + next.clay_robots * t - b.obsidian_robot_clay_cost;
-                next.obsidian += next.obsidian_robots * t;
-                next.geodes += next.geode_robots * t;
-                next.obsidian_robots += 1;
-                dfs(next, b, max_ore, max_geodes);
-            }
+        && let Some(t) = time_to_build(
+            b.obsidian_robot_ore_cost,
+            b.obsidian_robot_clay_cost,
+            0,
+            &state,
+        )
+        && state.time_left > t
+    {
+        let mut next = state;
+        next.time_left -= t;
+        next.ore = next.ore + next.ore_robots * t - b.obsidian_robot_ore_cost;
+        next.clay = next.clay + next.clay_robots * t - b.obsidian_robot_clay_cost;
+        next.obsidian += next.obsidian_robots * t;
+        next.geodes += next.geode_robots * t;
+        next.obsidian_robots += 1;
+        dfs(next, b, max_ore, max_geodes);
+    }
 
     // Try building clay robot
     if state.clay_robots < b.obsidian_robot_clay_cost
         && let Some(t) = time_to_build(b.clay_robot_ore_cost, 0, 0, &state)
-            && state.time_left > t {
-                let mut next = state;
-                next.time_left -= t;
-                next.ore = next.ore + next.ore_robots * t - b.clay_robot_ore_cost;
-                next.clay += next.clay_robots * t;
-                next.obsidian += next.obsidian_robots * t;
-                next.geodes += next.geode_robots * t;
-                next.clay_robots += 1;
-                dfs(next, b, max_ore, max_geodes);
-            }
+        && state.time_left > t
+    {
+        let mut next = state;
+        next.time_left -= t;
+        next.ore = next.ore + next.ore_robots * t - b.clay_robot_ore_cost;
+        next.clay += next.clay_robots * t;
+        next.obsidian += next.obsidian_robots * t;
+        next.geodes += next.geode_robots * t;
+        next.clay_robots += 1;
+        dfs(next, b, max_ore, max_geodes);
+    }
 
     // Try building ore robot
     if state.ore_robots < max_ore
         && let Some(t) = time_to_build(b.ore_robot_ore_cost, 0, 0, &state)
-            && state.time_left > t {
-                let mut next = state;
-                next.time_left -= t;
-                next.ore = next.ore + next.ore_robots * t - b.ore_robot_ore_cost;
-                next.clay += next.clay_robots * t;
-                next.obsidian += next.obsidian_robots * t;
-                next.geodes += next.geode_robots * t;
-                next.ore_robots += 1;
-                dfs(next, b, max_ore, max_geodes);
-            }
+        && state.time_left > t
+    {
+        let mut next = state;
+        next.time_left -= t;
+        next.ore = next.ore + next.ore_robots * t - b.ore_robot_ore_cost;
+        next.clay += next.clay_robots * t;
+        next.obsidian += next.obsidian_robots * t;
+        next.geodes += next.geode_robots * t;
+        next.ore_robots += 1;
+        dfs(next, b, max_ore, max_geodes);
+    }
 }
 
 fn time_to_build(ore_cost: u32, clay_cost: u32, obsidian_cost: u32, state: &State) -> Option<u32> {
@@ -176,19 +186,25 @@ fn time_to_build(ore_cost: u32, clay_cost: u32, obsidian_cost: u32, state: &Stat
 
     // Ore requirement
     if ore_cost > state.ore {
-        if state.ore_robots == 0 { return None; }
+        if state.ore_robots == 0 {
+            return None;
+        }
         t = t.max((ore_cost - state.ore).div_ceil(state.ore_robots));
     }
 
     // Clay requirement
     if clay_cost > state.clay {
-        if state.clay_robots == 0 { return None; }
+        if state.clay_robots == 0 {
+            return None;
+        }
         t = t.max((clay_cost - state.clay).div_ceil(state.clay_robots));
     }
 
     // Obsidian requirement
     if obsidian_cost > state.obsidian {
-        if state.obsidian_robots == 0 { return None; }
+        if state.obsidian_robots == 0 {
+            return None;
+        }
         t = t.max((obsidian_cost - state.obsidian).div_ceil(state.obsidian_robots));
     }
 
@@ -200,7 +216,11 @@ pub fn solve() -> Result<(crate::utils::Answer, crate::utils::Answer)> {
     let blueprints: Vec<Blueprint> = content
         .lines()
         .filter(|l| !l.is_empty())
-        .map(|l| parse_blueprint(l).map(|(_, b)| b).map_err(|e| anyhow!("Parse error: {}", e)))
+        .map(|l| {
+            parse_blueprint(l)
+                .map(|(_, b)| b)
+                .map_err(|e| anyhow!("Parse error: {}", e))
+        })
         .collect::<Result<Vec<Blueprint>>>()?;
 
     // Part 1: All blueprints, 24 minutes
@@ -237,10 +257,10 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
             .filter(|l| !l.is_empty())
             .map(|l| parse_blueprint(l).map(|(_, b)| b).unwrap())
             .collect();
-        
+
         let g1 = solve_blueprint(&blueprints[0], 24);
         assert_eq!(g1, 9);
-        
+
         let g2 = solve_blueprint(&blueprints[1], 24);
         assert_eq!(g2, 12);
     }
@@ -252,10 +272,10 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
             .filter(|l| !l.is_empty())
             .map(|l| parse_blueprint(l).map(|(_, b)| b).unwrap())
             .collect();
-        
+
         let g1 = solve_blueprint(&blueprints[0], 32);
         assert_eq!(g1, 56);
-        
+
         let g2 = solve_blueprint(&blueprints[1], 32);
         assert_eq!(g2, 62);
     }

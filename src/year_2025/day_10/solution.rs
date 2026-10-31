@@ -1,13 +1,13 @@
-use crate::utils::parser::{parse_str_lines, unsigned_number, Parse};
-use crate::utils::{Answer, read_input, Year, Day};
+use crate::utils::parser::{Parse, parse_str_lines, unsigned_number};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 use nom::{
+    IResult, Parser,
     bytes::complete::tag,
     character::complete::{one_of, space0},
     multi::many1,
     multi::separated_list1,
     sequence::{delimited, preceded},
-    IResult, Parser,
 };
 
 /// Represents a single machine's configuration.
@@ -350,4 +350,3 @@ mod tests {
         Ok(())
     }
 }
-

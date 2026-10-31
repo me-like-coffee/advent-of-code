@@ -1,5 +1,5 @@
-use crate::utils::{Answer, read_input, Day, Year};
-use anyhow::{anyhow, Result};
+use crate::utils::{Answer, Day, Year, read_input};
+use anyhow::{Result, anyhow};
 use std::collections::{HashSet, VecDeque};
 
 /// Solves Year 2023, Day 10: Pipe Maze.
@@ -54,13 +54,18 @@ fn find_loop(grid: &[Vec<char>]) -> Result<LoopInfo> {
     }
 
     if connected.len() != 2 {
-        return Err(anyhow!("Start position S does not have exactly 2 connected pipes"));
+        return Err(anyhow!(
+            "Start position S does not have exactly 2 connected pipes"
+        ));
     }
 
     // Determine actual shape of S
     let n1 = connected[0];
     let n2 = connected[1];
-    let actual_start_char = match ((n1.0 as i32 - r as i32, n1.1 as i32 - c as i32), (n2.0 as i32 - r as i32, n2.1 as i32 - c as i32)) {
+    let actual_start_char = match (
+        (n1.0 as i32 - r as i32, n1.1 as i32 - c as i32),
+        (n2.0 as i32 - r as i32, n2.1 as i32 - c as i32),
+    ) {
         ((-1, 0), (1, 0)) | ((1, 0), (-1, 0)) => '|',
         ((0, -1), (0, 1)) | ((0, 1), (0, -1)) => '-',
         ((-1, 0), (0, 1)) | ((0, 1), (-1, 0)) => 'L',
@@ -81,7 +86,11 @@ fn find_loop(grid: &[Vec<char>]) -> Result<LoopInfo> {
     while let Some((pos, dist)) = queue.pop_front() {
         max_dist = max_dist.max(dist);
         let (curr_r, curr_c) = pos;
-        let curr_char = if pos == start_pos { actual_start_char } else { grid[curr_r][curr_c] };
+        let curr_char = if pos == start_pos {
+            actual_start_char
+        } else {
+            grid[curr_r][curr_c]
+        };
 
         let neighbors = get_neighbors(curr_r, curr_c, curr_char, rows, cols);
         for next in neighbors {
@@ -99,41 +108,74 @@ fn get_neighbors(r: usize, c: usize, ch: char, rows: usize, cols: usize) -> Vec<
     let mut res = Vec::new();
     match ch {
         '|' => {
-            if r > 0 { res.push((r - 1, c)); }
-            if r + 1 < rows { res.push((r + 1, c)); }
+            if r > 0 {
+                res.push((r - 1, c));
+            }
+            if r + 1 < rows {
+                res.push((r + 1, c));
+            }
         }
         '-' => {
-            if c > 0 { res.push((r, c - 1)); }
-            if c + 1 < cols { res.push((r, c + 1)); }
+            if c > 0 {
+                res.push((r, c - 1));
+            }
+            if c + 1 < cols {
+                res.push((r, c + 1));
+            }
         }
         'L' => {
-            if r > 0 { res.push((r - 1, c)); }
-            if c + 1 < cols { res.push((r, c + 1)); }
+            if r > 0 {
+                res.push((r - 1, c));
+            }
+            if c + 1 < cols {
+                res.push((r, c + 1));
+            }
         }
         'J' => {
-            if r > 0 { res.push((r - 1, c)); }
-            if c > 0 { res.push((r, c - 1)); }
+            if r > 0 {
+                res.push((r - 1, c));
+            }
+            if c > 0 {
+                res.push((r, c - 1));
+            }
         }
         '7' => {
-            if r + 1 < rows { res.push((r + 1, c)); }
-            if c > 0 { res.push((r, c - 1)); }
+            if r + 1 < rows {
+                res.push((r + 1, c));
+            }
+            if c > 0 {
+                res.push((r, c - 1));
+            }
         }
         'F' => {
-            if r + 1 < rows { res.push((r + 1, c)); }
-            if c + 1 < cols { res.push((r, c + 1)); }
+            if r + 1 < rows {
+                res.push((r + 1, c));
+            }
+            if c + 1 < cols {
+                res.push((r, c + 1));
+            }
         }
         _ => {}
     }
     res
 }
 
-fn count_enclosed_tiles(grid: &[Vec<char>], loop_coords: &HashSet<(usize, usize)>, start_pos: (usize, usize), actual_start_char: char) -> usize {
+fn count_enclosed_tiles(
+    grid: &[Vec<char>],
+    loop_coords: &HashSet<(usize, usize)>,
+    start_pos: (usize, usize),
+    actual_start_char: char,
+) -> usize {
     let mut count = 0;
     for (r, row) in grid.iter().enumerate() {
         let mut inside = false;
         for (c, &ch) in row.iter().enumerate() {
             if loop_coords.contains(&(r, c)) {
-                let actual_ch = if (r, c) == start_pos { actual_start_char } else { ch };
+                let actual_ch = if (r, c) == start_pos {
+                    actual_start_char
+                } else {
+                    ch
+                };
                 // Rule: Toggle inside if the pipe has a "North" component
                 if matches!(actual_ch, '|' | 'L' | 'J') {
                     inside = !inside;

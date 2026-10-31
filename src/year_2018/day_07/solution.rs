@@ -1,4 +1,4 @@
-use crate::utils::{Answer, read_input, Day, Year};
+use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -40,9 +40,7 @@ fn solve_part1(input: &str) -> String {
     while !all_steps.is_empty() {
         let next_step = *all_steps
             .iter()
-            .find(|&&step| {
-                deps.get(&step).is_none_or(|d| d.is_empty())
-            })
+            .find(|&&step| deps.get(&step).is_none_or(|d| d.is_empty()))
             .unwrap();
 
         result.push(next_step);
@@ -65,24 +63,23 @@ fn solve_part2(input: &str, num_workers: usize, base_duration: u32) -> u64 {
         // Check for finished workers
         for worker in &mut workers {
             if let Some((step, finish_time)) = *worker
-                && finish_time == time {
-                    *worker = None;
-                    // Remove from dependencies
-                    for d in deps.values_mut() {
-                        d.remove(&step);
-                    }
+                && finish_time == time
+            {
+                *worker = None;
+                // Remove from dependencies
+                for d in deps.values_mut() {
+                    d.remove(&step);
                 }
+            }
         }
 
         // Assign available steps to idle workers
         let mut available_steps: Vec<char> = all_steps
             .iter()
-            .filter(|&&step| {
-                deps.get(&step).is_none_or(|d| d.is_empty())
-            })
+            .filter(|&&step| deps.get(&step).is_none_or(|d| d.is_empty()))
             .copied()
             .collect();
-        
+
         available_steps.sort_unstable();
 
         for worker in &mut workers {

@@ -154,14 +154,12 @@ fn solve_part1(input: &str) -> Result<u64> {
             }
         }
 
-        if let Some(portal) = maze.portals.get(&pos) {
-            if let Some(target) = portal.target {
-                if !visited.contains(&target) {
+        if let Some(portal) = maze.portals.get(&pos)
+            && let Some(target) = portal.target
+                && !visited.contains(&target) {
                     visited.insert(target);
                     queue.push_back((target, dist + 1));
                 }
-            }
-        }
     }
 
     Err(anyhow!("No path found for Part 1"))
@@ -190,22 +188,20 @@ fn solve_part2(input: &str) -> Result<u64> {
             }
         }
 
-        if let Some(portal) = maze.portals.get(&(r, c)) {
-            if let Some(target) = portal.target {
+        if let Some(portal) = maze.portals.get(&(r, c))
+            && let Some(target) = portal.target {
                 let next_level = if portal.is_outer {
                     if level == 0 { None } else { Some(level - 1) }
                 } else {
                     Some(level + 1)
                 };
 
-                if let Some(nl) = next_level {
-                    if !visited.contains(&(target.0, target.1, nl)) {
+                if let Some(nl) = next_level
+                    && !visited.contains(&(target.0, target.1, nl)) {
                         visited.insert((target.0, target.1, nl));
                         queue.push_back((target.0, target.1, nl, dist + 1));
                     }
-                }
             }
-        }
     }
 
     Err(anyhow!("No path found for Part 2"))

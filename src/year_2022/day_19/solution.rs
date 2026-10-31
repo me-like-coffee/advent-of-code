@@ -116,8 +116,8 @@ fn dfs(state: State, b: &Blueprint, max_ore: u32, max_geodes: &mut u32) {
     }
 
     // Try building geode robot
-    if let Some(t) = time_to_build(b.geode_robot_ore_cost, 0, b.geode_robot_obsidian_cost, &state) {
-        if state.time_left > t {
+    if let Some(t) = time_to_build(b.geode_robot_ore_cost, 0, b.geode_robot_obsidian_cost, &state)
+        && state.time_left > t {
             let mut next = state;
             next.time_left -= t;
             next.ore = next.ore + next.ore_robots * t - b.geode_robot_ore_cost;
@@ -127,12 +127,11 @@ fn dfs(state: State, b: &Blueprint, max_ore: u32, max_geodes: &mut u32) {
             next.geode_robots += 1;
             dfs(next, b, max_ore, max_geodes);
         }
-    }
 
     // Try building obsidian robot
-    if state.obsidian_robots < b.geode_robot_obsidian_cost {
-        if let Some(t) = time_to_build(b.obsidian_robot_ore_cost, b.obsidian_robot_clay_cost, 0, &state) {
-            if state.time_left > t {
+    if state.obsidian_robots < b.geode_robot_obsidian_cost
+        && let Some(t) = time_to_build(b.obsidian_robot_ore_cost, b.obsidian_robot_clay_cost, 0, &state)
+            && state.time_left > t {
                 let mut next = state;
                 next.time_left -= t;
                 next.ore = next.ore + next.ore_robots * t - b.obsidian_robot_ore_cost;
@@ -142,13 +141,11 @@ fn dfs(state: State, b: &Blueprint, max_ore: u32, max_geodes: &mut u32) {
                 next.obsidian_robots += 1;
                 dfs(next, b, max_ore, max_geodes);
             }
-        }
-    }
 
     // Try building clay robot
-    if state.clay_robots < b.obsidian_robot_clay_cost {
-        if let Some(t) = time_to_build(b.clay_robot_ore_cost, 0, 0, &state) {
-            if state.time_left > t {
+    if state.clay_robots < b.obsidian_robot_clay_cost
+        && let Some(t) = time_to_build(b.clay_robot_ore_cost, 0, 0, &state)
+            && state.time_left > t {
                 let mut next = state;
                 next.time_left -= t;
                 next.ore = next.ore + next.ore_robots * t - b.clay_robot_ore_cost;
@@ -158,13 +155,11 @@ fn dfs(state: State, b: &Blueprint, max_ore: u32, max_geodes: &mut u32) {
                 next.clay_robots += 1;
                 dfs(next, b, max_ore, max_geodes);
             }
-        }
-    }
 
     // Try building ore robot
-    if state.ore_robots < max_ore {
-        if let Some(t) = time_to_build(b.ore_robot_ore_cost, 0, 0, &state) {
-            if state.time_left > t {
+    if state.ore_robots < max_ore
+        && let Some(t) = time_to_build(b.ore_robot_ore_cost, 0, 0, &state)
+            && state.time_left > t {
                 let mut next = state;
                 next.time_left -= t;
                 next.ore = next.ore + next.ore_robots * t - b.ore_robot_ore_cost;
@@ -174,8 +169,6 @@ fn dfs(state: State, b: &Blueprint, max_ore: u32, max_geodes: &mut u32) {
                 next.ore_robots += 1;
                 dfs(next, b, max_ore, max_geodes);
             }
-        }
-    }
 }
 
 fn time_to_build(ore_cost: u32, clay_cost: u32, obsidian_cost: u32, state: &State) -> Option<u32> {
@@ -268,6 +261,7 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_regression() -> Result<()> {
         let (p1, p2) = solve()?;
         assert_eq!(p1, 1466);

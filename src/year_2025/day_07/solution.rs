@@ -89,14 +89,13 @@ fn solve_part_one(grid: &[Vec<char>], start: (usize, usize)) -> usize {
                     }
                 }
             }
-            '.' | 'S' => {
-                if r + 1 < rows {
+            '.' | 'S'
+                if r + 1 < rows => {
                     let next_pos = (r + 1, c);
                     if visited.insert(next_pos) {
                         queue.push_back(next_pos);
                     }
                 }
-            }
             _ => {}
         }
     }

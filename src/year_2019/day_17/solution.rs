@@ -224,12 +224,11 @@ fn compress_path(path: &[String]) -> Option<Compressed> {
         // Try using existing functions
         for i in 0..functions.len() {
             let func = &functions[i];
-            if path.starts_with(func) {
-                if let Some(mut rest) = find_functions(&path[func.len()..], functions) {
+            if path.starts_with(func)
+                && let Some(mut rest) = find_functions(&path[func.len()..], functions) {
                     rest.insert(0, i);
                     return Some(rest);
                 }
-            }
         }
 
         // Try creating a new function if we have space

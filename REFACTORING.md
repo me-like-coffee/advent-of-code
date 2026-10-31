@@ -1,0 +1,173 @@
+# Refactoring plan
+
+Status: **draft, awaiting approval** (2026-10-30)
+
+This plan merges the local solutions in `~/Workspace/AdventOfCode` (the "old folder") into this repository (`me-like-coffee/advent-of-code`), fixes flaws in the shared code, and adds the 2022 C++ solutions under `cpp/`.
+
+## 1. Current state
+
+### This repository
+| Area | Finding |
+|---|---|
+| Layout | One Rust crate (edition 2021). `src/year_YYYY/day_NN/solution.rs` exposes `solve() -> Result<(u64, u64)>`, registered through `register_days!`. A `clap` runner (`-y/-d/-a/-p`) and a `generate` scaffolding command are included. |
+| Coverage | 53 days from 2015 to 2025, 9,680 lines, 49 commits. No puzzle inputs anywhere in the history. |
+| `check` baseline | `cargo fmt` passes. `clippy -D warnings` (1.99) fails with 8 findings: `collapsible_match`, `unnecessary_sort_by`, `chunks_exact` with a constant size, and decimal constants. Tests: 102 pass and 9 fail, all because files under `inputs/` are missing. |
+| `read_input` | Builds the path `inputs/…` relative to the working directory, so it fails when run from anywhere but the repo root. |
+| `generate` | Builds paths with `format!("{}/…")`, which breaks the portability rule. It doesn't register the new day: it prints "ACTION REQUIRED" instead. |
+| Year registry | Adding a year means editing three places: `pub(crate) mod` in `lib.rs`, the `match` in `get_year_solver`, and the hard-coded `2015..=2025` in `run_all`. |
+| `day_to_u8` | A malformed module name, such as `day_1` or `dayXX`, gives a wrong number or an arithmetic overflow instead of a compile error. |
+| Answer type | `SolveFn` returns `(u64, u64)`, but 6 local days have answers that aren't numbers: 2017/10 part 2 (a hex hash), 2017/16 (strings), 2018/10 (a message drawn as text), 2018/11 and 2018/13 (coordinates), 2021/24 (a digit string). |
+| Dependencies | `anyhow` 1.0.104, `clap` 4.6.7, `nom` 8.0.0, `num` 0.4.3 and `rayon` 1.12.0 all resolve to the latest release, so nothing needs upgrading. But the manifest uses caret ranges and `Cargo.lock` is gitignored, so builds aren't reproducible. No `rust-toolchain.toml`. |
+| Edition | 2021. A scratch-copy migration to 2024 (`cargo fix --edition`) changed 6 files: import ordering, one added `;`, and rustfmt line wrapping. Tests are unchanged (102 pass, 9 fail for missing inputs). Edition 2024 enables let-chains, which adds 27 `collapsible_if` clippy findings; `cargo clippy --fix` fixes all but the 2 decimal-constant findings. |
+| Puzzle examples | 26 solution files contain puzzle examples as string constants in their tests. That conflicts with the decision to keep examples out of the repository (see §5). |
+
+### The old folder
+- 79 Rust crates and 17 C++ programs (2022), with no shared code. 7 crates have their own nested git history of 1–3 commits.
+- Puzzle inputs are hard-coded in source in 2016/11, 2017/03, 14, 15, 17 and 23, 2018/11 and 22, 2020/25, and 2022/Day05 (C++).
+- 16 days exist in both places: Rust 2019/09, 10, 14, 15, 16 and 17, 2021/08, 2022/16 and 19, 2023/10, 2024/01, 02, 03 and 22; plus 2022/21 and 22 in C++ locally and in Rust here.
+
+### Already done (2026-10-30)
+- Cloned to `~/Workspace/advent-of-code`.
+- Deleted `GEMINI.md`, `src/GEMINI.md` and `src/year_2025/GEMINI.md`. Their still-relevant conventions are now in `CLAUDE.md`.
+- Added `LICENSE` (Apache-2.0) and `CLAUDE.md`, and extended `.gitignore` with build, editor, OS and Claude Code entries.
+- Deleted the old folder's build outputs (925 MB).
+
+## 2. Target layout
+
+```
+advent-of-code/
+├── Cargo.toml  Cargo.lock  rust-toolchain.toml
+├── src/
+│   ├── main.rs               # runner and `generate`
+│   ├── lib.rs                # register_years!(2015, 2016, …)
+│   ├── utils/                # runner types, Answer, read_input, parser (+ unit tests)
+│   ├── year_2017/knot_hash.rs     # shared by days 10 and 14 (+ unit tests)
+│   ├── year_2018/device.rs        # shared by days 16, 19 (+ unit tests)
+│   ├── year_2019/intcode.rs       # existing (+ unit tests)
+│   └── year_YYYY/day_NN/{mod.rs, solution.rs}
+├── CMakeLists.txt  CMakePresets.json  vcpkg.json
+├── cpp/
+│   ├── common/               # aoc::input (+ GoogleTest unit tests)
+│   └── year_2022/day_NN/main.cpp
+├── inputs/                   # gitignored: year_YYYY/day_NN.txt, day_NN_example*.txt
+├── .github/workflows/ci.yml
+└── .gitignore  .gitattributes  README.md  LICENSE  CLAUDE.md  TODO.md  REFACTORING.md
+```
+
+The Rust and C++ solutions read the same `inputs/` tree.
+
+## 3. Phases
+
+Each phase ends with `check` green and is one commit. I'll make the commits and pushes when you ask, after `check` passes.
+
+### Phase 1: get `check` green on the current code (done 2026-10-31, not committed yet)
+- Migrate to edition 2024: `cargo fix --edition`, set `edition = "2024"`, then `cargo fmt`. This was validated in a scratch copy.
+- Fix the clippy findings: `cargo clippy --fix` for the 33 automatic ones, plus 2 decimal constants by hand. Approving this plan counts as approval for that cleanup.
+- Add a `puzzle-inputs` feature. Tests that read `inputs/` get `#[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]`. `check` runs them through `--all-features`; CI and fresh clones skip them.
+- Commit `Cargo.lock` (remove it from `.gitignore`), pin dependencies to exact versions, and add `rust-toolchain.toml` (1.99.1) and `rust-version`.
+- Add `.gitattributes` (`* text=auto eol=lf`) and `README.md`, covering usage, the input layout, and a note that inputs aren't included.
+- Copy the inputs of the 16 days that exist in both places from the old folder to `inputs/`.
+- Requires: inputs for the 5 days whose tests read files and have no copy locally (2019/13, 19, 21 and 22, and 2022/18). See §4.1.
+
+### Phase 2: shared-code fixes (with unit tests)
+- **`Answer` type**: `enum Answer { Num(u64), Text(String) }` with `From` and `Display`. `SolveFn` becomes `fn() -> Result<(Answer, Answer)>`. Existing days change only their return line: `Ok((p1.into(), p2.into()))`.
+- **`read_input`**: the inputs root comes from the `AOC_INPUTS` environment variable, or defaults to `<crate root>/inputs` (`env!("CARGO_MANIFEST_DIR")`). Paths are built with `Path::join`. Add `read_example(year, day, n)` for `day_NN_example{n}.txt`.
+- **Year registry**: a `register_years!` macro generates the modules, `get_year_solver` and the year list that `run_all` iterates. Adding a year then takes one line.
+- **`day_to_u8`**: checked at compile time, so a bad module name is a build error.
+- **`generate`**: builds paths with `Path::join` and adds the day to `register_days!` (and the year to `register_years!`) itself.
+- **Unit tests**: for everything above plus `utils::parser`. No new tests for individual days.
+
+### Phase 3: move puzzle examples out of the source (see §5, question 1)
+- Move the 26 inline examples to `inputs/year_YYYY/day_NN_example*.txt` and read them with `read_example`. Mark those tests `puzzle-inputs`.
+- Also move the examples in old-folder `test*.txt` files there during the port.
+
+### Phase 4: port the old folder's Rust days (65 days, one year per commit)
+| Year | Days |
+|---|---|
+| 2016 | 09, 11, 22 |
+| 2017 | 03, 09, 10, 11, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25 |
+| 2018 | 03, 04, 05, 06, 09, 10, 11, 12, 13, 15, 16, 17, 18, 19, 22, 23, 24, 25 |
+| 2019 | 03, 12 |
+| 2020 | 07, 10, 25 |
+| 2021 | 05, 06, 09, 10, 11, 12, 13, 14, 15, 16, 17, 21, 24, 25 |
+| 2022 | 20, 23 |
+| 2023 | 16, 17, 18, 19, 20, 21, 23, 25 |
+
+For each day:
+- Copy `input.txt` to `inputs/year_YYYY/day_NN.txt`, and the example files to `day_NN_example*.txt`.
+- Replace hard-coded inputs with parsing of the input file.
+- Wrap the existing logic in `solve()`. Change it only as far as the signature, errors and clippy require: `?` instead of `unwrap` outside tests, and no commented-out code.
+- Keep each day's existing answer assertions as its tests.
+- The 16 days already here keep this repository's version, and the old copies are dropped.
+- Extract shared code only where the duplication is real: `year_2017/knot_hash.rs` (days 10 and 14) and `year_2018/device.rs` (days 16 and 19), each with unit tests. If `Point` or `Direction` is needed by more than one ported day, it goes into `utils/grid.rs` with tests.
+- Dependencies: `regex` and `geo` were used only by days that are dropped (2024/03, 2023/10), and `itertools` only by 2016/11 among the ported days (the others are dropped). The ported days that need a crate are:
+  - 2016/11: `itertools` (0.12.1, latest 0.15.0)
+  - 2018/04: `chrono` (0.4.34, latest 0.4.45); std string sorting may be enough here
+  - 2023/25: `rand` (0.8.5, latest 0.10.3; the API changed, for example `thread_rng` became `rng`)
+
+  Each one is either replaced with std or added at its latest version, pinned exactly, after a maintenance check. Any randomized solution uses a fixed seed so its tests are deterministic.
+
+### Phase 5: C++ 2022 (17 programs)
+- Root `CMakeLists.txt` (CMake 4.x), `CMakePresets.json` "dev" preset (Ninja, C++23, `CMAKE_EXPORT_COMPILE_COMMANDS`, vcpkg toolchain, ASan and UBSan), and `vcpkg.json` with a pinned `builtin-baseline`. `check` finds the root CMake project and builds and tests it next to Cargo.
+- `cpp/common/`: `aoc::input_path(year, day, argv)`. The path is `argv[1]` if given, otherwise `AOC_INPUTS`, otherwise the repo's `inputs/` (passed in as a compile definition). Plus `aoc::read_lines` returning `std::expected`. Unit tests use GoogleTest from vcpkg, registered with CTest.
+- Each `2022/DayNN/main.cpp` moves to `cpp/year_2022/day_NN/main.cpp` and becomes executable `aoc_2022_day_NN`. Day 15's `main2.cpp` becomes `aoc_2022_day_15_part2`.
+- Language level today: the VS Code tasks passed no `-std`, so Apple clang 17 built the code as **C++14** (`__cplusplus` 201402L). A syntax check with `-std=c++23` passes for 16 of the 18 files. Day12 (`std::for_each`) and Day14 (`std::count_if`) need an include fix, because they relied on headers that older libc++ pulled in indirectly.
+- Day05: parse the starting stacks from the input instead of hard-coding them.
+- 2022/21 and 22 exist in both languages. Both versions are kept.
+- `.clang-format` and `.clang-tidy` are left for later, so that existing C++ isn't mass-reformatted.
+
+### Phase 6: CI and wrap-up
+- `.github/workflows/ci.yml`: an ubuntu, macOS and Windows matrix running `cargo fmt --check`, `clippy -D warnings`, `cargo test` (without `puzzle-inputs`), and the CMake build plus `ctest`.
+- Archive or delete the old folder after you've checked the port, along with its nested `.git` histories. That's your call when we get there.
+
+## 4. Manual tasks for you
+
+### 4.1 Download the missing puzzle inputs
+Each AoC account gets its own inputs, and the tests here check the answers for *your* inputs. 37 days in this repository have no input anywhere on this machine. Only you can download them, because it needs your AoC login.
+
+**Account.** Use the AoC account you solved with (the one shown as "Emmanuel Schilling"). Your local 2024/02 input gives 402, the same answer this repo's test expects, so the old folder and this repo use the same account. A different login, such as GitHub instead of Google, gives different inputs and failing tests.
+
+**Where files go.**
+- Save each input as `~/Workspace/advent-of-code/inputs/year_YYYY/day_NN.txt`, with a two-digit day. For example, 2019 day 13 is `inputs/year_2019/day_13.txt`.
+- `inputs/` is gitignored, so these files never leave your machine.
+- Save the file exactly as served. Copy-pasting from the browser can lose the final newline or add trailing spaces, so use the browser's *Save As…* on the input page, or the `curl` command below.
+
+**Which days.**
+| Needed for | Days |
+|---|---|
+| Phase 1 (tests that read inputs) | 2019/13, 2019/19, 2019/21, 2019/22, 2022/18 |
+| Running them with the runner (`-y`, `-a`) | 2015/01; 2018/07; 2019/02, 05, 07, 11, 18, 20, 23, 24, 25; 2020/13, 22; 2022/17, 24; 2023/12; 2024/04, 05, 06, 25; 2025/01–12 |
+
+The other 16 days in this repo already have inputs in the old folder. I'll copy those into `inputs/` in Phase 1, and you don't need to download them again.
+
+**How to download.**
+- **In a browser:** log in at https://adventofcode.com, open `https://adventofcode.com/YYYY/day/D/input` (no leading zero in the URL), and use *Save As…* with the path above.
+- **With `curl`:** in the browser's developer tools, copy the value of the `session` cookie for adventofcode.com and export it in your shell (don't save it to a file in the repo):
+  ```sh
+  export AOC_SESSION='<cookie value>'
+  cd ~/Workspace/advent-of-code
+  get() {  # usage: get 2019 13
+    mkdir -p "inputs/year_$1"
+    curl --fail -sS --cookie "session=$AOC_SESSION" \
+      -A "github.com/me-like-coffee/advent-of-code" \
+      -o "inputs/year_$1/day_$(printf %02d "$2").txt" \
+      "https://adventofcode.com/$1/day/$2/input"
+    sleep 2
+  }
+  get 2019 13; get 2019 19; get 2019 21; get 2019 22; get 2022 18
+  ```
+  AoC asks automated tools to identify themselves with a User-Agent (`-A`), to go slowly, and to download each input only once. The `sleep 2` and the one-time list above follow that. The session cookie works like a password, so don't commit it or paste it anywhere shared.
+
+**Example files are not a manual task.** In Phase 3 I'll write the examples from the current test code and the old folder's `test*.txt` files to `inputs/year_YYYY/day_NN_example{n}.txt` myself.
+
+**Verifying.** After downloading, tell me and I'll run the 9 input-dependent tests. If any fails, its input is probably from a different account or was damaged in saving.
+
+### 4.2 Nothing else
+`gh` is set up and the toolchains are installed.
+
+## 5. Decisions
+- 2026-10-30: examples are gitignored. The 26 inline examples move to `inputs/…_example{n}.txt` (Phase 3). The published history is not rewritten, so the examples stay visible in old commits.
+- 2026-10-30: phase order 1 → 6 as written. Shared code changes before porting.
+
+## 6. Platform divergence
+None planned. All paths go through `Path::join` and `std::filesystem::path`, and the inputs location comes from `AOC_INPUTS` or a path relative to the crate root. CI on all three OSes checks this.

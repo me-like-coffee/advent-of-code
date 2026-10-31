@@ -119,14 +119,13 @@ fn solve_part2(program: &[i64]) -> Result<u64> {
             }
         }
 
-        if idle && queues.iter().all(VecDeque::is_empty) {
-            if let Some((x, y)) = nat_packet {
+        if idle && queues.iter().all(VecDeque::is_empty)
+            && let Some((x, y)) = nat_packet {
                 if last_nat_y == Some(y) {
                     return Ok(y as u64);
                 }
                 last_nat_y = Some(y);
                 queues[0].push_back((x, y));
             }
-        }
     }
 }

@@ -70,6 +70,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_02_full_input() -> Result<()> {
         let content = read_input(Year(2024), Day(2))?;
         let reports = parse_str_lines(&content, parse_report)?;

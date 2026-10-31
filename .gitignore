@@ -1,3 +1,17 @@
+# Puzzle inputs and examples (Advent of Code asks that these not be shared)
 /inputs
+
+# Rust
 /target
-Cargo.lock
+
+# C++
+/build
+
+# Editors and OS
+.vscode/
+.DS_Store
+
+# Claude Code (CLAUDE.md is committed on purpose)
+.claude/
+CLAUDE.local.md
+.mcp.json

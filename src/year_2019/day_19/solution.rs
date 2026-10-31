@@ -74,6 +74,7 @@ mod tests {
     use super::*;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_10x10() -> Result<()> {
         let input = read_input(Year(2019), Day(19))?;
         let program: Vec<i64> = input

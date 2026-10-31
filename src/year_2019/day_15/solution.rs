@@ -102,12 +102,11 @@ fn find_shortest_path(start: (i32, i32), target: (i32, i32), map: &Grid) -> Opti
 
         for (dx, dy) in [(0, -1), (0, 1), (-1, 0), (1, 0)] {
             let next_pos = (pos.0 + dx, pos.1 + dy);
-            if let Some(&tile) = map.get(&next_pos) {
-                if tile != Tile::Wall && !visited.contains_key(&next_pos) {
+            if let Some(&tile) = map.get(&next_pos)
+                && tile != Tile::Wall && !visited.contains_key(&next_pos) {
                     visited.insert(next_pos, dist + 1);
                     queue.push_back((next_pos, dist + 1));
                 }
-            }
         }
     }
     None
@@ -125,12 +124,11 @@ fn find_max_distance(start: (i32, i32), map: &Grid) -> u32 {
 
         for (dx, dy) in [(0, -1), (0, 1), (-1, 0), (1, 0)] {
             let next_pos = (pos.0 + dx, pos.1 + dy);
-            if let Some(&tile) = map.get(&next_pos) {
-                if tile != Tile::Wall && !visited.contains_key(&next_pos) {
+            if let Some(&tile) = map.get(&next_pos)
+                && tile != Tile::Wall && !visited.contains_key(&next_pos) {
                     visited.insert(next_pos, dist + 1);
                     queue.push_back((next_pos, dist + 1));
                 }
-            }
         }
     }
     max_dist

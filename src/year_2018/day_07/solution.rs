@@ -64,15 +64,14 @@ fn solve_part2(input: &str, num_workers: usize, base_duration: u32) -> u64 {
     while !all_steps.is_empty() || workers.iter().any(|w| w.is_some()) {
         // Check for finished workers
         for worker in &mut workers {
-            if let Some((step, finish_time)) = *worker {
-                if finish_time == time {
+            if let Some((step, finish_time)) = *worker
+                && finish_time == time {
                     *worker = None;
                     // Remove from dependencies
                     for d in deps.values_mut() {
                         d.remove(&step);
                     }
                 }
-            }
         }
 
         // Assign available steps to idle workers

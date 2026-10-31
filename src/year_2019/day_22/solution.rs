@@ -263,6 +263,7 @@ cut -1";
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_math_check() -> Result<()> {
         // Verify that run_shuffle_part2 correctly reverses the shuffle.
         // For a large deck, shuffle once, pick a result position, find the card.

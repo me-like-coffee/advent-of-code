@@ -3,12 +3,12 @@
 //! This module provides a set of common parsers based on the `nom` crate,
 //! facilitating consistent and type-safe data extraction from puzzle strings.
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use nom::{
+    IResult, Parser,
     character::complete::{char, digit1},
     combinator::{map_res, opt, recognize},
     sequence::pair,
-    IResult, Parser,
 };
 
 /// Trait for types that can be parsed from a string using a `nom` parser.

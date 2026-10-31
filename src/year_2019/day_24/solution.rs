@@ -116,11 +116,10 @@ fn count_neighbors_p2(grids: &HashMap<i32, u32>, level: i32, i: usize) -> u32 {
     // Up
     if y == 0 {
         // level - 1, bit 7
-        if let Some(upper) = grids.get(&(level - 1)) {
-            if (upper >> 7) & 1 == 1 {
+        if let Some(upper) = grids.get(&(level - 1))
+            && (upper >> 7) & 1 == 1 {
                 count += 1;
             }
-        }
     } else if y == 3 && x == 2 {
         // level + 1, bottom row (20-24)
         if let Some(lower) = grids.get(&(level + 1)) {
@@ -130,20 +129,18 @@ fn count_neighbors_p2(grids: &HashMap<i32, u32>, level: i32, i: usize) -> u32 {
                 }
             }
         }
-    } else if let Some(grid) = grids.get(&level) {
-        if (grid >> (i - 5)) & 1 == 1 {
+    } else if let Some(grid) = grids.get(&level)
+        && (grid >> (i - 5)) & 1 == 1 {
             count += 1;
         }
-    }
 
     // Down
     if y == 4 {
         // level - 1, bit 17
-        if let Some(upper) = grids.get(&(level - 1)) {
-            if (upper >> 17) & 1 == 1 {
+        if let Some(upper) = grids.get(&(level - 1))
+            && (upper >> 17) & 1 == 1 {
                 count += 1;
             }
-        }
     } else if y == 1 && x == 2 {
         // level + 1, top row (0-4)
         if let Some(lower) = grids.get(&(level + 1)) {
@@ -153,20 +150,18 @@ fn count_neighbors_p2(grids: &HashMap<i32, u32>, level: i32, i: usize) -> u32 {
                 }
             }
         }
-    } else if let Some(grid) = grids.get(&level) {
-        if (grid >> (i + 5)) & 1 == 1 {
+    } else if let Some(grid) = grids.get(&level)
+        && (grid >> (i + 5)) & 1 == 1 {
             count += 1;
         }
-    }
 
     // Left
     if x == 0 {
         // level - 1, bit 11
-        if let Some(upper) = grids.get(&(level - 1)) {
-            if (upper >> 11) & 1 == 1 {
+        if let Some(upper) = grids.get(&(level - 1))
+            && (upper >> 11) & 1 == 1 {
                 count += 1;
             }
-        }
     } else if x == 3 && y == 2 {
         // level + 1, right column (4,9,14,19,24)
         if let Some(lower) = grids.get(&(level + 1)) {
@@ -176,20 +171,18 @@ fn count_neighbors_p2(grids: &HashMap<i32, u32>, level: i32, i: usize) -> u32 {
                 }
             }
         }
-    } else if let Some(grid) = grids.get(&level) {
-        if (grid >> (i - 1)) & 1 == 1 {
+    } else if let Some(grid) = grids.get(&level)
+        && (grid >> (i - 1)) & 1 == 1 {
             count += 1;
         }
-    }
 
     // Right
     if x == 4 {
         // level - 1, bit 13
-        if let Some(upper) = grids.get(&(level - 1)) {
-            if (upper >> 13) & 1 == 1 {
+        if let Some(upper) = grids.get(&(level - 1))
+            && (upper >> 13) & 1 == 1 {
                 count += 1;
             }
-        }
     } else if x == 1 && y == 2 {
         // level + 1, left column (0,5,10,15,20)
         if let Some(lower) = grids.get(&(level + 1)) {
@@ -199,11 +192,10 @@ fn count_neighbors_p2(grids: &HashMap<i32, u32>, level: i32, i: usize) -> u32 {
                 }
             }
         }
-    } else if let Some(grid) = grids.get(&level) {
-        if (grid >> (i + 1)) & 1 == 1 {
+    } else if let Some(grid) = grids.get(&level)
+        && (grid >> (i + 1)) & 1 == 1 {
             count += 1;
         }
-    }
 
     count
 }

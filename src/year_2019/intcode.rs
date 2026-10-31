@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::collections::VecDeque;
 
 /// Represents the execution status of an Intcode virtual machine.
@@ -200,7 +200,7 @@ impl Intcode {
                 Status::Halted => break,
                 Status::Output(v) => outputs.push(v),
                 Status::NeedsInput => {
-                    return Err(anyhow!("Program requested input but none available"))
+                    return Err(anyhow!("Program requested input but none available"));
                 }
             }
         }

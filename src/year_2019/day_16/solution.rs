@@ -122,8 +122,8 @@ mod tests {
             .collect();
         assert_eq!(run_fft_part1(&digits, 1)?, 48226158);
         assert_eq!(run_fft_part1(&digits, 2)?, 34040438);
-        assert_eq!(run_fft_part1(&digits, 3)?, 03415518);
-        assert_eq!(run_fft_part1(&digits, 4)?, 01029498);
+        assert_eq!(run_fft_part1(&digits, 3)?, 3415518);
+        assert_eq!(run_fft_part1(&digits, 4)?, 1029498);
         Ok(())
     }
 

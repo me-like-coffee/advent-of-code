@@ -1,5 +1,5 @@
 use advent_of_code::{Day, Year};
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use clap::{Parser, Subcommand};
 use std::fs;
 use std::path::Path;

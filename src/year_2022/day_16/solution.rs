@@ -227,6 +227,7 @@ Valve JJ has flow rate=21; tunnel leads to valve II
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_regression() -> Result<()> {
         let (p1, p2) = solve()?;
         assert_eq!(p1, 1862);

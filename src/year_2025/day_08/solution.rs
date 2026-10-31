@@ -92,7 +92,7 @@ fn calculate_solution(points: &[Point]) -> Result<(u64, u64)> {
     }
 
     // 3. Sort by distance (ascending)
-    connections.sort_unstable_by(|a, b| a.dist_sq.cmp(&b.dist_sq));
+    connections.sort_unstable_by_key(|a| a.dist_sq);
 
     // --- Part 1 Logic: Simulate fixed number of connections (1000) ---
     let p1_total: u64 = {

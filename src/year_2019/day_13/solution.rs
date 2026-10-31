@@ -31,7 +31,7 @@ fn solve_part1(program: &[i64]) -> Result<u64> {
     let outputs = vm.run_to_end()?;
     let mut block_count = 0;
 
-    for chunk in outputs.chunks_exact(3) {
+    for chunk in outputs.as_chunks::<3>().0 {
         if chunk[2] == 2 {
             block_count += 1;
         }
@@ -91,6 +91,7 @@ mod tests {
     use super::*;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_13_part1() -> Result<()> {
         let (p1, _) = solve()?;
         assert_eq!(p1, 270);

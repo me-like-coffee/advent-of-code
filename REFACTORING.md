@@ -127,6 +127,15 @@ For each day:
 - `.github/workflows/ci.yml`: an ubuntu, macOS and Windows matrix running `cargo fmt --check`, `rustfmt --check` on every `.rs` file (`cargo fmt` skips macro-declared modules), `clippy -D warnings`, `cargo test` (without `puzzle-inputs`), and the CMake build plus `ctest`.
 - Archive or delete the old folder after you've checked the port, along with its nested `.git` histories. That's your call when we get there.
 
+### Phase 7: shared parsing where the duplication is real
+This is not a move to one parser for every day. As of 2026-10-31, 15 of the 53 days use `utils::parser` and 18 use nom directly, and none of the 79 old-folder crates uses nom. Rewriting about 100 working parsers would change no answers, and only the answer tests check them, which need local inputs that CI doesn't have. So this phase removes only the duplicated code.
+- **Intcode programs**: `intcode::parse_program(&str) -> Result<Vec<i64>>` in `year_2019/intcode.rs`, with unit tests. It replaces the 8-line parsing block that 12 of the 2019 days copy.
+- **Character grids**: a `utils::grid` function that turns the input into a grid of `char`, with unit tests, in `utils/grid.rs` if Phase 4 created it. It replaces the `lines().map(|l| l.chars().collect())` code in 8 days. Days whose versions differ, for example by trimming or skipping empty lines, keep that behaviour, or keep their own code.
+- **Other patterns**: survey the ported days for parsing repeated in three or more of them, and extract only those.
+- **`generate`**: the day template imports `utils::parser`, so new days start from the shared parsers.
+- **Not included**: rewriting other days' parsing to nom.
+- **Checks**: `check` (with `puzzle-inputs`) gives the same answers before and after. CI runs the unit tests of the new helpers.
+
 ## 4. Manual tasks for you
 
 ### 4.1 Download the missing puzzle inputs
@@ -175,6 +184,7 @@ The other 16 days in this repo already had inputs in the old folder. They were c
 ## 5. Decisions
 - 2026-10-30: examples are gitignored. The 26 inline examples move to `inputs/…_example{n}.txt` (Phase 3). The published history is not rewritten, so the examples stay visible in old commits.
 - 2026-10-30: phase order 1 → 6 as written. Shared code changes before porting.
+- 2026-10-31: no repo-wide move to one parser. Phase 7 extracts only parsing that's really duplicated, after CI is in place.
 
 ## 6. Platform divergence
 None planned. All paths go through `Path::join` and `std::filesystem::path`, and the inputs location comes from `AOC_INPUTS` or a path relative to the crate root. CI on all three OSes checks this.

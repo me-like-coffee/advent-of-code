@@ -177,6 +177,15 @@ pub fn example_path(root: &Path, year: Year, day: Day, n: u8) -> PathBuf {
     year_dir(root, year).join(format!("day_{:02}_example{n}.txt", day.0))
 }
 
+/// Returns the path of the extra puzzle file `name` for a year and day under `root`.
+///
+/// Extra files hold puzzle data that is neither the input nor an example, such as a
+/// starting pattern given in the puzzle text.
+#[must_use]
+pub fn extra_path(root: &Path, year: Year, day: Day, name: &str) -> PathBuf {
+    year_dir(root, year).join(format!("day_{:02}_{name}.txt", day.0))
+}
+
 fn year_dir(root: &Path, year: Year) -> PathBuf {
     root.join(format!("year_{}", year.0))
 }
@@ -215,6 +224,21 @@ pub fn read_example(year: Year, day: Day, n: u8) -> Result<String> {
     read_file(
         &example_path(&inputs_root(), year, day, n),
         "example file",
+        year,
+        day,
+    )
+}
+
+/// Reads the extra puzzle file `name` for a specified year and day.
+///
+/// The file is expected at `year_XXXX/day_XX_{name}.txt` under [`inputs_root`].
+///
+/// # Errors
+/// Returns an `anyhow::Error` if the file cannot be found or read.
+pub fn read_extra(year: Year, day: Day, name: &str) -> Result<String> {
+    read_file(
+        &extra_path(&inputs_root(), year, day, name),
+        "extra puzzle file",
         year,
         day,
     )
@@ -317,6 +341,13 @@ mod tests {
         let root = Path::new("root");
         let expected = root.join("year_2024").join("day_01_example2.txt");
         assert_eq!(example_path(root, Year(2024), Day(1), 2), expected);
+    }
+
+    #[test]
+    fn test_extra_path() {
+        let root = Path::new("root");
+        let expected = root.join("year_2017").join("day_21_start.txt");
+        assert_eq!(extra_path(root, Year(2017), Day(21), "start"), expected);
     }
 
     #[test]

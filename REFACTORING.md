@@ -1,6 +1,6 @@
 # Refactoring plan
 
-Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 done; Phase 4 next (2026-10-31)
+Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 done; Phase 4 done; Phase 5 next (2026-10-31)
 
 §1 describes the state before Phase 1.
 
@@ -88,7 +88,13 @@ Each phase ends with `check` green and is one commit. I'll make the commits and 
 - 2023/12 `test_individual_rows` and 2025/03 `test_part_2_examples` copied example lines into the test; they now read them from example 1.
 - `generate`: the day template reads example 1 instead of an inline constant, its stub has `#[expect(unused_variables)]`, and an empty `day_NN_example1.txt` is created next to the input. Its `register_days!` and `register_years!` output now matches rustfmt's 60-character `fn_call_width`, a Phase 2 bug that the rustfmt check exposed.
 
-### Phase 4: port the old folder's Rust days (65 days, one year per commit)
+### Phase 4: port the old folder's Rust days (65 days, one year per commit) (done 2026-10-31)
+- **Outcome**: 46 days ported, 19 held back for Phase 8. Commits: 2016 `652cd51`, 2017 `0d78417`, 2018 `9e75640`, 2019 `86d30d5`, 2020 `6c12f22`, 2021 `6ec943d`, 2022 `a91b2a3`, 2023 `6ae44f3`.
+- **Held back**: 6 days appear adapted from third-party code (plus 2023/19 part 2), 11 compute no checked answer, and 2 were empty stubs. See Phase 8.
+- **Dependencies**: none added. `itertools` (2016/11) and `chrono` (2018/04) were replaced with the standard library. `rand` (2023/25) wasn't needed, because that day is held back.
+- **Shared code**: `year_2018/device.rs` (days 16 and 19). `knot_hash.rs` wasn't extracted, because 2017/14 is held back. No `utils/grid.rs`: the ported days' `Point` and `Direction` types differ.
+- **Puzzle data moved out of source**: hard-coded inputs were rebuilt as input files (2016/11, 2017/03, 15 and 17, 2018/11 and 22, 2020/25), and 2017/21's starting pattern moved to `day_21_start.txt` (read with the new `utils::read_extra`).
+- **Tests compile with `opt-level = 3`**, because 2016/11 takes minutes unoptimised.
 | Year | Days |
 |---|---|
 | 2016 | 09, 11, 22 |
@@ -125,7 +131,7 @@ For each day:
 
 ### Phase 6: CI and wrap-up
 - `.github/workflows/ci.yml`: an ubuntu, macOS and Windows matrix running `cargo fmt --check`, `rustfmt --check` on every `.rs` file (`cargo fmt` skips macro-declared modules), `clippy -D warnings`, `cargo test` (without `puzzle-inputs`), and the CMake build plus `ctest`.
-- Archive or delete the old folder after you've checked the port, along with its nested `.git` histories. That's your call when we get there.
+- Archiving or deleting the old folder moves to the end of Phase 8, which still needs it.
 
 ### Phase 7: shared parsing where the duplication is real
 This is not a move to one parser for every day. As of 2026-10-31, 15 of the 53 days use `utils::parser` and 18 use nom directly, and none of the 79 old-folder crates uses nom. Rewriting about 100 working parsers would change no answers, and only the answer tests check them, which need local inputs that CI doesn't have. So this phase removes only the duplicated code.
@@ -135,6 +141,16 @@ This is not a move to one parser for every day. As of 2026-10-31, 15 of the 53 d
 - **`generate`**: the day template imports `utils::parser`, so new days start from the shared parsers.
 - **Not included**: rewriting other days' parsing to nom.
 - **Checks**: `check` (with `puzzle-inputs`) gives the same answers before and after. CI runs the unit tests of the new helpers.
+
+### Phase 8: rewrite suspected third-party code and the held-back days
+Phase 4 holds back days instead of porting them when they appear copied or adapted from someone else's published code, or when they compute no checked answer. The list of suspected third-party code, with locations and evidence, is in the local file `THIRD_PARTY_REVIEW.md` (excluded from git). As of 2026-10-31 it holds 2017/14 and 23, 2021/14, 17 and 24, 2022/20, and 2023/19 part 2.
+- **For each suspected day you choose**: rewrite it from scratch without consulting the suspected source, credit it (if its license allows: for MIT, its copyright notice and license text), or drop it.
+- **Held back as unfinished**: 2018/10, 12, 15 and 17; 2021/16 and 21; 2023/18, 20, 21, 23 and 25 (25 used `rand`). Each is written as a new solution or dropped. 2018/09 and 2023/17 were empty `cargo new` stubs.
+- **Parts that return 0**: 2018/11, 18 and 19 part 2 (never finished in the original), and 2023/19 part 2 (third-party, see above).
+- **Answers drawn as letters**: 2018/10, 2019/11 and 2021/13 part 2. Decide between letter recognition in `utils/` (with unit tests) and printing the drawing.
+- **Conventions**: as for Phase 4. A rewritten day's tests check the answers recorded in the old folder's tests; answers that were never recorded are checked against the puzzle website.
+- **Order**: after Phase 7, so CI runs on the new code. One commit per year.
+- **Wrap-up**: archive or delete the old folder and its nested `.git` histories, once nothing is left to rewrite. That's your call.
 
 ## 4. Manual tasks for you
 
@@ -185,6 +201,7 @@ The other 16 days in this repo already had inputs in the old folder. They were c
 - 2026-10-30: examples are gitignored. The 26 inline examples move to `inputs/…_example{n}.txt` (Phase 3). The published history is not rewritten, so the examples stay visible in old commits.
 - 2026-10-30: phase order 1 → 6 as written. Shared code changes before porting.
 - 2026-10-31: no repo-wide move to one parser. Phase 7 extracts only parsing that's really duplicated, after CI is in place.
+- 2026-10-31: suspected third-party code is held back during the port and dealt with in Phase 8, after the port, rather than immediately.
 
 ## 6. Platform divergence
 None planned. All paths go through `Path::join` and `std::filesystem::path`, and the inputs location comes from `AOC_INPUTS` or a path relative to the crate root. CI on all three OSes checks this.

@@ -245,6 +245,30 @@ pub fn read_extra(year: Year, day: Day, name: &str) -> Result<String> {
     )
 }
 
+/// The line break an input uses: `\r\n` if it has any, otherwise `\n`.
+fn blank_line(input: &str) -> &'static str {
+    if input.contains("\r\n") {
+        "\r\n\r\n"
+    } else {
+        "\n\n"
+    }
+}
+
+/// Splits an input into its sections, which are separated by blank lines.
+///
+/// Works with `\n` and `\r\n` line endings alike.
+pub fn sections(input: &str) -> impl Iterator<Item = &str> {
+    input.split(blank_line(input))
+}
+
+/// Splits an input at its first blank line, or returns `None` if it has none.
+///
+/// Works with `\n` and `\r\n` line endings alike.
+#[must_use]
+pub fn split_at_blank_line(input: &str) -> Option<(&str, &str)> {
+    input.split_once(blank_line(input))
+}
+
 /// Standardized runner for a puzzle.
 ///
 /// Executes the provided `solve_fn`, tracks its execution time, and prints the results.
@@ -349,6 +373,31 @@ mod tests {
         let root = Path::new("root");
         let expected = root.join("year_2017").join("day_21_start.txt");
         assert_eq!(extra_path(root, Year(2017), Day(21), "start"), expected);
+    }
+
+    #[test]
+    fn test_sections() {
+        let found: Vec<&str> = sections("a\nb\n\nc\n\nd\n").collect();
+        assert_eq!(found, vec!["a\nb", "c", "d\n"]);
+    }
+
+    #[test]
+    fn test_sections_windows_line_endings() {
+        let found: Vec<&str> = sections("a\r\nb\r\n\r\nc\r\n").collect();
+        assert_eq!(found, vec!["a\r\nb", "c\r\n"]);
+    }
+
+    #[test]
+    fn test_sections_without_blank_line() {
+        let found: Vec<&str> = sections("a\nb").collect();
+        assert_eq!(found, vec!["a\nb"]);
+    }
+
+    #[test]
+    fn test_split_at_blank_line() {
+        assert_eq!(split_at_blank_line("a\n\nb\n\nc"), Some(("a", "b\n\nc")));
+        assert_eq!(split_at_blank_line("a\r\n\r\nb"), Some(("a", "b")));
+        assert_eq!(split_at_blank_line("a\nb"), None);
     }
 
     #[test]

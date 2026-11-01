@@ -1,4 +1,4 @@
-use crate::utils::{Answer, Day, Year, read_input};
+use crate::utils::{Answer, Day, Year, read_input, split_at_blank_line};
 use anyhow::{Result, anyhow};
 
 #[derive(Debug, Clone, Copy)]
@@ -36,12 +36,9 @@ impl Map {
 /// # Errors
 /// Returns an error if input is malformed.
 pub fn calculate_solution(input: &str) -> Result<(u64, u64)> {
-    let split_idx = input.find("\n\n").or_else(|| input.find("\r\n\r\n"));
-    let (map_str, path_str) = if let Some(idx) = split_idx {
-        let (m, p) = input.split_at(idx);
-        (m, p.trim())
-    } else {
-        return Err(anyhow!("Invalid input format"));
+    let (map_str, path_str) = match split_at_blank_line(input) {
+        Some((m, p)) => (m, p.trim()),
+        None => return Err(anyhow!("Invalid input format")),
     };
 
     let map_lines: Vec<&str> = map_str.lines().collect();

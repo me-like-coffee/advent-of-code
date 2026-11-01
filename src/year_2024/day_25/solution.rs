@@ -1,4 +1,4 @@
-use crate::utils::{Answer, Day, Year, read_input};
+use crate::utils::{Answer, Day, Year, read_input, sections};
 use anyhow::Result;
 
 /// A schematic represented by the heights of its 5 columns.
@@ -60,8 +60,7 @@ impl Schematic {
 /// Solves Year 2024, Day 25: Code Chronicle.
 pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2024), Day(25))?;
-    let blocks: Vec<&str> = input
-        .split("\r\n\r\n")
+    let blocks: Vec<&str> = sections(&input)
         .map(|s| s.trim())
         .filter(|s| !s.is_empty())
         .collect();
@@ -102,7 +101,7 @@ mod tests {
     fn test_day_25_example() -> Result<()> {
         let example = &read_example(Year(2024), Day(25), 1)?;
 
-        let blocks: Vec<&str> = example.split("\n\n").collect();
+        let blocks: Vec<&str> = sections(example).collect();
         let mut locks = Vec::new();
         let mut keys = Vec::new();
 
@@ -125,6 +124,14 @@ mod tests {
             }
         }
         assert_eq!(fit_count, 3);
+        Ok(())
+    }
+
+    #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_solve() -> Result<()> {
+        let (p1, _) = solve()?;
+        assert_eq!(p1, 3525.into());
         Ok(())
     }
 }

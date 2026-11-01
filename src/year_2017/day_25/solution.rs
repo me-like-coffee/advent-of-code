@@ -1,4 +1,4 @@
-use crate::utils::{Answer, Day, Year, read_input};
+use crate::utils::{Answer, Day, Year, read_input, sections};
 use anyhow::{Context, Result, ensure};
 use std::collections::HashMap;
 
@@ -64,7 +64,7 @@ impl TuringMachine {
         let cursor = 0;
         let mut states = HashMap::new();
 
-        let tokens: Vec<_> = data.split("\n\n").collect();
+        let tokens: Vec<_> = sections(data).collect();
 
         let (initial_state_token, checksum_token) =
             tokens[0].split_once('.').context("missing initial state")?;

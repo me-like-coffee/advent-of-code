@@ -1,4 +1,4 @@
-use crate::utils::{Answer, Day, Year, read_input};
+use crate::utils::{Answer, Day, Year, read_input, split_at_blank_line};
 use anyhow::{Context, Result, bail};
 use std::collections::BTreeSet;
 
@@ -30,9 +30,8 @@ fn parse_folds(data: &str) -> Result<Vec<(u8, usize)>> {
 type Folds = (BTreeSet<(usize, usize)>, Vec<(u8, usize)>);
 
 fn parse(data: &str) -> Result<Folds> {
-    let (point_data, fold_data) = data
-        .split_once("\n\n")
-        .context("expected points, a blank line, then folds")?;
+    let (point_data, fold_data) =
+        split_at_blank_line(data).context("expected points, a blank line, then folds")?;
     Ok((parse_points(point_data)?, parse_folds(fold_data)?))
 }
 

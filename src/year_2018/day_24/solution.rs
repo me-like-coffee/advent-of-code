@@ -1,6 +1,6 @@
 // TBD add enum UnitType and id to group
 
-use crate::utils::{Answer, Day, Year, read_input};
+use crate::utils::{Answer, Day, Year, read_input, split_at_blank_line};
 use anyhow::{Context, Result, bail};
 use std::collections::HashMap;
 
@@ -190,9 +190,8 @@ impl Group {
 }
 
 fn parse(data: &str) -> Result<(HashMap<usize, Group>, HashMap<usize, Group>)> {
-    let (immune_data, infection_data) = data
-        .split_once("\n\n")
-        .context("expected an immune system and an infection")?;
+    let (immune_data, infection_data) =
+        split_at_blank_line(data).context("expected an immune system and an infection")?;
 
     let immune = immune_data
         .lines()

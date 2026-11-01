@@ -1,4 +1,4 @@
-use crate::utils::{Answer, Day, Year, read_input};
+use crate::utils::{Answer, Day, Year, read_input, split_at_blank_line};
 use anyhow::{Context, Result, bail, ensure};
 use std::collections::HashMap;
 
@@ -149,9 +149,8 @@ impl Part {
 type Workflows = HashMap<String, Workflow>;
 
 fn parse(data: &str) -> Result<(Workflows, Vec<Part>)> {
-    let (workflow_data, part_data) = data
-        .split_once("\n\n")
-        .context("expected workflows, a blank line, then parts")?;
+    let (workflow_data, part_data) =
+        split_at_blank_line(data).context("expected workflows, a blank line, then parts")?;
 
     let workflows = workflow_data
         .lines()

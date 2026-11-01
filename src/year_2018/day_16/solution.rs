@@ -1,4 +1,4 @@
-use crate::utils::{Answer, Day, Year, read_input};
+use crate::utils::{Answer, Day, Year, read_input, sections};
 use crate::year_2018::device::Opcode;
 use anyhow::{Context, Result, ensure};
 use std::collections::{HashMap, HashSet, VecDeque};
@@ -38,7 +38,7 @@ fn parse(data: &str) -> Result<(Vec<Sample>, Vec<[u64; 4]>)> {
     let mut samples = Vec::new();
 
     let (sample_data, program_data) = data.split_once("\n\n\n\n").unwrap_or((data, ""));
-    let sample_data: Vec<_> = sample_data.split("\n\n").collect();
+    let sample_data: Vec<_> = sections(sample_data).collect();
 
     for datum in sample_data {
         let tokens: Vec<_> = datum.split('\n').collect();

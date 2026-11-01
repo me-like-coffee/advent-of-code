@@ -1,14 +1,12 @@
-use crate::utils::{Answer, Day, Year, read_input};
+use crate::utils::{Answer, Day, Year, read_input, split_at_blank_line};
 use anyhow::{Context, Result};
 use std::collections::{HashMap, HashSet};
 
 /// Solves Year 2024, Day 5: Print Queue.
 pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2024), Day(5))?;
-    let (rules_str, updates_str) = input
-        .split_once("\r\n\r\n")
-        .or_else(|| input.split_once("\n\n"))
-        .context("Invalid input format: missing double newline")?;
+    let (rules_str, updates_str) =
+        split_at_blank_line(&input).context("Invalid input format: missing double newline")?;
 
     // Parse rules: X must be before Y
     // Map of X -> Set of all Y that must be after X
@@ -98,7 +96,7 @@ mod tests {
     fn test_day_05_example() -> Result<()> {
         let example_input = &read_example(Year(2024), Day(5), 1)?;
 
-        let (rules_str, updates_str) = example_input.split_once("\n\n").unwrap();
+        let (rules_str, updates_str) = split_at_blank_line(example_input).unwrap();
         let mut rules: HashMap<u32, HashSet<u32>> = HashMap::new();
         for line in rules_str.lines() {
             if let Some((x_str, y_str)) = line.split_once('|') {

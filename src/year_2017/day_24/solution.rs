@@ -89,22 +89,19 @@ impl Bridge {
         best_strength
     }
 
+    /// The strength of the longest bridge; among equally long bridges, the strongest.
     fn best_longest_bridge(&self) -> IntType {
-        let mut best_strength = IntType::MIN;
-        let mut longest_length = 0;
+        let mut best = (0, IntType::MIN);
         for i in &self.start_components {
             let mut bridges = HashSet::new();
             let mut bridge_components = self.components.clone();
             bridge_components[*i].used = true;
             self.dfs(bridge_components, vec![*i], &mut bridges);
             for bridge in &bridges {
-                if bridge.len() >= longest_length {
-                    longest_length = bridge.len();
-                    best_strength = best_strength.max(self.bridge_strength(bridge));
-                }
+                best = best.max((bridge.len(), self.bridge_strength(bridge)));
             }
         }
-        best_strength
+        best.1
     }
 
     fn bridge_strength(&self, bridge: &[usize]) -> IntType {
@@ -167,7 +164,7 @@ fn part_one(data: &str) -> Result<IntType> {
     Ok(Bridge::parse(data)?.best_overall_bridge())
 }
 
-/// Not confirmed: the original's answer check for this part was commented out.
+/// The original's answer check for this part was commented out; 1994 matches it.
 fn part_two(data: &str) -> Result<IntType> {
     Ok(Bridge::parse(data)?.best_longest_bridge())
 }

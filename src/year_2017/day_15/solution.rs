@@ -73,15 +73,17 @@ mod tests {
     use crate::utils::read_example;
 
     #[test]
-    fn test_generator() {
-        let a_expected = vec![65, 1092455, 1181022009, 245556042, 1744312007, 1352636452];
-        let mut a_actual = vec![0; 6];
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_generator() -> Result<()> {
+        let (a, _) = parse(&read_example(Year(2017), Day(15), 1)?)?;
+        let a_expected = vec![1092455, 1181022009, 245556042, 1744312007, 1352636452];
+        let mut a_actual = vec![a];
         let a_factor = 16807;
-        a_actual[0] = 65;
-        for i in 1..a_actual.len() {
-            a_actual[i] = next_value(a_actual[i - 1], a_factor, 1);
+        for i in 0..a_expected.len() {
+            a_actual.push(next_value(a_actual[i], a_factor, 1));
         }
-        assert_eq!(a_actual, a_expected);
+        assert_eq!(a_actual[1..], a_expected);
+        Ok(())
     }
 
     #[test]

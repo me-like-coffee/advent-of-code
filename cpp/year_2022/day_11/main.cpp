@@ -15,7 +15,7 @@ enum operation {mult_old, mult_const, add, unknown};
 struct Monkey {
     size_t id;
     std::queue<size_t> items;
-    operation operation;
+    enum operation operation;  // "enum": GCC rejects a member that renames its type
     size_t operand;
     size_t test_divisor;
     size_t true_dest;

@@ -1,6 +1,6 @@
 use crate::utils::{Answer, Day, Year, read_input};
-use crate::year_2019::intcode::{Intcode, Status};
-use anyhow::{Context, Result};
+use crate::year_2019::intcode::{Intcode, Status, parse_program};
+use anyhow::Result;
 use std::collections::VecDeque;
 
 /// Solves Year 2019, Day 23: Category Six.
@@ -9,14 +9,7 @@ use std::collections::VecDeque;
 /// Returns an error if the input cannot be read or program execution fails.
 pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(23))?;
-    let program: Vec<i64> = input
-        .trim()
-        .split(',')
-        .map(|s| {
-            s.parse::<i64>()
-                .with_context(|| format!("Failed to parse program value: '{}'", s))
-        })
-        .collect::<Result<Vec<i64>>>()?;
+    let program = parse_program(&input)?;
 
     let part1 = solve_part1(&program)?;
     let part2 = solve_part2(&program)?;

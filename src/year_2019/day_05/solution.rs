@@ -1,18 +1,11 @@
 use crate::utils::{Answer, Day, Year, read_input};
-use crate::year_2019::intcode::Intcode;
+use crate::year_2019::intcode::{Intcode, parse_program};
 use anyhow::{Context, Result};
 
 /// Solves Year 2019, Day 5: Sunny with a Chance of Asteroids.
 pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(5))?;
-    let program: Vec<i64> = input
-        .trim()
-        .split(',')
-        .map(|s| {
-            s.parse::<i64>()
-                .with_context(|| format!("Failed to parse program value: '{}'", s))
-        })
-        .collect::<Result<Vec<i64>>>()?;
+    let program = parse_program(&input)?;
 
     // Part 1: Input is 1
     let mut vm1 = Intcode::new(program.clone());

@@ -1,5 +1,20 @@
-use anyhow::{Result, anyhow};
+use anyhow::{Context, Result, anyhow};
 use std::collections::VecDeque;
+
+/// Parses an Intcode program: comma-separated integers, with surrounding whitespace ignored.
+///
+/// # Errors
+/// Returns an error naming the first value that isn't an integer.
+pub fn parse_program(source: &str) -> Result<Vec<i64>> {
+    source
+        .trim()
+        .split(',')
+        .map(|s| {
+            s.parse::<i64>()
+                .with_context(|| format!("Failed to parse program value: '{}'", s))
+        })
+        .collect()
+}
 
 /// Represents the execution status of an Intcode virtual machine.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -205,5 +220,34 @@ impl Intcode {
             }
         }
         Ok(outputs)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_program() -> Result<()> {
+        assert_eq!(parse_program("1,0,-3,99")?, vec![1, 0, -3, 99]);
+        Ok(())
+    }
+
+    #[test]
+    fn test_parse_program_ignores_surrounding_whitespace() -> Result<()> {
+        assert_eq!(parse_program("  104,7,99\n")?, vec![104, 7, 99]);
+        Ok(())
+    }
+
+    #[test]
+    fn test_parse_program_names_the_bad_value() {
+        let err = parse_program("1,x2,99").map(|_| ()).unwrap_err();
+        assert!(err.to_string().contains("'x2'"), "{err}");
+    }
+
+    #[test]
+    fn test_parse_program_rejects_empty_input() {
+        assert!(parse_program("").is_err());
+        assert!(parse_program("1,,2").is_err());
     }
 }

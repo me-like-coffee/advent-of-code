@@ -1,18 +1,11 @@
 use crate::utils::{Answer, Day, Year, read_input};
-use crate::year_2019::intcode::Intcode;
+use crate::year_2019::intcode::{Intcode, parse_program};
 use anyhow::{Context, Result};
 
 /// Solves Year 2019, Day 2: 1202 Program Alarm.
 pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(2))?;
-    let program: Vec<i64> = input
-        .trim()
-        .split(',')
-        .map(|s| {
-            s.parse::<i64>()
-                .with_context(|| format!("Failed to parse program value: '{}'", s))
-        })
-        .collect::<Result<Vec<i64>>>()?;
+    let program = parse_program(&input)?;
 
     // Part 1: Restore the gravity assist program to the "1202 program alarm" state
     let part1 = run_with_params(&program, 12, 2)?;

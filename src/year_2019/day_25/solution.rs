@@ -1,6 +1,6 @@
 use crate::utils::{Answer, Day, Year, read_extra, read_input};
-use crate::year_2019::intcode::{Intcode, Status};
-use anyhow::{Context, Result};
+use crate::year_2019::intcode::{Intcode, Status, parse_program};
+use anyhow::Result;
 
 /// Solves Year 2019, Day 25: Cryostasis.
 ///
@@ -12,14 +12,7 @@ use anyhow::{Context, Result};
 /// Returns an error if the input cannot be read or program execution fails.
 pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(25))?;
-    let program: Vec<i64> = input
-        .trim()
-        .split(',')
-        .map(|s| {
-            s.parse::<i64>()
-                .with_context(|| format!("Failed to parse program value: '{}'", s))
-        })
-        .collect::<Result<Vec<i64>>>()?;
+    let program = parse_program(&input)?;
 
     let walkthrough = read_extra(Year(2019), Day(25), "walkthrough")?;
     let password = solve_part1(&program, &walkthrough)?;

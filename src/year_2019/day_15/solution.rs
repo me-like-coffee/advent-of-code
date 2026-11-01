@@ -1,5 +1,5 @@
 use crate::utils::{Answer, Day, Year, read_input};
-use crate::year_2019::intcode::{Intcode, Status};
+use crate::year_2019::intcode::{Intcode, Status, parse_program};
 use anyhow::{Context, Result};
 use std::collections::{HashMap, VecDeque};
 
@@ -18,14 +18,7 @@ type Grid = HashMap<(i32, i32), Tile>;
 /// Returns an error if the input cannot be read or program execution fails.
 pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2019), Day(15))?;
-    let program: Vec<i64> = input
-        .trim()
-        .split(',')
-        .map(|s| {
-            s.parse::<i64>()
-                .with_context(|| format!("Failed to parse program value: '{}'", s))
-        })
-        .collect::<Result<Vec<i64>>>()?;
+    let program = parse_program(&input)?;
 
     let (map, oxygen_pos) = explore_map(&program)?;
 

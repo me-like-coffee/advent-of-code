@@ -64,9 +64,9 @@ fn solve_part1(program: &[i64], walkthrough: &str) -> Result<u64> {
         // Moving 'east' from the Security Checkpoint tests the current weight.
         let output = run_command(&mut vm, "east")?;
         if !output.contains("Alert!") {
-            // Parsing the numeric password from the success message.
-            if let Some(pos) = output.find("password is ") {
-                let start = pos + "password is ".len();
+            // The success message says "…get in by typing <password> on the keypad…".
+            if let Some(pos) = output.find("typing ") {
+                let start = pos + "typing ".len();
                 let end = output[start..]
                     .find(|c: char| !c.is_ascii_digit())
                     .map(|i| start + i)

@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -22,7 +23,7 @@ int main(int argc, char** argv) {
     size_t foo_count = 0;
     size_t overlap_count = 0;
     
-    size_t min_s = SIZE_T_MAX;
+    size_t min_s = SIZE_MAX;
     size_t max_e = 0;
     int count = 0;
 

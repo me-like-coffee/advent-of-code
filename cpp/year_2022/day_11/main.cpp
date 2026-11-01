@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <algorithm>
 #include <fstream>
 #include <functional>
@@ -48,7 +49,7 @@ size_t BuildMonkey(std::vector<std::string>& lines, Monkey& monkey) {
     ParseLine(lines[2], tokens);
     if ("*" == tokens[4] && "old" == tokens[5]) {
         monkey.operation = mult_old;
-        monkey.operand = SIZE_T_MAX;
+        monkey.operand = SIZE_MAX;
     } else if ("*" == tokens[4]) {
         monkey.operation = mult_const;
         monkey.operand = (size_t)std::stoi(tokens[5]);
@@ -57,7 +58,7 @@ size_t BuildMonkey(std::vector<std::string>& lines, Monkey& monkey) {
         monkey.operand = (size_t)std::stoi(tokens[5]);
     } else {
         monkey.operation = unknown;
-        monkey.operand = SIZE_T_MAX;
+        monkey.operand = SIZE_MAX;
     }
 
     // Test divisor

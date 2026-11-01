@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -108,7 +109,7 @@ int main(int argc, char** argv) {
     // Process results
     size_t total_dir_size = 0;
     size_t unused_space = 70000000 - dir_sizes["/"];
-    size_t min_deletion_space = SIZE_T_MAX;
+    size_t min_deletion_space = SIZE_MAX;
 
     std::cout << "Directories" << std::endl;
     for (std::unordered_map<std::string, size_t>::iterator it = dir_sizes.begin();

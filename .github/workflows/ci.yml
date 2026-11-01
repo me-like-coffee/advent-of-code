@@ -88,5 +88,6 @@ jobs:
           path: ${{ runner.temp }}/vcpkg-archives
           key: vcpkg-${{ runner.os }}-${{ env.VCPKG_COMMIT }}-${{ hashFiles('vcpkg.json') }}
       - run: cmake --preset dev
-      - run: cmake --build --preset dev
+      - name: cmake --build (keeps going, to report every error at once)
+        run: cmake --build --preset dev -- -k 0
       - run: ctest --preset dev

@@ -7,6 +7,9 @@ use anyhow::{Result, anyhow};
 /// Maximum line width, matching rustfmt's default.
 const MAX_WIDTH: usize = 100;
 
+/// Maximum width of a call's arguments on one line, matching rustfmt's `fn_call_width`.
+const FN_CALL_WIDTH: usize = 60;
+
 /// Adds `item` to the top-level `macro_name!(…);` call in `source`.
 ///
 /// The items are kept sorted. Returns `None` if `item` is already registered.
@@ -47,12 +50,15 @@ pub fn register_in_macro(source: &str, macro_name: &str, item: &str) -> Result<O
 
 /// Formats `macro_name!(items)` the way rustfmt lays out a call followed by `;`.
 ///
-/// The call stays on one line if it fits. Otherwise the items are packed onto
-/// indented lines between the parentheses.
+/// The call stays on one line if its arguments fit in [`FN_CALL_WIDTH`] and the
+/// line fits in [`MAX_WIDTH`]. Otherwise the items are packed onto indented lines
+/// between the parentheses, which is how rustfmt lays out short items (at most
+/// 10 characters, as day and year module names are).
 #[must_use]
 pub fn format_macro_call(macro_name: &str, items: &[&str]) -> String {
-    let single = format!("{macro_name}!({})", items.join(", "));
-    if single.len() < MAX_WIDTH {
+    let args = items.join(", ");
+    let single = format!("{macro_name}!({args})");
+    if args.len() <= FN_CALL_WIDTH && single.len() < MAX_WIDTH {
         return single;
     }
 
@@ -142,6 +148,23 @@ mod tests {
         assert_eq!(
             format_macro_call("register_days", &["day_01", "day_02"]),
             "register_days!(day_01, day_02)"
+        );
+    }
+
+    #[test]
+    fn test_format_macro_call_fn_call_width() {
+        // Seven day names are 54 characters of arguments, eight are 62.
+        let names: Vec<String> = (1..=8).map(|d| format!("day_{d:02}")).collect();
+        let items: Vec<&str> = names.iter().map(String::as_str).collect();
+        assert_eq!(
+            format_macro_call("register_days", &items[..7])
+                .lines()
+                .count(),
+            1
+        );
+        assert_eq!(
+            format_macro_call("register_days", &items),
+            "register_days!(\n    day_01, day_02, day_03, day_04, day_05, day_06, day_07, day_08\n)"
         );
     }
 

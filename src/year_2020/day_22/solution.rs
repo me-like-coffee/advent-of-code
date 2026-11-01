@@ -135,45 +135,30 @@ fn calculate_solution(input: &str) -> Result<(u64, u64)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const EXAMPLE: &str = "Player 1:
-9
-2
-6
-3
-1
-
-Player 2:
-5
-8
-4
-7
-10";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_part1() -> Result<()> {
-        let (p1, _) = calculate_solution(EXAMPLE)?;
+        let example = read_example(Year(2020), Day(22), 1)?;
+        let (p1, _) = calculate_solution(&example)?;
         assert_eq!(p1, 306);
         Ok(())
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_part2() -> Result<()> {
-        let (_, p2) = calculate_solution(EXAMPLE)?;
+        let example = read_example(Year(2020), Day(22), 1)?;
+        let (_, p2) = calculate_solution(&example)?;
         assert_eq!(p2, 291);
         Ok(())
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_infinite_loop_prevention() -> Result<()> {
-        let input = "Player 1:
-43
-19
-
-Player 2:
-2
-29
-14";
+        let input = &read_example(Year(2020), Day(22), 2)?;
         let (p1_deck, p2_deck) = parse_decks(input)?;
         let (winner, _, _) = play_recursive_combat(p1_deck, p2_deck);
         assert!(matches!(winner, Player::One));

@@ -123,10 +123,12 @@ fn can_move(rock: &[(i64, i64)], x: i64, y: i64, chamber: &[u8]) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example() -> Result<()> {
-        let input = ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>";
+        let input = &read_example(Year(2022), Day(17), 1)?;
         let jets = input.trim().as_bytes();
         assert_eq!(simulate(jets, 2022), 3068);
         assert_eq!(simulate(jets, 1_000_000_000_000), 1514285714288);

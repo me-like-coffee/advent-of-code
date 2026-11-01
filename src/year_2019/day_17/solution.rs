@@ -282,17 +282,14 @@ fn compress_path(path: &[String]) -> Option<Compressed> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
 
     #[test]
-    fn test_example() {
-        let example = "..#..........
-..#..........
-#######...###
-#.#...#...#.#
-#############
-..#...#...#..
-..#####...^..";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example() -> Result<()> {
+        let example = &read_example(Year(2019), Day(17), 1)?;
         let grid: Vec<Vec<char>> = example.lines().map(|l| l.chars().collect()).collect();
         assert_eq!(calculate_alignment_parameters(&grid), 76);
+        Ok(())
     }
 }

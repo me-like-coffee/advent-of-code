@@ -151,12 +151,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const TEST_INPUT: &str = "162,817,812\n57,618,57\n906,360,560\n592,479,940\n352,342,300\n466,668,158\n542,29,236\n431,825,988\n739,650,466\n52,470,668\n216,146,977\n819,987,18\n117,168,530\n805,96,715\n346,949,466\n970,615,88\n941,993,340\n862,61,35\n984,92,344\n425,690,689";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_08_solution() -> Result<()> {
-        let points = parse_str_lines(TEST_INPUT, Point::parse)?;
+        let test_input = read_example(Year(2025), Day(8), 1)?;
+        let points = parse_str_lines(&test_input, Point::parse)?;
         let (p1, p2) = calculate_solution(&points)?;
         assert_eq!(p1, 20);
         assert_eq!(p2, 25272);

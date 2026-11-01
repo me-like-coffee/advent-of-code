@@ -106,12 +106,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const TEST_INPUT: &str = "11-22,95-115,998-1012,1188511880-1188511890,222220-222224,1698522-1698528,446443-446449,38593856-38593862,565653-565659,824824821-824824827,2121212118-2121212124";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_02_solution() -> Result<()> {
-        let groups = parse_str_lines(TEST_INPUT, RangeGroup::parse)?;
+        let test_input = read_example(Year(2025), Day(2), 1)?;
+        let groups = parse_str_lines(&test_input, RangeGroup::parse)?;
         let (p1, p2) = calculate_solution(&groups)?;
         assert_eq!(p1, 1227775554);
         assert_eq!(p2, 4174379265);

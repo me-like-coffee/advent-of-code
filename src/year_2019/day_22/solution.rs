@@ -186,6 +186,7 @@ fn extended_gcd(a: i128, b: i128) -> (i128, i128, i128) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
 
     fn simulate_deck(input: &str, deck_size: i128) -> Result<Vec<i128>> {
         let mut deck = vec![0; deck_size as usize];
@@ -197,10 +198,9 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_1() -> Result<()> {
-        let input = "deal with increment 7
-deal into new stack
-deal into new stack";
+        let input = &read_example(Year(2019), Day(22), 1)?;
         assert_eq!(
             simulate_deck(input, 10)?,
             vec![0, 3, 6, 9, 2, 5, 8, 1, 4, 7]
@@ -209,10 +209,9 @@ deal into new stack";
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_2() -> Result<()> {
-        let input = "cut 6
-deal with increment 7
-deal into new stack";
+        let input = &read_example(Year(2019), Day(22), 2)?;
         assert_eq!(
             simulate_deck(input, 10)?,
             vec![3, 0, 7, 4, 1, 8, 5, 2, 9, 6]
@@ -221,10 +220,9 @@ deal into new stack";
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_3() -> Result<()> {
-        let input = "deal with increment 7
-deal with increment 9
-cut -2";
+        let input = &read_example(Year(2019), Day(22), 3)?;
         assert_eq!(
             simulate_deck(input, 10)?,
             vec![6, 3, 0, 7, 4, 1, 8, 5, 2, 9]
@@ -233,17 +231,9 @@ cut -2";
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_4() -> Result<()> {
-        let input = "deal into new stack
-cut -2
-deal with increment 7
-cut 8
-cut -4
-deal with increment 7
-cut 3
-deal with increment 9
-deal with increment 3
-cut -1";
+        let input = &read_example(Year(2019), Day(22), 4)?;
         assert_eq!(
             simulate_deck(input, 10)?,
             vec![9, 2, 5, 8, 1, 4, 7, 0, 3, 6]

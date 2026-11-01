@@ -97,12 +97,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const TEST_INPUT: &str = "..@@.@@@@.\n@@@.@.@.@@\n@@@@@.@.@@\n@.@@@@..@.\n@@.@@@@.@@\n.@@@@@@@.@\n.@.@.@.@@@\n@.@@@.@@@@\n.@@@@@@@@.\n@.@.@@@.@.";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_04_solution() -> Result<()> {
-        let rows = parse_str_lines(TEST_INPUT, GridRow::parse)?;
+        let test_input = read_example(Year(2025), Day(4), 1)?;
+        let rows = parse_str_lines(&test_input, GridRow::parse)?;
         let grid: Vec<Vec<char>> = rows.into_iter().map(|r| r.cells).collect();
         let (_p1, p2) = calculate_solution(grid)?;
         assert_eq!(p2, 43);

@@ -123,36 +123,39 @@ fn count_recursive(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
+    use anyhow::Context;
 
     #[test]
-    fn test_example() {
-        let input = "???.### 1,1,3
-.??..??...?##. 1,1,3
-?#?#?#?#?#?#?#? 1,3,1,6
-????.#...#... 4,1,1
-????.######..#####. 1,6,5
-?###???????? 3,2,1";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example() -> Result<()> {
+        let input = &read_example(Year(2023), Day(12), 1)?;
         assert_eq!(part_1(input), 21);
+        Ok(())
     }
 
     #[test]
-    fn test_part2_example() {
-        let input = "???.### 1,1,3
-.??..??...?##. 1,1,3
-?#?#?#?#?#?#?#? 1,3,1,6
-????.#...#... 4,1,1
-????.######..#####. 1,6,5
-?###???????? 3,2,1";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_part2_example() -> Result<()> {
+        let input = &read_example(Year(2023), Day(12), 1)?;
         assert_eq!(part_2(input), 525152);
+        Ok(())
     }
 
     #[test]
-    fn test_individual_rows() {
-        assert_eq!(count_arrangements("???.###", &[1, 1, 3]), 1);
-        assert_eq!(count_arrangements(".??..??...?##.", &[1, 1, 3]), 4);
-        assert_eq!(count_arrangements("?#?#?#?#?#?#?#?", &[1, 3, 1, 6]), 1);
-        assert_eq!(count_arrangements("????.#...#...", &[4, 1, 1]), 1);
-        assert_eq!(count_arrangements("????.######..#####.", &[1, 6, 5]), 4);
-        assert_eq!(count_arrangements("?###????????", &[3, 2, 1]), 10);
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_individual_rows() -> Result<()> {
+        let example = read_example(Year(2023), Day(12), 1)?;
+        let expected = [1, 4, 1, 1, 4, 10];
+        assert_eq!(example.lines().count(), expected.len());
+        for (line, want) in example.lines().zip(expected) {
+            let (springs, groups) = line.split_once(' ').context("missing groups")?;
+            let groups = groups
+                .split(',')
+                .map(str::parse)
+                .collect::<Result<Vec<usize>, _>>()?;
+            assert_eq!(count_arrangements(springs, &groups), want, "{line}");
+        }
+        Ok(())
     }
 }

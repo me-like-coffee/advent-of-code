@@ -262,31 +262,23 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const EXAMPLE: &str = "        ...#
-        .#..
-        #...
-        ....
-...#.......#
-........#...
-..#....#....
-..........#.
-        ...#....
-        .....#..
-        .#......
-        ......#.
-
-10R5L5R10L4R5L5";
+    use crate::utils::read_example;
 
     #[test]
-    fn test_example_p1() {
-        let (p1, _) = calculate_solution(EXAMPLE).unwrap();
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example_p1() -> Result<()> {
+        let example = read_example(Year(2022), Day(22), 1)?;
+        let (p1, _) = calculate_solution(&example).unwrap();
         assert_eq!(p1, 6032);
+        Ok(())
     }
 
     #[test]
-    fn test_example_p2() {
-        let (_, p2) = calculate_solution(EXAMPLE).unwrap();
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example_p2() -> Result<()> {
+        let example = read_example(Year(2022), Day(22), 1)?;
+        let (_, p2) = calculate_solution(&example).unwrap();
         assert_eq!(p2, 5031);
+        Ok(())
     }
 }

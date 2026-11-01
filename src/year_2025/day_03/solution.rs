@@ -83,12 +83,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const TEST_INPUT: &str = "987654321111111\n811111111111119\n234234234234278\n818181911112111";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_03_solution() -> Result<()> {
-        let banks = parse_str_lines(TEST_INPUT, BatteryBank::parse)?;
+        let test_input = read_example(Year(2025), Day(3), 1)?;
+        let banks = parse_str_lines(&test_input, BatteryBank::parse)?;
         let (p1, p2) = calculate_solution(&banks)?;
         assert_eq!(p1, 357);
         assert_eq!(p2, 3121910778619);
@@ -96,17 +97,15 @@ mod tests {
     }
 
     #[test]
-    fn test_part_2_examples() {
-        let b1 = vec![9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1];
-        assert_eq!(find_max_subsequence_val(&b1, 12).unwrap(), 987654321111);
-
-        let b2 = vec![8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9];
-        assert_eq!(find_max_subsequence_val(&b2, 12).unwrap(), 811111111119);
-
-        let b3 = vec![2, 3, 4, 2, 3, 4, 2, 3, 4, 2, 3, 4, 2, 7, 8];
-        assert_eq!(find_max_subsequence_val(&b3, 12).unwrap(), 434234234278);
-
-        let b4 = vec![8, 1, 8, 1, 8, 1, 9, 1, 1, 1, 1, 2, 1, 1, 1];
-        assert_eq!(find_max_subsequence_val(&b4, 12).unwrap(), 888911112111);
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_part_2_examples() -> Result<()> {
+        let test_input = read_example(Year(2025), Day(3), 1)?;
+        let banks = parse_str_lines(&test_input, BatteryBank::parse)?;
+        let expected = [987654321111, 811111111119, 434234234278, 888911112111];
+        assert_eq!(banks.len(), expected.len());
+        for (bank, want) in banks.iter().zip(expected) {
+            assert_eq!(find_max_subsequence_val(&bank.joltages, 12)?, want);
+        }
+        Ok(())
     }
 }

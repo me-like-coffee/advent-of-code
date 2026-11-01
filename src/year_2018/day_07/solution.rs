@@ -104,22 +104,21 @@ fn solve_part2(input: &str, num_workers: usize, base_duration: u32) -> u64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const EXAMPLE: &str = "Step C must be finished before step A can begin.
-Step C must be finished before step F can begin.
-Step A must be finished before step B can begin.
-Step A must be finished before step D can begin.
-Step B must be finished before step E can begin.
-Step D must be finished before step E can begin.
-Step F must be finished before step E can begin.";
+    use crate::utils::read_example;
 
     #[test]
-    fn test_part1_example() {
-        assert_eq!(solve_part1(EXAMPLE), "CABDFE");
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_part1_example() -> Result<()> {
+        let example = read_example(Year(2018), Day(7), 1)?;
+        assert_eq!(solve_part1(&example), "CABDFE");
+        Ok(())
     }
 
     #[test]
-    fn test_part2_example() {
-        assert_eq!(solve_part2(EXAMPLE, 2, 0), 15);
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_part2_example() -> Result<()> {
+        let example = read_example(Year(2018), Day(7), 1)?;
+        assert_eq!(solve_part2(&example, 2, 0), 15);
+        Ok(())
     }
 }

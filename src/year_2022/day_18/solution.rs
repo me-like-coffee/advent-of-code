@@ -149,28 +149,16 @@ fn calculate_exterior_surface_area(cubes: &HashSet<Point3D>) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const EXAMPLE: &str = "\
-2,2,2
-1,2,2
-3,2,2
-2,1,2
-2,3,2
-2,2,1
-2,2,3
-2,2,4
-2,2,6
-1,2,5
-3,2,5
-2,1,5
-2,3,5
-";
+    use crate::utils::{Day, Year, read_example};
 
     #[test]
-    fn test_example() {
-        let cubes = parse_input(EXAMPLE).unwrap();
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example() -> Result<()> {
+        let example = read_example(Year(2022), Day(18), 1)?;
+        let cubes = parse_input(&example).unwrap();
         assert_eq!(calculate_surface_area(&cubes), 64);
         assert_eq!(calculate_exterior_surface_area(&cubes), 58);
+        Ok(())
     }
 
     #[test]

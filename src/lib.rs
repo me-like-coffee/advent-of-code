@@ -25,6 +25,6 @@ mod tests {
         assert!(get_year_solver(2015, 1).is_some());
         assert!(get_year_solver(2019, 25).is_some());
         assert!(get_year_solver(2015, 2).is_none());
-        assert!(get_year_solver(2016, 1).is_none());
+        assert!(get_year_solver(2014, 1).is_none());
     }
 }

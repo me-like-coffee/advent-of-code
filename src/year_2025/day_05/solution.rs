@@ -132,12 +132,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const TEST_INPUT: &str = "3-5\n10-14\n16-20\n12-18\n\n1\n5\n8\n11\n17\n32";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_05_solution() -> Result<()> {
-        let db = parse_full(TEST_INPUT, InventoryDb::parse)?;
+        let test_input = read_example(Year(2025), Day(5), 1)?;
+        let db = parse_full(&test_input, InventoryDb::parse)?;
         let (p1, p2) = calculate_solution(&db)?;
         assert_eq!(p1, 3);
         assert_eq!(p2, 14);

@@ -95,49 +95,12 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
 
     #[test]
-    fn test_day_25_example() {
-        let example = "\
-#####
-.####
-.####
-.####
-.#.#.
-.#...
-.....
-
-#####
-##.##
-.#.##
-...##
-...#.
-...#.
-.....
-
-.....
-#....
-#....
-#...#
-#.#.#
-#.###
-#####
-
-.....
-.....
-#.#..
-###..
-###.#
-###.#
-#####
-
-.....
-.....
-.....
-#....
-#.#..
-#.#.#
-#####";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_day_25_example() -> Result<()> {
+        let example = &read_example(Year(2024), Day(25), 1)?;
 
         let blocks: Vec<&str> = example.split("\n\n").collect();
         let mut locks = Vec::new();
@@ -162,5 +125,6 @@ mod tests {
             }
         }
         assert_eq!(fit_count, 3);
+        Ok(())
     }
 }

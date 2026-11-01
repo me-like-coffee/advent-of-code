@@ -118,31 +118,24 @@ fn sort_string(s: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const EXAMPLE: &str =
-        "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
-edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec | fcgedb cgb dgebacf gc
-fgaebd cg bdaec gdafb agbcfd gdcbef bgcad gfac gcb cdgabef | cg cg fdcagb cbg
-fbegcd cbd adcefb dageb afcb bc aefdc ecdab fgdeca fcdbega | efabcd cedba gadfec cb
-aecbfdg fbg gf bafeg dbefa fcge gcbea fcaegb dgceab fcbdga | gecf egdcabf bgf bfgea
-fgeab ca afcebg bdacfeg cfaedg gcfdb baec bfadeg bafgc acf | gebdcfa ecba ca fadegcb
-dbcfg fgd bdegcaf fgec aegbdf ecdfab fbedc dacgb gdcebf gf | cefg dcbef fcge gbcadfe
-bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd | ed bcgafe cdgba cbgef
-egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
-gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce";
+    use crate::utils::read_example;
 
     #[test]
-    fn test_example() {
-        let (p1, p2) = calculate_solution(EXAMPLE);
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example() -> Result<()> {
+        let example = read_example(Year(2021), Day(8), 1)?;
+        let (p1, p2) = calculate_solution(&example);
         assert_eq!(p1, 26);
         assert_eq!(p2, 61229);
+        Ok(())
     }
 
     #[test]
-    fn test_single_line() {
-        let input =
-            "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_single_line() -> Result<()> {
+        let input = &read_example(Year(2021), Day(8), 2)?;
         let (_, p2) = calculate_solution(input);
         assert_eq!(p2, 5353);
+        Ok(())
     }
 }

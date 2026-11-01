@@ -61,12 +61,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const TEST_INPUT: &str = "L68\nL30\nR48\nL5\nR60\nL55\nL1\nL99\nR14\nL82";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_01_solution() -> Result<()> {
-        let instructions = parse_str_lines(TEST_INPUT, Instruction::parse)?;
+        let test_input = read_example(Year(2025), Day(1), 1)?;
+        let instructions = parse_str_lines(&test_input, Instruction::parse)?;
         let (p1, p2) = calculate_solution(&instructions)?;
         assert_eq!(p1, 3);
         assert_eq!(p2, 6);

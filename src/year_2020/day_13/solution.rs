@@ -75,41 +75,59 @@ fn solve_part2(bus_ids_raw: &str) -> u64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
 
     #[test]
-    fn test_example_part1() {
-        let input = "939\n7,13,x,x,59,x,31,19";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example_part1() -> Result<()> {
+        let input = &read_example(Year(2020), Day(13), 1)?;
         let (p1, _) = calculate_solution(input).unwrap();
         assert_eq!(p1, 295);
+        Ok(())
     }
 
     #[test]
-    fn test_example_part2_1() {
-        assert_eq!(solve_part2("7,13,x,x,59,x,31,19"), 1068781);
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example_part2_1() -> Result<()> {
+        assert_eq!(solve_part2(&read_example(Year(2020), Day(13), 2)?), 1068781);
+        Ok(())
     }
 
     #[test]
-    fn test_example_part2_2() {
-        assert_eq!(solve_part2("17,x,13,19"), 3417);
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example_part2_2() -> Result<()> {
+        assert_eq!(solve_part2(&read_example(Year(2020), Day(13), 3)?), 3417);
+        Ok(())
     }
 
     #[test]
-    fn test_example_part2_3() {
-        assert_eq!(solve_part2("67,7,59,61"), 754018);
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example_part2_3() -> Result<()> {
+        assert_eq!(solve_part2(&read_example(Year(2020), Day(13), 4)?), 754018);
+        Ok(())
     }
 
     #[test]
-    fn test_example_part2_4() {
-        assert_eq!(solve_part2("67,x,7,59,61"), 779210);
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example_part2_4() -> Result<()> {
+        assert_eq!(solve_part2(&read_example(Year(2020), Day(13), 5)?), 779210);
+        Ok(())
     }
 
     #[test]
-    fn test_example_part2_5() {
-        assert_eq!(solve_part2("67,7,x,59,61"), 1261476);
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example_part2_5() -> Result<()> {
+        assert_eq!(solve_part2(&read_example(Year(2020), Day(13), 6)?), 1261476);
+        Ok(())
     }
 
     #[test]
-    fn test_example_part2_6() {
-        assert_eq!(solve_part2("1789,37,47,1889"), 1202161486);
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example_part2_6() -> Result<()> {
+        assert_eq!(
+            solve_part2(&read_example(Year(2020), Day(13), 7)?),
+            1202161486
+        );
+        Ok(())
     }
 }

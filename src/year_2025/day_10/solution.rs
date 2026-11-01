@@ -338,12 +338,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const TEST_INPUT: &str = "[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_10_solution() -> Result<()> {
-        let machines = parse_str_lines(TEST_INPUT, Machine::parse)?;
+        let test_input = read_example(Year(2025), Day(10), 1)?;
+        let machines = parse_str_lines(&test_input, Machine::parse)?;
         let (p1, p2) = calculate_solution(&machines)?;
         assert_eq!(p1, 2);
         assert_eq!(p2, 10);

@@ -120,8 +120,12 @@ fn generate_day(year: u16, day: u8) -> Result<()> {
         fs::create_dir_all(input_dir)?;
     }
 
-    // Create day_XX.txt
+    // Create day_XX.txt and day_XX_example1.txt
     create_file(&input_path, "")?;
+    create_file(
+        &utils::example_path(&utils::inputs_root(), Year(year), Day(day), 1),
+        "",
+    )?;
 
     // Create day_XX/mod.rs
     create_file(
@@ -135,6 +139,7 @@ fn generate_day(year: u16, day: u8) -> Result<()> {
 use anyhow::Result;
 
 /// Core logic for Year {year}, Day {day:02}
+#[expect(unused_variables, reason = "stub until the day is implemented")]
 fn calculate_solution(input: &str) -> Result<(u64, u64)> {{
     // TODO: Implement solution
     Ok((0, 0))
@@ -149,12 +154,13 @@ pub fn solve() -> Result<(Answer, Answer)> {{
 #[cfg(test)]
 mod tests {{
     use super::*;
-
-    const TEST_INPUT: &str = "";
+    use crate::utils::read_example;
 
     #[test]
-    fn test_day_{day:02}_solution() -> Result<()> {{
-        let (p1, p2) = calculate_solution(TEST_INPUT)?;
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_day_{day:02}_example() -> Result<()> {{
+        let example = read_example(Year({year}), Day({day}), 1)?;
+        let (p1, p2) = calculate_solution(&example)?;
         assert_eq!(p1, 0);
         assert_eq!(p2, 0);
         Ok(())

@@ -151,20 +151,12 @@ fn is_looping(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
 
     #[test]
-    fn test_day_06_example() {
-        let example = "\
-....#.....
-.........#
-..........
-..#.......
-.......#..
-..........
-.#..^.....
-........#.
-#.........
-......#...";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_day_06_example() -> Result<()> {
+        let example = &read_example(Year(2024), Day(6), 1)?;
 
         let grid: Vec<Vec<char>> = example.lines().map(|l| l.chars().collect()).collect();
 
@@ -182,5 +174,6 @@ mod tests {
 
         assert_eq!(original_visited.len(), 41);
         assert_eq!(part2, 6);
+        Ok(())
     }
 }

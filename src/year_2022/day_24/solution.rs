@@ -144,17 +144,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const EXAMPLE: &str = "#.######
-#>>.<^<#
-#.<..<<#
-#>v.><>#
-#<^v^^>#
-######.#";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example() -> Result<()> {
-        let (p1, p2) = calculate_solution(EXAMPLE)?;
+        let example = read_example(Year(2022), Day(24), 1)?;
+        let (p1, p2) = calculate_solution(&example)?;
         assert_eq!(p1, 18);
         assert_eq!(p2, 54);
         Ok(())

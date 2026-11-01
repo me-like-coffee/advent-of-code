@@ -211,26 +211,23 @@ fn count_neighbors_p2(grids: &HashMap<i32, u32>, level: i32, i: usize) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
 
     #[test]
-    fn test_part1_example() {
-        let input = "....#
-#..#.
-#..##
-..#..
-#....";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_part1_example() -> Result<()> {
+        let input = &read_example(Year(2019), Day(24), 1)?;
         let initial_grid = parse_grid(input);
         assert_eq!(solve_part1(initial_grid), 2129920);
+        Ok(())
     }
 
     #[test]
-    fn test_part2_example() {
-        let input = "....#
-#..#.
-#..##
-..#..
-#....";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_part2_example() -> Result<()> {
+        let input = &read_example(Year(2019), Day(24), 1)?;
         let initial_grid = parse_grid(input);
         assert_eq!(solve_part2(initial_grid, 10), 99);
+        Ok(())
     }
 }

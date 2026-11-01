@@ -113,10 +113,12 @@ fn run_fft_part2(initial_digits: &[i32], phases: usize) -> Result<u64> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_small_example() -> Result<()> {
-        let input = "12345678";
+        let input = &read_example(Year(2019), Day(16), 1)?;
         let digits: Vec<i32> = input
             .chars()
             .filter_map(|c| c.to_digit(10).map(|d| d as i32))
@@ -129,22 +131,23 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_larger_examples() -> Result<()> {
-        let input1 = "80871224585914546619083218645595";
+        let input1 = &read_example(Year(2019), Day(16), 2)?;
         let digits1: Vec<i32> = input1
             .chars()
             .filter_map(|c| c.to_digit(10).map(|d| d as i32))
             .collect();
         assert_eq!(run_fft_part1(&digits1, 100)?, 24176176);
 
-        let input2 = "19617804207202209144916044189917";
+        let input2 = &read_example(Year(2019), Day(16), 3)?;
         let digits2: Vec<i32> = input2
             .chars()
             .filter_map(|c| c.to_digit(10).map(|d| d as i32))
             .collect();
         assert_eq!(run_fft_part1(&digits2, 100)?, 73745418);
 
-        let input3 = "69317163492948606335995924319873";
+        let input3 = &read_example(Year(2019), Day(16), 4)?;
         let digits3: Vec<i32> = input3
             .chars()
             .filter_map(|c| c.to_digit(10).map(|d| d as i32))
@@ -154,22 +157,23 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_examples() -> Result<()> {
-        let input1 = "03036732577212944063491565474664";
+        let input1 = &read_example(Year(2019), Day(16), 5)?;
         let digits1: Vec<i32> = input1
             .chars()
             .filter_map(|c| c.to_digit(10).map(|d| d as i32))
             .collect();
         assert_eq!(run_fft_part2(&digits1, 100)?, 84462026);
 
-        let input2 = "02935109699940807407585447034323";
+        let input2 = &read_example(Year(2019), Day(16), 6)?;
         let digits2: Vec<i32> = input2
             .chars()
             .filter_map(|c| c.to_digit(10).map(|d| d as i32))
             .collect();
         assert_eq!(run_fft_part2(&digits2, 100)?, 78725270);
 
-        let input3 = "03081770884921959731165446850517";
+        let input3 = &read_example(Year(2019), Day(16), 7)?;
         let digits3: Vec<i32> = input3
             .chars()
             .filter_map(|c| c.to_digit(10).map(|d| d as i32))

@@ -89,22 +89,22 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const TEST_INPUT_P1: &str =
-        "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
-    const TEST_INPUT_P2: &str =
-        "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_03_part1() -> Result<()> {
-        let (p1, _) = calculate_solution(TEST_INPUT_P1)?;
+        let test_input_p1 = read_example(Year(2024), Day(3), 1)?;
+        let (p1, _) = calculate_solution(&test_input_p1)?;
         assert_eq!(p1, 161);
         Ok(())
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_03_part2() -> Result<()> {
-        let (_, p2) = calculate_solution(TEST_INPUT_P2)?;
+        let test_input_p2 = read_example(Year(2024), Day(3), 2)?;
+        let (_, p2) = calculate_solution(&test_input_p2)?;
         assert_eq!(p2, 48);
         Ok(())
     }

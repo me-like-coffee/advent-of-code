@@ -16,13 +16,14 @@ cargo run -- generate -y 2025 -d 13     # scaffold a new day
 Inputs are not included: Advent of Code asks that they not be shared.
 Save your own as `inputs/year_YYYY/day_NN.txt` (two-digit day), for example
 `inputs/year_2024/day_01.txt`. The `inputs/` directory is gitignored.
+Puzzle examples used by the tests live there too, as `day_NN_example{n}.txt`.
 To keep them elsewhere, set `AOC_INPUTS` to a directory with the same layout.
 
 ## Tests
 
 ```sh
 cargo test                          # tests that need no puzzle files
-cargo test --features puzzle-inputs # also the tests that read inputs/
+cargo test --features puzzle-inputs # also the tests that read inputs and examples
 ```
 
 ## License

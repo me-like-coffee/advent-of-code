@@ -1,6 +1,6 @@
 # Refactoring plan
 
-Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 next (2026-10-31)
+Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 done; Phase 4 next (2026-10-31)
 
 §1 describes the state before Phase 1.
 
@@ -80,9 +80,13 @@ Each phase ends with `check` green and is one commit. I'll make the commits and 
 - **Unit tests**: for everything above plus `utils::parser`. No new tests for individual days.
 - **Follow-up (`359387c`)**: `cargo fmt` never reached the modules declared inside `register_days!` and `register_years!`. `rustfmt.toml` (edition 2024) now makes `check` run `rustfmt --check` on every file, and all sources were formatted once. That commit is listed in `.git-blame-ignore-revs`.
 
-### Phase 3: move puzzle examples out of the source (see §5, question 1)
+### Phase 3: move puzzle examples out of the source (see §5, question 1) (done 2026-10-31)
 - Move the 26 inline examples to `inputs/year_YYYY/day_NN_example*.txt` and read them with `read_example`. Mark those tests `puzzle-inputs`.
 - Also move the examples in old-folder `test*.txt` files there during the port.
+- Done: the count of 26 was low. Examples were in 41 day files, including plain multi-line strings and strings passed straight to functions, and they became 78 example files (an example repeated in one day's tests shares a file). Each file holds the literal's exact value, including leading and trailing spaces and whether it ends with a newline. The 91 tests that read inputs or examples are skipped without `puzzle-inputs`; 49 still run.
+- Kept in the source: 2019/22 `test_parsing` (a shuffle written for the test), 2019/15 `test_shortest_path_example` (a grid built in code), the 2019/21 springscript (the solution itself), and expected answers.
+- 2023/12 `test_individual_rows` and 2025/03 `test_part_2_examples` copied example lines into the test; they now read them from example 1.
+- `generate`: the day template reads example 1 instead of an inline constant, its stub has `#[expect(unused_variables)]`, and an empty `day_NN_example1.txt` is created next to the input. Its `register_days!` and `register_years!` output now matches rustfmt's 60-character `fn_call_width`, a Phase 2 bug that the rustfmt check exposed.
 
 ### Phase 4: port the old folder's Rust days (65 days, one year per commit)
 | Year | Days |

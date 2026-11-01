@@ -142,27 +142,15 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const EXAMPLE: &str = "root: pppw + sjmn
-dbpl: 5
-cczh: sllz + lgvd
-zczc: 2
-ptdq: humn - dvpt
-dvpt: 3
-lfqf: 4
-humn: 5
-ljgn: 2
-sjmn: drzm * dbpl
-sllz: 4
-pppw: cczh / lfqf
-lgvd: ljgn * ptdq
-drzm: hmdt - zczc
-hmdt: 32";
+    use crate::utils::read_example;
 
     #[test]
-    fn test_example() {
-        let (p1, p2) = calculate_solution(EXAMPLE).unwrap();
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example() -> Result<()> {
+        let example = read_example(Year(2022), Day(21), 1)?;
+        let (p1, p2) = calculate_solution(&example).unwrap();
         assert_eq!(p1, 152);
         assert_eq!(p2, 301);
+        Ok(())
     }
 }

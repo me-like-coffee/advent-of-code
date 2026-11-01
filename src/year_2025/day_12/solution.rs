@@ -123,44 +123,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const TEST_INPUT: &str = r#"0:
-###
-##.
-##.
-
-1:
-###
-##.
-.##
-
-2:
-.##
-###
-##.
-
-3:
-##.
-###
-##.
-
-4:
-###
-#..
-###
-
-5:
-###
-.#.
-###
-
-4x4: 0 0 0 0 2 0
-12x5: 1 0 1 0 2 2
-12x5: 1 0 1 0 3 2"#;
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_12_solution() -> Result<()> {
-        let data = parse_full(TEST_INPUT, PuzzleData::parse)?;
+        let test_input = read_example(Year(2025), Day(12), 1)?;
+        let data = parse_full(&test_input, PuzzleData::parse)?;
         let (p1, p2) = calculate_solution(&data)?;
         assert_eq!(p1, 3);
         assert_eq!(p2, 0);

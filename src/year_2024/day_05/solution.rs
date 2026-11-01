@@ -91,37 +91,12 @@ fn reorder(update: &mut [u32], rules: &HashMap<u32, HashSet<u32>>) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
 
     #[test]
-    fn test_day_05_example() {
-        let example_input = "47|53
-97|13
-97|61
-97|47
-75|29
-61|13
-75|53
-29|13
-97|29
-53|29
-61|53
-97|53
-61|29
-47|13
-75|47
-97|75
-47|61
-75|61
-47|29
-75|13
-53|13
-
-75,47,61,53,29
-97,61,53,29,13
-75,29,13
-75,97,47,61,53
-61,13,29
-97,13,75,29,47";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_day_05_example() -> Result<()> {
+        let example_input = &read_example(Year(2024), Day(5), 1)?;
 
         let (rules_str, updates_str) = example_input.split_once("\n\n").unwrap();
         let mut rules: HashMap<u32, HashSet<u32>> = HashMap::new();
@@ -155,5 +130,6 @@ mod tests {
 
         assert_eq!(part1_sum, 143);
         assert_eq!(part2_sum, 123);
+        Ok(())
     }
 }

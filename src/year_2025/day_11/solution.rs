@@ -111,12 +111,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const TEST_INPUT: &str = "svr: aaa bbb\naaa: fft\nfft: ccc\nbbb: tty\ntty: ccc\nccc: ddd eee\nddd: hub\nhub: fff\neee: dac\ndac: fff\nfff: ggg hhh\nggg: out\nhhh: out";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_11_solution() -> Result<()> {
-        let connections = parse_str_lines(TEST_INPUT, Connection::parse)?;
+        let test_input = read_example(Year(2025), Day(11), 1)?;
+        let connections = parse_str_lines(&test_input, Connection::parse)?;
         let (p1, p2) = calculate_solution(&connections)?;
         assert_eq!(p1, 0);
         assert_eq!(p2, 2);

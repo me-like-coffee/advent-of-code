@@ -193,12 +193,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const TEST_INPUT: &str = "7,1 11,1 11,7 9,7 9,5 2,5 2,3 7,3";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_09_solution() -> Result<()> {
-        let points: Vec<Point> = TEST_INPUT
+        let test_input = read_example(Year(2025), Day(9), 1)?;
+        let points: Vec<Point> = test_input
             .split_whitespace()
             .map(|s| {
                 Point::parse(s)

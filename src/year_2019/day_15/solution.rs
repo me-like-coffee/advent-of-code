@@ -141,6 +141,7 @@ fn find_max_distance(start: (i32, i32), map: &Grid) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
 
     #[test]
     fn test_shortest_path_example() {
@@ -172,12 +173,9 @@ mod tests {
     }
 
     #[test]
-    fn test_oxygen_spread() {
-        let example = " ##   
-#..## 
-#.#..#
-#.O.# 
- ###  ";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_oxygen_spread() -> Result<()> {
+        let example = &read_example(Year(2019), Day(15), 1)?;
         let mut map = Grid::new();
         let mut oxygen_pos = (0, 0);
         for (y, line) in example.lines().enumerate() {
@@ -199,5 +197,6 @@ mod tests {
             }
         }
         assert_eq!(find_max_distance(oxygen_pos, &map), 4);
+        Ok(())
     }
 }

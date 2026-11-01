@@ -244,15 +244,13 @@ pub fn solve() -> Result<(crate::utils::Answer, crate::utils::Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const EXAMPLE: &str = "\
-Blueprint 1: Each ore robot costs 4 ore. Each clay robot costs 2 ore. Each obsidian robot costs 3 ore and 14 clay. Each geode robot costs 2 ore and 7 obsidian.
-Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsidian robot costs 3 ore and 8 clay. Each geode robot costs 3 ore and 12 obsidian.
-";
+    use crate::utils::{Day, Year, read_example};
 
     #[test]
-    fn test_example_p1() {
-        let blueprints: Vec<Blueprint> = EXAMPLE
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example_p1() -> Result<()> {
+        let example = read_example(Year(2022), Day(19), 1)?;
+        let blueprints: Vec<Blueprint> = example
             .lines()
             .filter(|l| !l.is_empty())
             .map(|l| parse_blueprint(l).map(|(_, b)| b).unwrap())
@@ -263,11 +261,14 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
 
         let g2 = solve_blueprint(&blueprints[1], 24);
         assert_eq!(g2, 12);
+        Ok(())
     }
 
     #[test]
-    fn test_example_p2() {
-        let blueprints: Vec<Blueprint> = EXAMPLE
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_example_p2() -> Result<()> {
+        let example = read_example(Year(2022), Day(19), 1)?;
+        let blueprints: Vec<Blueprint> = example
             .lines()
             .filter(|l| !l.is_empty())
             .map(|l| parse_blueprint(l).map(|(_, b)| b).unwrap())
@@ -278,6 +279,7 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
 
         let g2 = solve_blueprint(&blueprints[1], 32);
         assert_eq!(g2, 62);
+        Ok(())
     }
 
     #[test]

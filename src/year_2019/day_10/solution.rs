@@ -157,19 +157,23 @@ fn vaporize_asteroids(asteroids: &HashSet<Coord>, origin: Coord, target_count: u
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
 
     #[test]
-    fn test_small_example() {
-        let input = ".#..#\n.....\n#####\n....#\n...##";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_small_example() -> Result<()> {
+        let input = &read_example(Year(2019), Day(10), 1)?;
         let asteroids = parse_asteroids(input);
         let (pos, count) = find_best_location(&asteroids);
         assert_eq!(pos, Coord::new(3, 4));
         assert_eq!(count, 8);
+        Ok(())
     }
 
     #[test]
-    fn test_large_example_210() {
-        let input = ".#..##.###...#######\n##.############..##.\n.#.######.########.#\n.###.#######.####.#.\n#####.##.#.##.###.##\n..#####..#.#########\n####################\n#.####....###.#.#.##\n##.#################\n#####.##.###..####..\n..######..##.#######\n####.##.####...##..#\n.#####..#.######.###\n##...#.##########...\n#.##########.#######\n.####.#.###.###.#.##\n....##.##.###..#####\n.#.#.###########.###\n#.#.#.#####.####.###\n###.##.####.##.#..##";
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
+    fn test_large_example_210() -> Result<()> {
+        let input = &read_example(Year(2019), Day(10), 2)?;
         let asteroids = parse_asteroids(input);
         let (pos, count) = find_best_location(&asteroids);
         assert_eq!(pos, Coord::new(11, 13));
@@ -177,5 +181,6 @@ mod tests {
 
         let p2 = vaporize_asteroids(&asteroids, pos, 200);
         assert_eq!(p2, 802);
+        Ok(())
     }
 }

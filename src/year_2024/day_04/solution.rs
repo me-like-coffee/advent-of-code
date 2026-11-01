@@ -86,21 +86,13 @@ pub fn solve() -> Result<(Answer, Answer)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const TEST_INPUT: &str = "MMMSXXMASM
-MSAMXMSMSA
-AMXSXMAAMM
-MSAMASMSMX
-XMASAMXAMM
-XXAMMXXAMA
-SMSMSASXSS
-SAXAMASAAA
-MAMMMXMMMM
-MXMXAXMASX";
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_day_04_solution() -> Result<()> {
-        let (p1, p2) = calculate_solution(TEST_INPUT)?;
+        let test_input = read_example(Year(2024), Day(4), 1)?;
+        let (p1, p2) = calculate_solution(&test_input)?;
         assert_eq!(p1, 18);
         assert_eq!(p2, 9);
         Ok(())

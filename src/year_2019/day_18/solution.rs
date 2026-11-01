@@ -185,74 +185,52 @@ fn solve_generic(grid: &[Vec<char>]) -> Result<u64> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::read_example;
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_1() -> Result<()> {
-        let input = "#########
-#b.A.@.a#
-#########";
+        let input = &read_example(Year(2019), Day(18), 1)?;
         assert_eq!(solve_part1(input)?, 8);
         Ok(())
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_2() -> Result<()> {
-        let input = "########################
-#f.D.E.e.C.b.A.@.a.B.c.#
-######################.#
-#d.....................#
-########################";
+        let input = &read_example(Year(2019), Day(18), 2)?;
         assert_eq!(solve_part1(input)?, 86);
         Ok(())
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_3() -> Result<()> {
-        let input = "########################
-#...............b.C.D.f#
-#.######################
-#.....@.a.B.c.d.A.e.F.g#
-########################";
+        let input = &read_example(Year(2019), Day(18), 3)?;
         assert_eq!(solve_part1(input)?, 132);
         Ok(())
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_4() -> Result<()> {
-        let input = "#################
-#i.G..c...e..H.p#
-########.########
-#j.A..b...f..D.o#
-########@########
-#k.E..a...g..B.n#
-########.########
-#l.F..d...h..C.m#
-#################";
+        let input = &read_example(Year(2019), Day(18), 4)?;
         assert_eq!(solve_part1(input)?, 136);
         Ok(())
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_5() -> Result<()> {
-        let input = "########################
-#@..............ac.GI.b#
-###d#e#f################
-###A#B#C################
-###g#h#i################
-########################";
+        let input = &read_example(Year(2019), Day(18), 5)?;
         assert_eq!(solve_part1(input)?, 81);
         Ok(())
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_example_1() -> Result<()> {
-        let input = "#######
-#a.#Cd#
-##@#@##
-#######
-##@#@##
-#cB#Ab#
-#######";
+        let input = &read_example(Year(2019), Day(18), 6)?;
         assert_eq!(
             solve_generic(
                 &input
@@ -266,14 +244,9 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_example_2() -> Result<()> {
-        let input = "###############
-#d.ABC.#.....a#
-######@#@######
-###############
-######@#@######
-#b.....#.....c#
-###############";
+        let input = &read_example(Year(2019), Day(18), 7)?;
         assert_eq!(
             solve_generic(
                 &input
@@ -287,14 +260,9 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_example_3() -> Result<()> {
-        let input = "#############
-#DcBa.#.GhKl#
-#.###@#@#I###
-#e#d#####j#k#
-###C#@#@###J#
-#fEbA.#.FgHi#
-#############";
+        let input = &read_example(Year(2019), Day(18), 8)?;
         assert_eq!(
             solve_generic(
                 &input
@@ -308,16 +276,9 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_example_4() -> Result<()> {
-        let input = "#############
-#g#f.D#..h#l#
-#F###e#E###.#
-#dCba@#@BcIJ#
-#############
-#nK.L@#@G...#
-#M###N#H###.#
-#o#m..#i#jk.#
-#############";
+        let input = &read_example(Year(2019), Day(18), 9)?;
         assert_eq!(
             solve_generic(
                 &input

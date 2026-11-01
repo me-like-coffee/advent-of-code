@@ -1,6 +1,6 @@
 # Refactoring plan
 
-Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 done; Phase 4 done; Phase 5 done; Phase 6 in progress (2026-10-31)
+Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 done; Phase 4 done; Phase 5 done; Phase 6 done; Phase 7 next (2026-10-31)
 
 §1 describes the state before Phase 1.
 
@@ -136,7 +136,9 @@ For each day:
 - 2022/21 and 22 exist in both languages. Both versions are kept.
 - `.clang-format` and `.clang-tidy` are left for later, so that existing C++ isn't mass-reformatted.
 
-### Phase 6: CI (in progress)
+### Phase 6: CI (done 2026-10-31)
+- **Outcome**: all 7 jobs pass on `main` (`00ef96d`), with the expected counts on every system: 57 Rust tests passed and 218 skipped, 7 doc tests, and 9 of 9 C++ tests. On Windows, MSVC's AddressSanitizer works in CI, so no Windows-only preset was needed.
+- **Fixes the first runs found**: `SIZE_T_MAX` in C++ days 04, 07 and 11 (defined only by Apple's headers; now `SIZE_MAX`), and `operation operation;` in C++ day 11, which GCC rejects (now `enum operation operation;`). CI builds with `ninja -k 0`, so one run reports every compile error.
 - **Workflow**: `.github/workflows/ci.yml`, on every push and pull request and on demand. Formatting runs on Ubuntu; clippy, `cargo test` and the CMake build with `ctest` run on Ubuntu, macOS and Windows. Actions are pinned to commit hashes, permissions are read-only, and no secrets are used.
 - **C++ setup in CI**: CMake 4.4.5 and Ninja from `lukka/get-cmake`; vcpkg fetched at the baseline commit, with its built packages cached; the MSVC developer environment and `CXX=cl` on Windows.
 - **Expected results**: 57 Rust tests run and 218 are skipped (they need puzzle inputs), plus 7 doc tests; 9 C++ unit tests. The day programs are built, not run.
@@ -216,4 +218,6 @@ The other 16 days in this repo already had inputs in the old folder. They were c
 - 2026-10-31: suspected third-party code is held back during the port and dealt with in Phase 8, after the port, rather than immediately.
 
 ## 6. Platform divergence
-None planned. All paths go through `Path::join` and `std::filesystem::path`, and the inputs location comes from `AOC_INPUTS` or a path relative to the crate root. CI on all three OSes checks this.
+All paths go through `Path::join` and `std::filesystem::path`, and the inputs location comes from `AOC_INPUTS` or a path relative to the crate root. CI on Linux, macOS and Windows checks this. The divergent paths, each also marked in the code or workflow:
+- **`CMakeLists.txt`, sanitizer flags** (`PLATFORM: windows (MSVC)`): MSVC gets AddressSanitizer only, because it has no UndefinedBehaviorSanitizer, and `/RTC1` is removed from the Debug flags, because its AddressSanitizer rejects it. Clang and GCC get both sanitizers.
+- **`.github/workflows/ci.yml`, Windows steps**: the MSVC developer environment, `CXX=cl` so that CMake picks MSVC, and `bootstrap-vcpkg.bat` instead of `bootstrap-vcpkg.sh`.

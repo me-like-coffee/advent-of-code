@@ -1,8 +1,9 @@
+use crate::utils::grid::byte_grid;
 use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::{Result, ensure};
 
 fn parse(data: &str) -> Vec<Vec<u8>> {
-    data.lines().map(|l| l.bytes().collect()).collect()
+    byte_grid(data)
 }
 
 #[allow(

@@ -1,3 +1,4 @@
+use crate::utils::grid::char_grid;
 use crate::utils::{Answer, Day, Year, read_input};
 use crate::year_2019::intcode::{Intcode, parse_program};
 use anyhow::{Context, Result};
@@ -15,11 +16,7 @@ pub fn solve() -> Result<(Answer, Answer)> {
     let outputs = vm.run_to_end()?;
 
     let grid_str: String = outputs.iter().map(|&x| x as u8 as char).collect();
-    let grid: Vec<Vec<char>> = grid_str
-        .trim()
-        .lines()
-        .map(|l| l.chars().collect())
-        .collect();
+    let grid = char_grid(grid_str.trim());
 
     let part1 = calculate_alignment_parameters(&grid);
     let part2 = solve_part2(&program, &grid)?;
@@ -281,7 +278,7 @@ mod tests {
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example() -> Result<()> {
         let example = &read_example(Year(2019), Day(17), 1)?;
-        let grid: Vec<Vec<char>> = example.lines().map(|l| l.chars().collect()).collect();
+        let grid: Vec<Vec<char>> = char_grid(example);
         assert_eq!(calculate_alignment_parameters(&grid), 76);
         Ok(())
     }

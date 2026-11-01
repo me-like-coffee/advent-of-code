@@ -11,6 +11,7 @@ use std::path::{Path, PathBuf};
 use std::time::Instant;
 
 pub mod answer;
+pub mod grid;
 pub mod parser;
 pub mod scaffold;
 

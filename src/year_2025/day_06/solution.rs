@@ -1,3 +1,4 @@
+use crate::utils::grid::char_grid;
 use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::{Context, Result};
 
@@ -94,7 +95,7 @@ fn parse_block_part2(lines: &[Vec<char>], col_start: usize, col_end: usize) -> R
 
 /// Contains the core logic for the day's puzzle.
 fn calculate_solution(content: &str) -> Result<(u64, u64)> {
-    let lines: Vec<Vec<char>> = content.lines().map(|l| l.chars().collect()).collect();
+    let lines: Vec<Vec<char>> = char_grid(content);
     if lines.is_empty() {
         return Ok((0, 0));
     }

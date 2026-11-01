@@ -1,3 +1,4 @@
+use crate::utils::grid::char_grid;
 use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::{Result, anyhow};
 use std::collections::{HashSet, VecDeque};
@@ -8,7 +9,7 @@ use std::collections::{HashSet, VecDeque};
 /// Returns an error if the input cannot be read or the loop cannot be found.
 pub fn solve() -> Result<(Answer, Answer)> {
     let input = read_input(Year(2023), Day(10))?;
-    let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+    let grid: Vec<Vec<char>> = char_grid(&input);
 
     let (part1, loop_coords, start_pos, actual_start_char) = find_loop(&grid)?;
     let part2 = count_enclosed_tiles(&grid, &loop_coords, start_pos, actual_start_char);
@@ -197,7 +198,7 @@ mod tests {
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_1() -> Result<()> {
         let input = &read_example(Year(2023), Day(10), 1)?;
-        let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+        let grid: Vec<Vec<char>> = char_grid(input);
         let (dist, _, _, _) = find_loop(&grid)?;
         assert_eq!(dist, 4);
         Ok(())
@@ -207,7 +208,7 @@ mod tests {
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_example_2() -> Result<()> {
         let input = &read_example(Year(2023), Day(10), 2)?;
-        let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+        let grid: Vec<Vec<char>> = char_grid(input);
         let (dist, _, _, _) = find_loop(&grid)?;
         assert_eq!(dist, 8);
         Ok(())
@@ -217,7 +218,7 @@ mod tests {
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_example_1() -> Result<()> {
         let input = &read_example(Year(2023), Day(10), 3)?;
-        let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+        let grid: Vec<Vec<char>> = char_grid(input);
         let (_, loop_coords, start_pos, actual_start_char) = find_loop(&grid)?;
         let count = count_enclosed_tiles(&grid, &loop_coords, start_pos, actual_start_char);
         assert_eq!(count, 4);
@@ -228,7 +229,7 @@ mod tests {
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_example_2() -> Result<()> {
         let input = &read_example(Year(2023), Day(10), 4)?;
-        let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+        let grid: Vec<Vec<char>> = char_grid(input);
         let (_, loop_coords, start_pos, actual_start_char) = find_loop(&grid)?;
         let count = count_enclosed_tiles(&grid, &loop_coords, start_pos, actual_start_char);
         assert_eq!(count, 8);
@@ -239,7 +240,7 @@ mod tests {
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_example_3() -> Result<()> {
         let input = &read_example(Year(2023), Day(10), 5)?;
-        let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+        let grid: Vec<Vec<char>> = char_grid(input);
         let (_, loop_coords, start_pos, actual_start_char) = find_loop(&grid)?;
         let count = count_enclosed_tiles(&grid, &loop_coords, start_pos, actual_start_char);
         assert_eq!(count, 10);

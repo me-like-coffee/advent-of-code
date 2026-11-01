@@ -1,3 +1,4 @@
+use crate::utils::grid::byte_grid;
 use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::{Result, bail};
 use std::collections::HashMap;
@@ -103,7 +104,7 @@ impl Virus {
 /// Maps the grid onto coordinates centred on its middle node.
 fn parse_infection_map(data: &str) -> InfectionMap {
     let mut infection_map = InfectionMap::new();
-    let initial_state: Vec<Vec<_>> = data.lines().map(|l| l.bytes().collect()).collect();
+    let initial_state: Vec<Vec<_>> = byte_grid(data);
 
     let (x_mid, y_mid) = (
         initial_state[0].len() as IntType / 2,

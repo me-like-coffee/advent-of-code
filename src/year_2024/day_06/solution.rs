@@ -151,6 +151,7 @@ fn is_looping(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::grid::char_grid;
     use crate::utils::read_example;
 
     #[test]
@@ -158,7 +159,7 @@ mod tests {
     fn test_day_06_example() -> Result<()> {
         let example = &read_example(Year(2024), Day(6), 1)?;
 
-        let grid: Vec<Vec<char>> = example.lines().map(|l| l.chars().collect()).collect();
+        let grid: Vec<Vec<char>> = char_grid(example);
 
         let (start_pos, start_dir) = find_start(&grid).unwrap();
         let original_visited = simulate_part1(&grid, start_pos, start_dir);

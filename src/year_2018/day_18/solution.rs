@@ -4,11 +4,12 @@
     https://github.com/slightknack/hashlife
 */
 
+use crate::utils::grid::byte_grid;
 use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::{Result, bail};
 
 fn parse_grid(data: &str) -> Vec<Vec<u8>> {
-    data.lines().map(|row| row.bytes().collect()).collect()
+    byte_grid(data)
 }
 
 fn update_grid(grid: &[Vec<u8>]) -> Result<Vec<Vec<u8>>> {

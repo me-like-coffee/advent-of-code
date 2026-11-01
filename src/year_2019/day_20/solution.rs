@@ -1,3 +1,4 @@
+use crate::utils::grid::char_grid;
 use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::{Result, anyhow};
 use std::collections::{HashMap, HashSet, VecDeque};
@@ -30,7 +31,7 @@ struct PortalInfo {
 impl Maze {
     #[allow(clippy::needless_range_loop)]
     fn parse(input: &str) -> Result<Self> {
-        let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+        let grid: Vec<Vec<char>> = char_grid(input);
         let rows = grid.len();
         if rows == 0 {
             return Err(anyhow!("Empty grid"));

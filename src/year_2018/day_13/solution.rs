@@ -1,3 +1,4 @@
+use crate::utils::grid::byte_grid;
 use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::{Result, bail};
 use std::collections::{BTreeSet, HashSet};
@@ -33,7 +34,7 @@ impl Direction {
 }
 
 fn parse(data: &str) -> Vec<Vec<u8>> {
-    data.lines().map(|l| l.bytes().collect()).collect()
+    byte_grid(data)
 }
 
 fn get_carts_and_intersections(grid: &[Vec<u8>]) -> (BTreeSet<Cart>, HashSet<(usize, usize)>) {

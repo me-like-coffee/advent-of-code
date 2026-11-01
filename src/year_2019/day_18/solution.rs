@@ -1,3 +1,4 @@
+use crate::utils::grid::char_grid;
 use crate::utils::{Answer, Day, Year, read_input};
 use anyhow::Result;
 use std::collections::{BinaryHeap, HashMap, HashSet, VecDeque};
@@ -14,12 +15,12 @@ pub fn solve() -> Result<(Answer, Answer)> {
 }
 
 fn solve_part1(input: &str) -> Result<u64> {
-    let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+    let grid: Vec<Vec<char>> = char_grid(input);
     solve_generic(&grid)
 }
 
 fn solve_part2(input: &str) -> Result<u64> {
-    let mut grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+    let mut grid: Vec<Vec<char>> = char_grid(input);
     let mut center = (0, 0);
     for (y, row) in grid.iter().enumerate() {
         for (x, &c) in row.iter().enumerate() {
@@ -231,15 +232,7 @@ mod tests {
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_example_1() -> Result<()> {
         let input = &read_example(Year(2019), Day(18), 6)?;
-        assert_eq!(
-            solve_generic(
-                &input
-                    .lines()
-                    .map(|l| l.chars().collect())
-                    .collect::<Vec<Vec<char>>>()
-            )?,
-            8
-        );
+        assert_eq!(solve_generic(&char_grid(input))?, 8);
         Ok(())
     }
 
@@ -247,15 +240,7 @@ mod tests {
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_example_2() -> Result<()> {
         let input = &read_example(Year(2019), Day(18), 7)?;
-        assert_eq!(
-            solve_generic(
-                &input
-                    .lines()
-                    .map(|l| l.chars().collect())
-                    .collect::<Vec<Vec<char>>>()
-            )?,
-            24
-        );
+        assert_eq!(solve_generic(&char_grid(input))?, 24);
         Ok(())
     }
 
@@ -263,15 +248,7 @@ mod tests {
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_example_3() -> Result<()> {
         let input = &read_example(Year(2019), Day(18), 8)?;
-        assert_eq!(
-            solve_generic(
-                &input
-                    .lines()
-                    .map(|l| l.chars().collect())
-                    .collect::<Vec<Vec<char>>>()
-            )?,
-            32
-        );
+        assert_eq!(solve_generic(&char_grid(input))?, 32);
         Ok(())
     }
 
@@ -279,15 +256,7 @@ mod tests {
     #[cfg_attr(not(feature = "puzzle-inputs"), ignore = "needs local puzzle files")]
     fn test_part2_example_4() -> Result<()> {
         let input = &read_example(Year(2019), Day(18), 9)?;
-        assert_eq!(
-            solve_generic(
-                &input
-                    .lines()
-                    .map(|l| l.chars().collect())
-                    .collect::<Vec<Vec<char>>>()
-            )?,
-            72
-        );
+        assert_eq!(solve_generic(&char_grid(input))?, 72);
         Ok(())
     }
 }

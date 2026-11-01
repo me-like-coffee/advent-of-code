@@ -19,6 +19,17 @@ Save your own as `inputs/year_YYYY/day_NN.txt` (two-digit day), for example
 Puzzle examples used by the tests live there too, as `day_NN_example{n}.txt`.
 To keep them elsewhere, set `AOC_INPUTS` to a directory with the same layout.
 
+## C++ (2022)
+
+The 2022 C++ solutions are in `cpp/year_2022/` and read the same `inputs/` files.
+They build with CMake 4 and vcpkg (`VCPKG_ROOT` must point to a vcpkg checkout):
+
+```sh
+cmake --preset dev && cmake --build --preset dev   # Debug, with sanitizers
+ctest --preset dev                                 # unit tests of cpp/common
+build/cpp/aoc_2022_day_01                          # one day; an input path may follow
+```
+
 ## Tests
 
 ```sh

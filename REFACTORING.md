@@ -1,6 +1,6 @@
 # Refactoring plan
 
-Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 done; Phase 4 done; Phase 5 next (2026-10-31)
+Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 done; Phase 4 done; Phase 5 done; Phase 6 next (2026-10-31)
 
 §1 describes the state before Phase 1.
 
@@ -120,7 +120,14 @@ For each day:
 
   Each one is either replaced with std or added at its latest version, pinned exactly, after a maintenance check. Any randomized solution uses a fixed seed so its tests are deterministic.
 
-### Phase 5: C++ 2022 (17 programs)
+### Phase 5: C++ 2022 (17 programs) (done 2026-10-31)
+- **Outcome**: 15 programs ported, days 01–14 and 21, each printing exactly what the original printed (compared line by line against the originals built from the old folder). `check` now configures, builds and runs the C++ unit tests next to Cargo.
+- **Held back**: day 15 (`main.cpp` is commented out from top to bottom; `main2.cpp` appears adapted from another C++ solution, see Phase 8) and day 22 (unfinished: part 1 only, and it didn't finish within 5 minutes). Both days are solved in Rust here.
+- **`cpp/common`**: `aoc::input_path`, `aoc::example_path` and `aoc::open` (returning `std::expected`). `read_lines` wasn't needed, because the programs keep their own reading loops. 9 GoogleTest tests.
+- **Corrections to the notes below**: days 13, 15 and 22 used `std::variant` and `std::optional`, so they were built as C++17, not C++14. Day 14 already had `#include <algorithm>`, commented out.
+- **Day 05**: the starting stacks are parsed from the input. The local input had lost its drawing, so it was rebuilt from the hard-coded stacks; the output matches the original's.
+- **Speed**: under the dev preset (Debug, sanitizers) day 14 takes over 10 minutes; built with `-O2` it takes about 100 seconds. `check` runs only the unit tests, not the days.
+- **Unchanged**: the programs' debug output and commented-out code, so that the output comparison holds.
 - Root `CMakeLists.txt` (CMake 4.x), `CMakePresets.json` "dev" preset (Ninja, C++23, `CMAKE_EXPORT_COMPILE_COMMANDS`, vcpkg toolchain, ASan and UBSan), and `vcpkg.json` with a pinned `builtin-baseline`. `check` finds the root CMake project and builds and tests it next to Cargo.
 - `cpp/common/`: `aoc::input_path(year, day, argv)`. The path is `argv[1]` if given, otherwise `AOC_INPUTS`, otherwise the repo's `inputs/` (passed in as a compile definition). Plus `aoc::read_lines` returning `std::expected`. Unit tests use GoogleTest from vcpkg, registered with CTest.
 - Each `2022/DayNN/main.cpp` moves to `cpp/year_2022/day_NN/main.cpp` and becomes executable `aoc_2022_day_NN`. Day 15's `main2.cpp` becomes `aoc_2022_day_15_part2`.
@@ -147,6 +154,7 @@ Phase 4 holds back days instead of porting them when they appear copied or adapt
 - **For each suspected day you choose**: rewrite it from scratch without consulting the suspected source, credit it (if its license allows: for MIT, its copyright notice and license text), or drop it.
 - **Held back as unfinished**: 2018/10, 12, 15 and 17; 2021/16 and 21; 2023/18, 20, 21, 23 and 25 (25 used `rand`). Each is written as a new solution or dropped. 2018/09 and 2023/17 were empty `cargo new` stubs.
 - **Parts that return 0**: 2018/11, 18 and 19 part 2 (never finished in the original), and 2023/19 part 2 (third-party, see above).
+- **C++ held back in Phase 5**: 2022/15 (third-party) and 2022/22 (unfinished). Both are solved in Rust, so they can also be dropped.
 - **Answers drawn as letters**: 2018/10, 2019/11 and 2021/13 part 2. Decide between letter recognition in `utils/` (with unit tests) and printing the drawing.
 - **Conventions**: as for Phase 4. A rewritten day's tests check the answers recorded in the old folder's tests; answers that were never recorded are checked against the puzzle website.
 - **Order**: after Phase 7, so CI runs on the new code. One commit per year.

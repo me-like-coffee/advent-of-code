@@ -138,6 +138,10 @@ fn generate_day(year: u16, day: u8) -> Result<()> {
         r#"use crate::utils::{{Answer, Day, Year, read_input}};
 use anyhow::Result;
 
+// Shared parsers: crate::utils::parser (nom helpers such as parse_str_lines),
+// crate::utils::grid (char_grid, byte_grid), crate::utils::{{sections,
+// split_at_blank_line}} (inputs in blocks), and, for 2019, intcode::parse_program.
+
 /// Core logic for Year {year}, Day {day:02}
 #[expect(unused_variables, reason = "stub until the day is implemented")]
 fn calculate_solution(input: &str) -> Result<(u64, u64)> {{

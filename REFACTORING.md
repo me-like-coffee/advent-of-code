@@ -1,6 +1,6 @@
 # Refactoring plan
 
-Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 done; Phase 4 done; Phase 5 done; Phase 6 done; Phase 7 next (2026-10-31)
+Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 done; Phase 4 done; Phase 5 done; Phase 6 done; Phase 7 done; Phase 8 next (2026-10-31)
 
 §1 describes the state before Phase 1.
 
@@ -146,7 +146,11 @@ For each day:
 - `.github/workflows/ci.yml`: an ubuntu, macOS and Windows matrix running `cargo fmt --check`, `rustfmt --check` on every `.rs` file (`cargo fmt` skips macro-declared modules), `clippy -D warnings`, `cargo test` (without `puzzle-inputs`), and the CMake build plus `ctest`.
 - Archiving or deleting the old folder moves to the end of Phase 8, which still needs it.
 
-### Phase 7: shared parsing where the duplication is real
+### Phase 7: shared parsing where the duplication is real (done 2026-10-31)
+- **Outcome**: `intcode::parse_program` (12 days), `utils::grid::{char_grid, byte_grid}` (11 days), and `utils::{sections, split_at_blank_line}` (9 days), each with unit tests. The `generate` template names them in a comment. 2024/04 and 2024/06's solution skip empty lines, so they keep their own code; digit grids (2 days) and comma-separated numbers (one-liners of different kinds) weren't extracted. More can be extracted later the same way.
+- **Checked against the runner's output for all 100 days, saved first**: every answer is unchanged except two fixes.
+- **2024/25** split only on `"\r\n\r\n"`, so it answered 0 with the downloaded input. It now gives 3525, the accepted answer, which a test checks.
+- **2017/24** part 2 depended on the order of a `HashSet` and gave 1994 or 2002 from run to run. It now takes the longest bridge, then the strongest, and always gives 1994, the value in the original's commented-out check.
 This is not a move to one parser for every day. As of 2026-10-31, 15 of the 53 days use `utils::parser` and 18 use nom directly, and none of the 79 old-folder crates uses nom. Rewriting about 100 working parsers would change no answers, and only the answer tests check them, which need local inputs that CI doesn't have. So this phase removes only the duplicated code.
 - **Intcode programs**: `intcode::parse_program(&str) -> Result<Vec<i64>>` in `year_2019/intcode.rs`, with unit tests. It replaces the 8-line parsing block that 12 of the 2019 days copy.
 - **Character grids**: a `utils::grid` function that turns the input into a grid of `char`, with unit tests, in `utils/grid.rs` if Phase 4 created it. It replaces the `lines().map(|l| l.chars().collect())` code in 8 days. Days whose versions differ, for example by trimming or skipping empty lines, keep that behaviour, or keep their own code.

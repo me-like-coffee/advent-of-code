@@ -1,6 +1,6 @@
 # Refactoring plan
 
-Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 done; Phase 4 done; Phase 5 done; Phase 6 next (2026-10-31)
+Status: **approved, in progress**: Phase 1 committed (`dd539f0`); Phase 2 committed (`f4c16bf`); Phase 3 done; Phase 4 done; Phase 5 done; Phase 6 in progress (2026-10-31)
 
 §1 describes the state before Phase 1.
 
@@ -136,7 +136,11 @@ For each day:
 - 2022/21 and 22 exist in both languages. Both versions are kept.
 - `.clang-format` and `.clang-tidy` are left for later, so that existing C++ isn't mass-reformatted.
 
-### Phase 6: CI and wrap-up
+### Phase 6: CI (in progress)
+- **Workflow**: `.github/workflows/ci.yml`, on every push and pull request and on demand. Formatting runs on Ubuntu; clippy, `cargo test` and the CMake build with `ctest` run on Ubuntu, macOS and Windows. Actions are pinned to commit hashes, permissions are read-only, and no secrets are used.
+- **C++ setup in CI**: CMake 4.4.5 and Ninja from `lukka/get-cmake`; vcpkg fetched at the baseline commit, with its built packages cached; the MSVC developer environment and `CXX=cl` on Windows.
+- **Expected results**: 57 Rust tests run and 218 are skipped (they need puzzle inputs), plus 7 doc tests; 9 C++ unit tests. The day programs are built, not run.
+- **Portability fixes made for it**: `#include <climits>` in C++ days 01, 08, 12 and 14, which relied on libc++ including it indirectly; C++ day 21 uses `std::int64_t` instead of `long`, which is 32 bits on Windows (its output is unchanged); the MSVC sanitizer build drops `/RTC1`, which MSVC's AddressSanitizer rejects.
 - `.github/workflows/ci.yml`: an ubuntu, macOS and Windows matrix running `cargo fmt --check`, `rustfmt --check` on every `.rs` file (`cargo fmt` skips macro-declared modules), `clippy -D warnings`, `cargo test` (without `puzzle-inputs`), and the CMake build plus `ctest`.
 - Archiving or deleting the old folder moves to the end of Phase 8, which still needs it.
 
@@ -155,7 +159,7 @@ Phase 4 holds back days instead of porting them when they appear copied or adapt
 - **Held back as unfinished**: 2018/10, 12, 15 and 17; 2021/16 and 21; 2023/18, 20, 21, 23 and 25 (25 used `rand`). Each is written as a new solution or dropped. 2018/09 and 2023/17 were empty `cargo new` stubs.
 - **Parts that return 0**: 2018/11, 18 and 19 part 2 (never finished in the original), and 2023/19 part 2 (third-party, see above).
 - **C++ held back in Phase 5**: 2022/15 (third-party) and 2022/22 (unfinished). Both are solved in Rust, so they can also be dropped.
-- **Answers drawn as letters**: 2018/10, 2019/11 and 2021/13 part 2. Decide between letter recognition in `utils/` (with unit tests) and printing the drawing.
+- **Answers drawn as letters**: 2018/10, 2019/11 and 2021/13 part 2. Tentatively (2026-10-31), letter recognition in `utils/` with unit tests, using only letter shapes from your own accepted answers, and failing with the drawing for an unknown letter. Revisit before Phase 8 starts.
 - **Conventions**: as for Phase 4. A rewritten day's tests check the answers recorded in the old folder's tests; answers that were never recorded are checked against the puzzle website.
 - **Order**: after Phase 7, so CI runs on the new code. One commit per year.
 - **Wrap-up**: archive or delete the old folder and its nested `.git` histories, once nothing is left to rewrite. That's your call.

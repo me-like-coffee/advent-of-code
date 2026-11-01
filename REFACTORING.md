@@ -154,8 +154,8 @@ Phase 4 holds back days instead of porting them when they appear copied or adapt
 
 ## 4. Manual tasks for you
 
-### 4.1 Download the missing puzzle inputs
-Each AoC account gets its own inputs, and the tests here check the answers for *your* inputs. 37 days in this repository have no input anywhere on this machine. Only you can download them, because it needs your AoC login.
+### 4.1 Download the missing puzzle inputs (done 2026-10-31)
+Each AoC account gets its own inputs, and the tests here check the answers for *your* inputs. 37 days in this repository had no input anywhere on this machine. Only you could download them, because it needs your AoC login. All are downloaded now, and every solved day runs with `cargo run --release -- -a`. The instructions below still apply to days added later.
 
 **Account.** Use the AoC account you solved with (the one shown as "Emmanuel Schilling"). Your local 2024/02 input gives 402, the same answer this repo's test expects, so the old folder and this repo use the same account. A different login, such as GitHub instead of Google, gives different inputs and failing tests.
 
@@ -168,9 +168,9 @@ Each AoC account gets its own inputs, and the tests here check the answers for *
 | Needed for | Days |
 |---|---|
 | Phase 1 (tests that read inputs), **done 2026-10-31** | 2019/13, 2019/19, 2019/21, 2019/22, 2022/18 |
-| Running them with the runner (`-y`, `-a`), **still missing** | 2015/01; 2018/07; 2019/02, 05, 07, 11, 18, 20, 23, 24, 25; 2020/13, 22; 2022/17, 24; 2023/12; 2024/04, 05, 06, 25; 2025/01–12 |
+| Running them with the runner (`-y`, `-a`), **done 2026-10-31** | 2015/01; 2018/07; 2019/02, 05, 07, 11, 18, 20, 23, 24, 25; 2020/13, 22; 2022/17, 24; 2023/12; 2024/04, 05, 06, 25; 2025/01–12 |
 
-The other 16 days in this repo already had inputs in the old folder. They were copied into `inputs/` in Phase 1, and you don't need to download them again.
+The other 16 days in this repo already had inputs in the old folder. They were copied into `inputs/` in Phase 1. The days ported in Phase 4 brought their inputs from the old folder too.
 
 **How to download.**
 - **In a browser:** log in at https://adventofcode.com, open `https://adventofcode.com/YYYY/day/D/input` (no leading zero in the URL), and use *Save As…* with the path above.
@@ -192,7 +192,7 @@ The other 16 days in this repo already had inputs in the old folder. They were c
 
 **Example files are not a manual task.** In Phase 3 I'll write the examples from the current test code and the old folder's `test*.txt` files to `inputs/year_YYYY/day_NN_example{n}.txt` myself.
 
-**Verifying.** After downloading, tell me and I'll run the 9 input-dependent tests. If any fails, its input is probably from a different account or was damaged in saving. Verified 2026-10-31 for the Phase 1 days: all 9 pass.
+**Verifying.** After downloading, run `check`, which includes the tests that read inputs. If one fails, its input is probably from a different account or was damaged in saving. Verified 2026-10-31: `check` passes, and every solved day runs.
 
 ### 4.2 Nothing else
 `gh` is set up and the toolchains are installed.

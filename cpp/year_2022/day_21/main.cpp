@@ -7,6 +7,8 @@
 // #include <assert.h>
 // #include <stdio.h>
 //#include "timer.hpp"
+#include <limits>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -19,7 +21,7 @@
 struct node_t {
     std::string id;
     bool finished;
-    long value;
+    std::int64_t value;
     char op;
     node_t * left;
     node_t * right;
@@ -27,13 +29,13 @@ struct node_t {
     node_t() {
         this->id = "";
         this->finished = true;
-        this->value = LONG_MIN;
+        this->value = std::numeric_limits<std::int64_t>::min();
         this->op = '#';
         this->left = nullptr;
         this->right = nullptr;
     }
 
-    long eval(const char previous_op) {
+    std::int64_t eval(const char previous_op) {
         // BUGBUG: This bugs part 1
         // Move to inverse_eval()
         if ("humn" == this->id) {
@@ -85,7 +87,7 @@ node_map_t load_input(const std::string& file){
 
         std::stringstream ss(line.substr(6));
         if (isdigit(line[6])) {
-            node_map[id]->value = stol(line.substr(6));
+            node_map[id]->value = std::stoll(line.substr(6));
             node_map[id]->finished = true;
             // std::cout << id << '\t' << node_map[id]->value << '\t' << node_map[id]->finished << std::endl;
         } else {
@@ -161,8 +163,8 @@ auto part2(node_map_t& nodes) {
     nodes["humn"]->value = 0;
     nodes["humn"]->finished = true;
 
-    long left_value = nodes["root"]->left->eval('#');
-    long right_value = nodes["root"]->right->eval('#');
+    std::int64_t left_value = nodes["root"]->left->eval('#');
+    std::int64_t right_value = nodes["root"]->right->eval('#');
 
     std::cout << left_value << '\t' << right_value << std::endl;
 

@@ -1,3 +1,4 @@
+#include <climits>
 #include <algorithm>
 #include <fstream>
 #include <functional>

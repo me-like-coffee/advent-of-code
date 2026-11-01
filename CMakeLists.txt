@@ -9,7 +9,10 @@ option(AOC_SANITIZE "Build with AddressSanitizer and UndefinedBehaviorSanitizer"
 if(AOC_SANITIZE)
     if(MSVC)
         # PLATFORM: windows (MSVC) — MSVC has AddressSanitizer but no
-        # UndefinedBehaviorSanitizer; clang and GCC builds get both below.
+        # UndefinedBehaviorSanitizer, and its ASan rejects the run-time checks
+        # (/RTC1) in CMake's default Debug flags; clang and GCC builds get both
+        # sanitizers below.
+        string(REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
         add_compile_options(/fsanitize=address)
     else()
         add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)

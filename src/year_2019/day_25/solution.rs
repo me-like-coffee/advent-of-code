@@ -1,49 +1,12 @@
-use crate::utils::{Answer, Day, Year, read_input};
+use crate::utils::{Answer, Day, Year, read_extra, read_input};
 use crate::year_2019::intcode::{Intcode, Status};
 use anyhow::{Context, Result};
 
 /// Solves Year 2019, Day 25: Cryostasis.
 ///
-/// ROOM DATA TABLE:
-/// | Room Name                | Items Present              | Exits                |
-/// | :---                     | :---                       | :---                 |
-/// | Hull Breach (Start)      | -                          | north, south, west   |
-/// | Arcade                   | infinite loop (TRAP)       | north, south         |
-/// | Corridor                 | -                          | north, west          |
-/// | Crew Quarters            | -                          | east                 |
-/// | Engineering              | photons (TRAP)             | east, south          |
-/// | Gift Wrapping Center     | giant electromagnet (TRAP) | south, west          |
-/// | Hallway                  | mouse                      | north, east, south   |
-/// | Holodeck                 | escape pod (TRAP)          | west                 |
-/// | Hot Chocolate Fountain   | space law space brochure   | north                |
-/// | Kitchen                  | pointer                    | east, south          |
-/// | Navigation               | sand                       | north, south         |
-/// | Observatory              | food ration                | east, south          |
-/// | Passages                 | -                          | north                |
-/// | Pressure-Sensitive Floor | -                          | west                 |
-/// | Security Checkpoint      | -                          | north, east          |
-/// | Science Lab              | -                          | north, west          |
-/// | Sick Bay                 | molten lava (TRAP)         | south, west          |
-/// | Stables                  | monolith                   | north, east, south   |
-/// | Storage                  | mutex                      | north, west          |
-/// | Warp Drive Maintenance   | asterisk                   | east, south          |
-///
-/// ADJACENCY MAP:
-/// Hull Breach ↔ Hallway (North) / Arcade (South) / Stables (West)
-/// Hallway ↔ Kitchen (North) / Holodeck (East)
-/// Arcade ↔ Science Lab (South)
-/// Science Lab ↔ Engineering (West)
-/// Engineering ↔ Security Checkpoint (South)
-/// Security Checkpoint → Pressure-Sensitive Floor (East)
-/// Kitchen ↔ Gift Wrapping Center (East)
-/// Gift Wrapping Center ↔ Passages (South)
-/// Stables ↔ Sick Bay (North) / Navigation (South)
-/// Navigation ↔ Corridor (South)
-/// Corridor ↔ Warp Drive Maintenance (West)
-/// Warp Drive Maintenance ↔ Storage (South)
-/// Storage ↔ Crew Quarters (West)
-/// Sick Bay ↔ Observatory (West)
-/// Observatory ↔ Hot Chocolate Fountain (South)
+/// The route through the ship depends on the input, so it lives in the local
+/// file `day_25_walkthrough.txt` (one command per line), next to the input.
+/// The items it picks up with `take` are the ones tried at the checkpoint.
 ///
 /// # Errors
 /// Returns an error if the input cannot be read or program execution fails.
@@ -58,65 +21,27 @@ pub fn solve() -> Result<(Answer, Answer)> {
         })
         .collect::<Result<Vec<i64>>>()?;
 
-    let password = solve_part1(&program)?;
+    let walkthrough = read_extra(Year(2019), Day(25), "walkthrough")?;
+    let password = solve_part1(&program, &walkthrough)?;
 
     Ok((password.into(), 0.into()))
 }
 
-fn solve_part1(program: &[i64]) -> Result<u64> {
+fn solve_part1(program: &[i64], walkthrough: &str) -> Result<u64> {
     let mut vm = Intcode::new(program.to_vec());
 
-    // Phase 1: Walkthrough to collect all 8 safe items and reach the Security Checkpoint.
+    // Phase 1: Walkthrough to collect the safe items and reach the Security Checkpoint.
     // The sequence includes backtracking steps to ensure the VM state stays synchronized.
-    let walkthrough = [
-        "north",
-        "take mouse",
-        "north",
-        "take pointer",
-        "south",
-        "south",
-        "west",
-        "take monolith",
-        "north",
-        "west",
-        "take food ration",
-        "south",
-        "take space law space brochure",
-        "north",
-        "east",
-        "south",
-        "south",
-        "take sand",
-        "south",
-        "west",
-        "take asterisk",
-        "south",
-        "take mutex",
-        "north",
-        "east",
-        "north",
-        "north",
-        "east",
-        "south",
-        "south",
-        "west",
-        "south",
-    ];
+    let walkthrough: Vec<&str> = walkthrough.lines().filter(|l| !l.is_empty()).collect();
 
-    for cmd in walkthrough {
+    for cmd in &walkthrough {
         run_command(&mut vm, cmd)?;
     }
 
-    let safe_items = [
-        "mouse",
-        "pointer",
-        "monolith",
-        "food ration",
-        "space law space brochure",
-        "sand",
-        "asterisk",
-        "mutex",
-    ];
+    let safe_items: Vec<&str> = walkthrough
+        .iter()
+        .filter_map(|cmd| cmd.strip_prefix("take "))
+        .collect();
 
     // Phase 2: Brute force the correct weight combination using Differential Inventory Management.
     // We start with all items (mask 255) and XOR the current mask with the next to minimize commands.
